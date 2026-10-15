@@ -14,7 +14,14 @@ RUNTIME = r'''(function(){
 var KEY = 'actconnect-demo-v1';
 var SEED = __SEED__;
 var params = new URLSearchParams(location.search);
-var OWNER = params.get('role') === 'wizard';
+var WIZARD_PIN = '0827';
+var OWNER = false;
+if (params.get('role') === 'wizard') {
+  var entered = null; try { entered = sessionStorage.getItem('actconnect-wizard-pin'); } catch (e) {}
+  if (entered !== WIZARD_PIN) entered = window.prompt('연구자 PIN을 입력하세요');
+  if (entered === WIZARD_PIN) { try { sessionStorage.setItem('actconnect-wizard-pin', entered); } catch (e) {} OWNER = true; }
+  else { params.delete('role'); var qs = params.toString(); location.replace(location.pathname + (qs ? '?' + qs : '')); }
+}
 var store = new Map();
 function load(){ store.clear(); var raw = null; try { raw = localStorage.getItem(KEY); } catch (e) {}
   var obj = raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(SEED)); for (var k in obj) store.set(k, obj[k]); if (!raw) save(); }
@@ -67,8 +74,8 @@ BAR = '''<style>
 body #root{height:calc(100% - 30px)}
 @media (max-width:640px){#demoBar .muted{display:none}}
 </style>
-<div id="demoBar" role="note"><b>Act &amp; Connect 데모</b><span class="muted">claude.ai 없이 이 브라우저에서만 동작합니다. 두 탭을 열어 참여자와 연구자를 함께 체험하세요.</span><span class="sp"></span>
-<a href="./">참여자 화면</a><a href="./?role=wizard" target="_blank" rel="noopener">연구자 콘솔 (새 탭)</a><button type="button" onclick="if(confirm('데모 데이터를 모두 지우고 처음 상태로 돌립니다.'))ActConnectDemo.reset()">초기화</button></div>
+<div id="demoBar" role="note"><b>Act &amp; Connect 데모</b><span class="muted">claude.ai 없이 이 브라우저에서만 동작합니다. 참여자 화면입니다.</span><span class="sp"></span>
+<button type="button" onclick="if(confirm('데모 데이터를 모두 지우고 처음 상태로 돌립니다.'))ActConnectDemo.reset()">초기화</button></div>
 '''
 
 html = ('<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'

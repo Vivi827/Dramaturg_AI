@@ -2,7 +2,7 @@
 
 드라마투르기 기반 AI 인터랙티브 시스템을 활용한 **배우의 캐릭터 해석 지원 연구**(이화여자대학교)의 Phase 1 형성 연구용 프로토타입입니다. 배우가 대본에 메모하고, 그 메모를 구조화하고, 구조화한 해석을 근거로 레퍼런스를 얻는 과정에서 AI를 언제·어떻게 찾는지 관찰하기 위해 만들었습니다.
 
-**▶ 데모:** [`demo/`](demo/) — GitHub Pages를 켜면 `https://vivi827.github.io/Dramaturg_AI/phase1/demo/`에서 바로 써 볼 수 있습니다. 데모는 claude.ai 없이 브라우저 안에서만 동작하며, 데이터는 그 브라우저에만 저장됩니다. 탭 두 개(참여자 화면 / `?role=wizard` 연구자 콘솔)를 열면 Wizard-of-Oz 흐름을 함께 체험할 수 있습니다.
+**▶ 데모:** [`demo/`](demo/) — GitHub Pages를 켜면 `https://vivi827.github.io/Dramaturg_AI/phase1/demo/`에서 바로 써 볼 수 있습니다. 데모는 claude.ai 없이 브라우저 안에서만 동작하며, 데이터는 그 브라우저에만 저장됩니다. 참여자 화면에는 연구자 콘솔로 가는 링크가 없습니다. 연구자는 `?role=wizard`를 붙인 URL을 열고 PIN(`build_demo.py`의 `WIZARD_PIN`, 기본값 `0827`)을 입력해야 콘솔이 열립니다. 클라이언트 전용 데모라 PIN은 소스에 그대로 들어 있어 참여자가 실수로 들어가는 것만 막아줄 뿐, 진짜 보안은 아닙니다.
 
 ![대본 뷰어](docs/images/01-script-viewer.png)
 
