@@ -1,0 +1,13 @@
+{
+  "db": {
+    "rules": [
+      { "path": "", "read": "view", "write": "owner" },
+      { "path": "pool", "read": "owner", "write": "owner" },
+      { "path": "wizardlog", "read": "owner", "write": "owner" },
+      { "path": "sessions", "read": "owner", "write": "owner" },
+      { "path": "sessions/{self}", "read": "admin", "write": "admin" }
+    ]
+  },
+  "user": {},
+  "downloads": true
+}

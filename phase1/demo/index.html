@@ -1,0 +1,1824 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Act & Connect Phase 1 프로토타입 데모 — 배우의 캐릭터 해석 지원 연구"><style>*,*::before,*::after{box-sizing:border-box}html,body{margin:0}</style></head><body><style>
+#demoBar{height:30px;display:flex;align-items:center;gap:12px;padding:0 16px;font:12px/1 "IBM Plex Sans KR",system-ui,sans-serif;background:#1e2226;color:#e6e8ea}
+#demoBar b{font-weight:600}#demoBar a,#demoBar button{color:#9cc3e6;background:none;border:0;padding:0;font:inherit;cursor:pointer;text-decoration:underline}
+#demoBar .sp{flex:1}#demoBar .muted{color:#a5adb5}
+body #root{height:calc(100% - 30px)}
+@media (max-width:640px){#demoBar .muted{display:none}}
+</style>
+<div id="demoBar" role="note"><b>Act &amp; Connect 데모</b><span class="muted">claude.ai 없이 이 브라우저에서만 동작합니다. 두 탭을 열어 참여자와 연구자를 함께 체험하세요.</span><span class="sp"></span>
+<a href="./">참여자 화면</a><a href="./?role=wizard" target="_blank" rel="noopener">연구자 콘솔 (새 탭)</a><button type="button" onclick="if(confirm('데모 데이터를 모두 지우고 처음 상태로 돌립니다.'))ActConnectDemo.reset()">초기화</button></div>
+<script>(function(){
+'use strict';
+var KEY = 'actconnect-demo-v1';
+var SEED = {"config/script": {"scenes": [{"id": "s1", "isTarget": false, "lines": [{"kind": "direction", "n": 1, "speaker": "", "text": "좁은 부엌. 어머니가 식탁에 수저를 두 벌 놓는다. 수진이 외투를 입은 채 서 있다."}, {"kind": "line", "n": 2, "speaker": "어머니", "text": "밥은 먹고 가. 서울까지 멀잖아."}, {"kind": "line", "n": 3, "speaker": "수진", "text": "버스 시간 다 됐어요. 다음에 먹을게요."}, {"kind": "line", "n": 4, "speaker": "어머니", "text": "너 지난번에도 다음에라고 했어."}, {"kind": "direction", "n": 5, "speaker": "", "text": "수진, 대답하지 않고 식탁 위 숟가락 하나를 서랍에 도로 넣는다."}, {"kind": "line", "n": 6, "speaker": "수진", "text": "아빠 방은 아직 그대로예요?"}, {"kind": "line", "n": 7, "speaker": "어머니", "text": "치울 사람이 있어야 치우지."}, {"kind": "line", "n": 8, "speaker": "수진", "text": "제가 올 때 할게요. 진짜로요."}, {"kind": "direction", "n": 9, "speaker": "", "text": "수진 퇴장. 어머니는 서랍을 열어 숟가락을 다시 꺼낸다."}], "title": "1장 · 부엌, 겨울 저녁"}, {"id": "s2", "isTarget": false, "lines": [{"kind": "direction", "n": 1, "speaker": "", "text": "식탁에 수저가 한 벌. 동생 민호가 휴대폰을 보고 있다."}, {"kind": "line", "n": 2, "speaker": "민호", "text": "누나 이번 주에도 못 온대. 회사 일 때문에."}, {"kind": "line", "n": 3, "speaker": "어머니", "text": "그래. 바쁘면 그럴 수 있지."}, {"kind": "line", "n": 4, "speaker": "민호", "text": "근데 누나 회사 그만둔 지 한 달 됐어. 엄마한테는 말하지 말래서."}, {"kind": "direction", "n": 5, "speaker": "", "text": "어머니, 아무 말 없이 아빠 방 쪽을 본다."}, {"kind": "line", "n": 6, "speaker": "어머니", "text": "그 방, 이번 주말에 내가 치울란다."}], "title": "2장 · 같은 부엌, 석 달 뒤"}, {"id": "s3", "isTarget": true, "lines": [{"kind": "direction", "n": 1, "speaker": "", "text": "아빠 방 문이 열려 있고 상자 몇 개가 쌓여 있다. 현관문 소리. 수진이 가방을 들고 들어온다."}, {"kind": "line", "n": 2, "speaker": "수진", "text": "엄마? 문이 열려 있길래."}, {"kind": "line", "n": 3, "speaker": "어머니", "text": "왔니. 연락도 없이."}, {"kind": "line", "n": 4, "speaker": "수진", "text": "그냥, 지나가는 길이었어요."}, {"kind": "direction", "n": 5, "speaker": "", "text": "수진, 상자들을 본다. 가방을 내려놓지 않는다."}, {"kind": "line", "n": 6, "speaker": "수진", "text": "아빠 방 치우는 거예요? 제가 한다고 했잖아요."}, {"kind": "line", "n": 7, "speaker": "어머니", "text": "네가 언제 올지 알아야 기다리지."}, {"kind": "line", "n": 8, "speaker": "수진", "text": "이번엔 진짜 오려고 했어요. 일이 좀 생겨서."}, {"kind": "line", "n": 9, "speaker": "어머니", "text": "무슨 일?"}, {"kind": "direction", "n": 10, "speaker": "", "text": "긴 사이. 수진이 가방을 바닥에 내려놓는다."}, {"kind": "line", "n": 11, "speaker": "수진", "text": "밥 있어요? 배고파요."}, {"kind": "line", "n": 12, "speaker": "어머니", "text": "앉아. 수저 꺼내고."}, {"kind": "direction", "n": 13, "speaker": "", "text": "수진, 서랍을 열어 숟가락 두 개를 꺼낸다."}], "title": "3장 · 같은 부엌, 일요일 아침"}], "targetCharacter": "수진", "title": "[샘플] 빈 방"}, "config/practice": {"scenes": [{"id": "p1", "isTarget": true, "lines": [{"kind": "direction", "n": 1, "speaker": "", "text": "비 오는 정류장. 지우가 우산 없이 서 있다."}, {"kind": "line", "n": 2, "speaker": "태오", "text": "같이 쓸래요? 방향 같으면."}, {"kind": "line", "n": 3, "speaker": "지우", "text": "괜찮아요. 금방 와요, 버스."}, {"kind": "line", "n": 4, "speaker": "태오", "text": "그 버스 아까 지나갔는데요."}, {"kind": "direction", "n": 5, "speaker": "", "text": "지우, 잠시 웃는다. 우산 안으로 한 걸음 들어간다."}, {"kind": "line", "n": 6, "speaker": "지우", "text": "그럼 다음 거 올 때까지만요."}], "title": "연습 · 버스 정류장"}], "targetCharacter": "지우", "title": "[샘플] 연습 장면"}, "config/settings": {"showPolarity": false}, "pool/bg-01": {"branch": "", "keywords": [], "polarity": "", "quote": "", "sourceType": "history", "sourceUrl": "", "summary": "샘플 카드입니다. 실제 연구에서는 작품 배경에 맞는 검증된 역사·사회 자료로 교체합니다. 가족이 고인의 방을 언제, 누가 정리하는지는 애도의 속도와 가족 내 역할을 드러내는 단서가 됩니다.", "tags": ["유품", "애도"], "title": "[샘플] 장례 후 유품 정리의 관습", "type": "background"}, "pool/fb-01": {"branch": "", "keywords": [], "polarity": "", "quote": "", "sourceType": "", "sourceUrl": "", "summary": "이 프로토타입에서는 이 질문에 대한 자료를 제공하지 않습니다. 대본 안에서 단서를 찾아보시거나 다른 도구를 이용해 보세요.", "tags": [], "title": "준비된 자료 범위 밖의 질문입니다", "type": "fallback"}, "pool/ref-a1": {"branch": "회피", "keywords": ["숨기", "피하", "돌리", "회피", "모른 척", "말하지"], "polarity": "similar", "quote": "", "sourceType": "play", "sourceUrl": "", "summary": "샘플 카드입니다. 귀향한 인물이 사정을 말하지 않고 일상적인 요구로 화제를 돌리는 장면 사례가 들어갈 자리입니다. 실제 카드는 출처를 확인할 수 있는 희곡·공연으로 채웁니다.", "tags": ["귀향", "침묵"], "title": "[샘플] 말하지 않음으로 버티는 귀향 장면", "type": "reference"}, "pool/ref-a2": {"branch": "회피", "keywords": ["숨기", "피하", "회피", "말하지"], "polarity": "contrast", "quote": "", "sourceType": "performance", "sourceUrl": "", "summary": "샘플 카드입니다. 같은 상황을 '털어놓기 위해 왔다'로 읽은 공연 사례가 들어갈 자리입니다. 대조 사례는 참여자의 해석과 다른 목적을 보여줍니다.", "tags": ["귀향", "고백"], "title": "[샘플] 귀향하자마자 고백하는 해석", "type": "reference"}, "pool/ref-b1": {"branch": "화해", "keywords": ["화해", "다가가", "풀", "가까워", "숟가락", "돌아"], "polarity": "similar", "quote": "", "sourceType": "interview", "sourceUrl": "", "summary": "샘플 카드입니다. 배우가 대사보다 소품을 다루는 행동으로 관계 회복을 표현했다고 말한 인터뷰가 들어갈 자리입니다.", "tags": ["소품", "화해"], "title": "[샘플] 사소한 행동으로 건네는 화해", "type": "reference"}, "pool/rel-01": {"branch": "", "keywords": [], "polarity": "", "quote": "", "sourceType": "", "sourceUrl": "", "summary": "샘플 카드입니다. 수진은 어머니에게 퇴사 사실을 숨기고, 민호는 그 비밀을 알고 있습니다(2장 4행). 아빠 방 정리는 수진이 맡겠다고 약속했던 일입니다(1장 8행).", "tags": ["관계"], "title": "[샘플] 수진 · 어머니 · 민호의 관계", "type": "relation"}};
+var params = new URLSearchParams(location.search);
+var OWNER = params.get('role') === 'wizard';
+var store = new Map();
+function load(){ store.clear(); var raw = null; try { raw = localStorage.getItem(KEY); } catch (e) {}
+  var obj = raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(SEED)); for (var k in obj) store.set(k, obj[k]); if (!raw) save(); }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(Object.fromEntries(store))); } catch (e) {} }
+load();
+var subs = new Set();
+function notify(){ subs.forEach(function(f){ try { f(); } catch (e) { console.error(e); } }); }
+window.addEventListener('storage', function(e){ if (e.key === KEY) { load(); notify(); } });
+function clone(v){ return v == null ? v : JSON.parse(JSON.stringify(v)); }
+function snapDoc(path){ var d = store.get(path); return { id: path.split('/').pop(), exists: !!d, data: function(){ return clone(d); }, metadata: {} }; }
+function commit(){ save(); notify(); }
+function docRef(path){ return { id: path.split('/').pop(), path: path,
+  get: async function(){ return snapDoc(path); },
+  set: async function(d){ store.set(path, clone(d)); commit(); },
+  update: async function(d){ if (!store.has(path)) throw { code: 'not_found', message: 'no doc' }; store.set(path, Object.assign({}, store.get(path), clone(d))); commit(); },
+  delete: async function(){ store.delete(path); commit(); },
+  onSnapshot: function(next){ var prev; var f = function(){ var s = snapDoc(path); var j = JSON.stringify(s.data()); if (j !== prev) { prev = j; next(s); } }; subs.add(f); setTimeout(f, 0); return function(){ subs.delete(f); }; },
+  collection: function(c){ return colRef(path + '/' + c); } }; }
+function colRef(path, filters, ord, lim){ filters = filters || []; var q = { path: path,
+  doc: function(id){ return docRef(path + '/' + (id || Math.random().toString(36).slice(2))); },
+  where: function(f, op, v){ return colRef(path, filters.concat([[f, op, v]]), ord, lim); },
+  orderBy: function(f, d){ return colRef(path, filters, [f, d || 'asc'], lim); },
+  limit: function(n){ return colRef(path, filters, ord, n); },
+  _docs: function(){ var depth = path.split('/').length + 1;
+    var ds = Array.from(store.keys()).filter(function(k){ return k.indexOf(path + '/') === 0 && k.split('/').length === depth; }).map(snapDoc);
+    ds = ds.filter(function(d){ return filters.every(function(x){ return x[1] === '==' ? d.data()[x[0]] === x[2] : true; }); });
+    if (ord) ds.sort(function(a, b){ return (a.data()[ord[0]] > b.data()[ord[0]] ? 1 : -1) * (ord[1] === 'desc' ? -1 : 1); });
+    if (lim) ds = ds.slice(0, lim); return ds; },
+  get: async function(){ var docs = q._docs(); return { docs: docs, size: docs.length, empty: !docs.length }; },
+  onSnapshot: function(next){ var prevMap = new Map(), ran = false; var f = function(){ var docs = q._docs(); var m = new Map(docs.map(function(d){ return [d.id, JSON.stringify(d.data())]; })); var ch = [];
+      docs.forEach(function(d){ if (!prevMap.has(d.id)) ch.push({ type: 'added', doc: d }); else if (prevMap.get(d.id) !== m.get(d.id)) ch.push({ type: 'modified', doc: d }); });
+      prevMap.forEach(function(_, id){ if (!m.has(id)) ch.push({ type: 'removed', doc: { id: id, exists: true, data: function(){ return {}; } } }); });
+      if (ch.length || !ran) { ran = true; prevMap = m; next({ docs: docs, size: docs.length, empty: !docs.length, docChanges: function(){ return ch; }, metadata: {} }); } };
+    subs.add(f); setTimeout(f, 0); return function(){ subs.delete(f); }; } };
+  return q; }
+var db = { doc: docRef, collection: function(p){ return colRef(p); } };
+var me = OWNER ? 'demo-researcher' : 'demo-participant';
+var user = { isOwner: async function(){ return OWNER; }, canEdit: async function(){ return true; }, can: async function(){ return null; },
+  id: async function(){ return me; }, me: async function(){ return { id: me, name: '', email: null }; } };
+var downloads = { save: async function(r){ var blob = new Blob([r.data], { type: 'text/plain;charset=utf-8' }); var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = r.filename; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000); return { status: 'saved' }; } };
+window.claude = { use: async function(n){ return ({ db: db, user: user, downloads: downloads })[n] || null; } };
+window.ActConnectDemo = { reset: function(){ try { localStorage.removeItem(KEY); } catch (e) {} location.reload(); } };
+})();</script>
+<title>Act &amp; Connect · 데모</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@400;600&display=swap">
+<style>
+/* Layout: a rehearsal-room desk. Script sheet on top (75%), beat strip below (25%), AI drawer on the right edge. */
+:root{
+  --paper:#eef0ee; --sheet:#fbfbfa; --ink:#1e2226; --muted:#5f666d; --faint:#959ca3; --rule:#d7dad7;
+  --accent:#2b5a83; --accent-ink:#ffffff; --accent-soft:#dbe6f0;
+  --think-bg:#f8efc4; --think-bd:#b8901c; --past-bg:#ebe3f6; --past-bd:#7d5fb0;
+  --ok:#2c7a4c; --warn:#a85418; --danger:#ad2a22;
+  --h0:rgba(43,90,131,.13); --s0:rgba(43,90,131,.30);
+  --h1:rgba(44,122,76,.14); --s1:rgba(44,122,76,.32);
+  --h2:rgba(168,84,24,.13); --s2:rgba(168,84,24,.30);
+  --h3:rgba(125,95,176,.15); --s3:rgba(125,95,176,.33);
+  --h4:rgba(24,124,136,.14); --s4:rgba(24,124,136,.32);
+  --h5:rgba(170,58,98,.13); --s5:rgba(170,58,98,.30);
+  --d0:#2b5a83; --d1:#2c7a4c; --d2:#a85418; --d3:#7d5fb0; --d4:#187c88; --d5:#aa3a62;
+  --shadow:0 6px 24px rgba(20,30,40,.14);
+  --f-script:"Noto Serif KR","Nanum Myeongjo","AppleMyungjo",serif;
+  --f-ui:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#15181b; --sheet:#1d2125; --ink:#e6e8ea; --muted:#a5adb5; --faint:#78808a; --rule:#323840;
+  --accent:#7fb0dc; --accent-ink:#0f1a24; --accent-soft:#233548;
+  --think-bg:#3a3317; --think-bd:#d6b54a; --past-bg:#2e2640; --past-bd:#ad92dc;
+  --ok:#6cc392; --warn:#e3965c; --danger:#ef7d74;
+  --h0:rgba(127,176,220,.18); --s0:rgba(127,176,220,.38);
+  --h1:rgba(108,195,146,.17); --s1:rgba(108,195,146,.36);
+  --h2:rgba(227,150,92,.17); --s2:rgba(227,150,92,.36);
+  --h3:rgba(173,146,220,.19); --s3:rgba(173,146,220,.40);
+  --h4:rgba(96,196,206,.17); --s4:rgba(96,196,206,.36);
+  --h5:rgba(232,120,160,.17); --s5:rgba(232,120,160,.36);
+  --d0:#7fb0dc; --d1:#6cc392; --d2:#e3965c; --d3:#ad92dc; --d4:#60c4ce; --d5:#e878a0;
+  --shadow:0 6px 24px rgba(0,0,0,.45);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#15181b; --sheet:#1d2125; --ink:#e6e8ea; --muted:#a5adb5; --faint:#78808a; --rule:#323840;
+  --accent:#7fb0dc; --accent-ink:#0f1a24; --accent-soft:#233548;
+  --think-bg:#3a3317; --think-bd:#d6b54a; --past-bg:#2e2640; --past-bd:#ad92dc;
+  --ok:#6cc392; --warn:#e3965c; --danger:#ef7d74;
+  --h0:rgba(127,176,220,.18); --s0:rgba(127,176,220,.38);
+  --h1:rgba(108,195,146,.17); --s1:rgba(108,195,146,.36);
+  --h2:rgba(227,150,92,.17); --s2:rgba(227,150,92,.36);
+  --h3:rgba(173,146,220,.19); --s3:rgba(173,146,220,.40);
+  --h4:rgba(96,196,206,.17); --s4:rgba(96,196,206,.36);
+  --h5:rgba(232,120,160,.17); --s5:rgba(232,120,160,.36);
+  --d0:#7fb0dc; --d1:#6cc392; --d2:#e3965c; --d3:#ad92dc; --d4:#60c4ce; --d5:#e878a0;
+  --shadow:0 6px 24px rgba(0,0,0,.45);
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-size:14px;line-height:1.5}
+*{box-sizing:border-box}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid var(--rule);background:var(--sheet);border-radius:6px;padding:5px 10px}
+button:hover{border-color:var(--muted)}
+button:disabled{cursor:not-allowed;opacity:.5}
+button.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button.ghost{background:transparent;border-color:transparent;color:var(--muted)}
+button.ghost:hover{color:var(--ink);border-color:var(--rule)}
+button.danger{color:var(--danger)}
+button.armed{background:var(--danger);color:#fff;border-color:var(--danger)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input[type=text],textarea,select{background:var(--sheet);border:1px solid var(--rule);border-radius:6px;padding:6px 8px;width:100%}
+textarea{resize:vertical}
+#root{height:100%}
+.center{height:100%;display:grid;place-items:center;padding:24px 16px;text-align:center}
+.center h1{font-family:var(--f-script);font-weight:600;font-size:22px;margin:0 0 6px}
+.center p{color:var(--muted);margin:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.banner{padding:8px 16px;font-weight:500;text-align:center}
+.banner.danger{background:var(--danger);color:#fff}
+.narrow-note{display:none;padding:8px 16px;background:var(--accent-soft);color:var(--ink);font-size:13px}
+@media (max-width:960px){.narrow-note{display:block}}
+#toast{position:fixed;z-index:60;background:var(--ink);color:var(--paper);padding:6px 12px;border-radius:6px;font-size:13px;pointer-events:none;opacity:0;transition:opacity .15s}
+#toast.on{opacity:1}
+#holdRing{position:fixed;z-index:70;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;pointer-events:none;display:none;
+  background:conic-gradient(var(--accent) calc(var(--p,0)*1turn),transparent 0);-webkit-mask:radial-gradient(circle,transparent 9px,#000 10px);mask:radial-gradient(circle,transparent 9px,#000 10px)}
+#holdRing.on{display:block;animation:hold 1s linear forwards}
+@property --p{syntax:'<number>';inherits:false;initial-value:0}
+@keyframes hold{to{--p:1}}
+@media (prefers-reduced-motion:reduce){#holdRing.on{animation:none;--p:1}}
+
+/* code entry */
+.entry{max-width:340px;margin:0 auto;display:grid;gap:12px;text-align:left}
+.entry label{font-weight:600}
+.entry input{font-family:var(--f-mono);font-size:20px;letter-spacing:.08em;text-transform:uppercase}
+.entry .err{color:var(--danger);font-size:13px;min-height:1.2em}
+
+/* participant app */
+.wrap{height:100%;display:flex;flex-direction:column}
+.app{flex:1;min-height:0;display:flex;gap:12px;padding:12px 16px}
+.work{flex:1;min-width:0;display:grid;grid-template-rows:minmax(0,3fr) minmax(0,1fr);gap:12px}
+.main{min-height:0;display:flex;flex-direction:column;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 12px;border-bottom:1px solid var(--rule)}
+.bar .spacer{flex:1}
+.tab{border-radius:16px;padding:3px 12px;background:transparent}
+.tab.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tag{font-size:11px;letter-spacing:.04em;padding:1px 6px;border-radius:10px;border:1px solid currentColor;margin-left:4px}
+.tgl{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:13px;cursor:pointer}
+.tgl input{width:auto}
+.startbar{display:flex;align-items:center;justify-content:center;padding:10px;background:var(--accent-soft);border-bottom:1px solid var(--rule)}
+.resel{background:var(--accent);color:var(--accent-ink);padding:6px 12px;display:flex;gap:10px;align-items:center}
+.resel button{background:transparent;color:inherit;border-color:currentColor}
+
+.script-scroll{flex:1;min-height:0;overflow:auto;-webkit-user-select:none;user-select:none;background:var(--paper)}
+.sheet{max-width:50em;margin:20px auto 40px;background:var(--sheet);border:1px solid var(--rule);padding:28px 32px 48px}
+.scene-title{font-family:var(--f-script);font-weight:600;font-size:17px;margin:0 0 14px;padding-left:4.2em}
+.ln{display:grid;grid-template-columns:3.6em minmax(0,1fr);column-gap:.6em;font-family:var(--f-script);font-size:16px;line-height:1.8}
+.ln .no{font-family:var(--f-mono);font-size:11px;color:var(--faint);text-align:right;padding-top:.45em;display:flex;justify-content:flex-end;gap:4px;align-items:flex-start}
+.ln .lt{white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere}
+.ln .spk{font-weight:600;margin-right:.5em;font-family:var(--f-ui);font-size:14px}
+.ln.dir .lt{font-style:italic;color:var(--muted)}
+.ln.tline .spk{background:var(--accent-soft);padding:0 4px;border-radius:3px}
+.c{cursor:text}
+.script-scroll .c{cursor:crosshair}
+.bt{border-radius:2px;transition:background .12s}
+.bt.b0{background:var(--h0)}.bt.b1{background:var(--h1)}.bt.b2{background:var(--h2)}.bt.b3{background:var(--h3)}.bt.b4{background:var(--h4)}.bt.b5{background:var(--h5)}
+.bt.b0.hov,.bt.b0.flash{background:var(--s0)}.bt.b1.hov,.bt.b1.flash{background:var(--s1)}.bt.b2.hov,.bt.b2.flash{background:var(--s2)}.bt.b3.hov,.bt.b3.flash{background:var(--s3)}.bt.b4.hov,.bt.b4.flash{background:var(--s4)}.bt.b5.hov,.bt.b5.flash{background:var(--s5)}
+.bchip{font-family:var(--f-mono);font-size:10px;line-height:1;padding:3px 5px;border-radius:9px;color:#fff;font-weight:500;cursor:default}
+.k0{background:var(--d0)}.k1{background:var(--d1)}.k2{background:var(--d2)}.k3{background:var(--d3)}.k4{background:var(--d4)}.k5{background:var(--d5)}
+:root .bchip{color:var(--sheet)}
+.c.flag{box-shadow:inset 2px 0 0 var(--accent);background:var(--accent-soft)}
+.flagtag{display:inline-block;font-family:var(--f-ui);font-size:10px;background:var(--accent);color:var(--accent-ink);padding:0 4px;border-radius:3px;margin-right:2px;vertical-align:.3em}
+
+.gap{position:relative;min-height:9px;margin-left:4.2em}
+.gap-add{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:11px;padding:0 8px;line-height:16px;border-radius:9px;opacity:0;background:var(--sheet);color:var(--muted);z-index:2}
+.gap:hover .gap-add,.gap-add:focus-visible{opacity:1}
+.gap.has{padding:4px 0}
+.gap.has .gap-add{position:static;transform:none;opacity:.0;margin-top:2px}
+.gap.has:hover .gap-add{opacity:1}
+.note{border:1px solid var(--think-bd);background:var(--think-bg);border-radius:6px;padding:6px 8px;margin:4px 0;font-family:var(--f-ui);font-size:13px}
+.note.past{border-color:var(--past-bd);background:var(--past-bg)}
+.note-h{display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin-bottom:4px}
+.note-h .spacer{flex:1}
+.note-h button{font-size:12px;padding:1px 8px;background:transparent}
+.note-h .seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.note textarea{background:transparent;border-color:transparent;padding:2px 0;min-height:3.2em}
+.note textarea:focus{background:var(--sheet);border-color:var(--rule)}
+.note-prev{cursor:pointer;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* beat strip */
+.menu{min-height:0;display:flex;flex-direction:column;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.menu-h{padding:6px 12px;font-size:12px;letter-spacing:.06em;color:var(--muted);border-bottom:1px solid var(--rule);display:flex;gap:8px}
+.menu-row{flex:1;min-height:0;display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;padding:10px 12px;align-items:stretch}
+.empty{color:var(--faint);padding:12px;margin:0}
+.bcard{flex:0 0 210px;display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;padding:8px 10px;border:1px solid var(--rule);border-radius:6px;background:var(--paper);min-height:0;overflow:hidden}
+.bcard.hov{border:2px solid var(--ink);padding:7px 9px}
+.bcard.open{background:var(--accent-soft);border-color:var(--accent)}
+.bcard .top{display:flex;gap:6px;align-items:center;width:100%}
+.bcard .rng{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.bcard .pur{font-family:var(--f-script);font-size:14px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bcard .pur.none{color:var(--faint);font-family:var(--f-ui)}
+.bcard .st{font-size:11px;color:var(--muted);margin-top:auto}
+.done-mark{color:var(--ok);font-weight:600}
+
+/* beat detail */
+.bd-scroll{flex:1;min-height:0;overflow:auto}
+.bd-head{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 12px;border-bottom:1px solid var(--rule)}
+.bd-head .title{font-weight:600;display:flex;gap:6px;align-items:center}
+.bd-head .spacer{flex:1}
+.chips{display:flex;gap:6px;flex-wrap:wrap;padding:8px 16px 0}
+.chip{font-size:12px;border:1px solid var(--accent);color:var(--accent);border-radius:12px;padding:1px 8px;background:transparent}
+.bd-purpose{padding:12px 16px 4px;display:grid;gap:4px}
+.bd-purpose label{font-size:12px;color:var(--muted);letter-spacing:.04em}
+.bd-purpose input{font-family:var(--f-script);font-size:17px}
+.bd{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,300px);gap:20px;padding:8px 16px 24px}
+.bd-text{font-family:var(--f-script);font-size:19px;line-height:2.1;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere}
+.bd-line{display:block;margin-bottom:.3em}
+.bd-line .spk{font-family:var(--f-ui);font-weight:600;font-size:14px;margin-right:.5em}
+.bd-line.dir{font-style:italic;color:var(--muted)}
+.sen{border-radius:3px;transition:background .12s}
+.sen.g0{background:var(--h0)}.sen.g1{background:var(--h1)}.sen.g2{background:var(--h2)}.sen.g3{background:var(--h3)}.sen.g4{background:var(--h4)}.sen.g5{background:var(--h5)}
+.sen.g0.hov{background:var(--s0)}.sen.g1.hov{background:var(--s1)}.sen.g2.hov{background:var(--s2)}.sen.g3.hov{background:var(--s3)}.sen.g4.hov{background:var(--s4)}.sen.g5.hov{background:var(--s5)}
+.glab{font-family:var(--f-mono);font-size:10px;padding:1px 4px;border-radius:3px;color:var(--sheet);vertical-align:.5em;margin-right:2px;-webkit-user-select:none;user-select:none}
+.mu{text-decoration:underline;text-decoration-color:var(--think-bd);text-decoration-thickness:2px;text-underline-offset:4px}
+.mu.mm{text-decoration-style:double}
+.mu.hov{background:var(--think-bg)}
+.selx{background:var(--accent-soft);outline:1px solid var(--accent)}
+.margin{display:grid;gap:14px;align-content:start}
+.margin h3{font-size:12px;letter-spacing:.06em;color:var(--muted);margin:0 0 6px;font-weight:600}
+.mcard{border:1px solid var(--rule);border-radius:6px;padding:8px;background:var(--paper);display:grid;gap:6px}
+.mcard.hov{border-color:var(--ink)}
+.mcard .row{display:flex;align-items:center;gap:6px}
+.mcard .row .spacer{flex:1}
+.mcard .q{font-family:var(--f-script);font-size:13px;color:var(--muted);border-left:2px solid var(--think-bd);padding-left:6px;max-height:4.5em;overflow:hidden}
+.mcard .gname{font-family:var(--f-mono);font-size:11px;padding:1px 6px;border-radius:3px;color:var(--sheet)}
+.oor{font-size:11px;color:var(--warn)}
+.mcard button{font-size:12px;padding:1px 8px}
+#fmenu{position:fixed;z-index:65;background:var(--sheet);border:1px solid var(--rule);box-shadow:var(--shadow);border-radius:8px;padding:4px;display:flex;gap:4px}
+#fmenu[hidden]{display:none}
+#fmenu button{border-color:transparent}
+#fmenu button:hover{background:var(--accent-soft)}
+
+/* completion board */
+.board-scroll{flex:1;min-height:0;overflow:auto;background:var(--paper)}
+.board{max-width:60em;margin:20px auto 40px;background:var(--sheet);border:1px solid var(--rule);padding:28px 36px 40px;display:grid;gap:30px}
+.board .eyebrow{font-size:12px;letter-spacing:.08em;color:var(--muted)}
+.board h2{font-family:var(--f-script);font-weight:600;font-size:26px;margin:4px 0 6px;text-wrap:balance}
+.board .stats{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:12px;color:var(--muted)}
+.board h3{font-size:12px;letter-spacing:.08em;color:var(--muted);margin:0 0 12px;font-weight:600;padding-bottom:6px;border-bottom:1px solid var(--rule)}
+.board .lab{font-size:11px;letter-spacing:.06em;color:var(--muted);margin:10px 0 4px}
+.bfields{display:grid;gap:14px}
+.bfields label{display:grid;gap:4px;font-size:13px;color:var(--muted)}
+.bfields textarea{font-family:var(--f-script);font-size:16px;line-height:1.6;color:var(--ink)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch}
+.fl-beat{display:flex;flex-direction:column;gap:4px;text-align:left;width:190px;background:var(--paper);padding:8px 10px}
+.fl-beat .top{display:flex;gap:6px;align-items:center}
+.fl-v{font-weight:600;font-size:14px}
+.fl-p{font-family:var(--f-script);font-size:13px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fl-arrow{align-self:center;color:var(--faint);font-size:16px}
+.missing{color:var(--warn);font-size:12px}
+.brow{display:grid;grid-template-columns:7em minmax(0,1fr);gap:16px;padding:16px 0;border-top:1px solid var(--rule)}
+.brow:first-of-type{border-top:0;padding-top:4px}
+.brow .left{display:grid;gap:6px;align-content:start}
+.brow .left button{font-size:12px;padding:2px 8px;justify-self:start}
+.brow .purpose{font-family:var(--f-script);font-size:18px;margin:0}
+.brow ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:14px}
+.brow q{font-family:var(--f-script);color:var(--muted)}
+.ncols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.nitem{display:block;width:100%;text-align:left;margin-bottom:6px;border:1px solid var(--think-bd);background:var(--think-bg);padding:6px 10px;font-size:14px;white-space:pre-wrap}
+.nitem.past{border-color:var(--past-bd);background:var(--past-bg)}
+.nitem .pos{font-family:var(--f-mono);font-size:11px;color:var(--muted);display:block}
+.refl{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px}
+.refl a{color:var(--accent);font-size:12px}
+.hint-s{font-size:13px;color:var(--muted);margin:-4px 0 10px}
+.tl-list{display:grid;gap:4px}
+.tl-scene{font-size:12px;font-weight:600;color:var(--muted);margin:10px 0 2px}
+.tl-scene:first-child{margin-top:0}
+.tl-row{display:grid;grid-template-columns:auto 6.5em 6.5em minmax(0,1fr) auto;gap:8px;align-items:start;padding:6px 8px;border:1px solid var(--rule);border-left-width:4px;border-radius:4px;background:var(--paper);font-size:14px;cursor:pointer}
+.tl-row input{margin-top:3px}
+.tl-row.on{background:var(--accent-soft);border-color:var(--accent)}
+.tl-row.k-past{border-left-color:var(--past-bd)}.tl-row.k-think{border-left-color:var(--think-bd)}.tl-row.k-verb{border-left-color:var(--accent)}.tl-row.k-memo{border-left-color:var(--warn)}.tl-row.k-purpose{border-left-color:var(--ok)}
+.tl-pos{font-family:var(--f-mono);font-size:11px;color:var(--muted);padding-top:2px}
+.tl-kind{font-size:12px;color:var(--muted);padding-top:1px}
+.tl-body q{font-family:var(--f-script);color:var(--muted)}
+.tl-body b{font-weight:600}
+.tl-row button{font-size:12px;padding:0 8px}
+.pickbar{position:sticky;bottom:0;display:flex;gap:8px;align-items:center;justify-content:flex-end;background:var(--sheet);border-top:1px solid var(--rule);padding:8px 0;margin-top:8px;z-index:2}
+.pickbar .muted{margin-right:auto;font-size:13px}
+.bu-list{display:grid;gap:10px}
+.bundle{border:1px solid var(--rule);border-radius:6px;padding:10px 12px;display:grid;gap:8px;background:var(--paper)}
+.bu-h{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.buchip{font-family:var(--f-mono);font-size:11px;background:var(--ink);color:var(--sheet);border-radius:9px;padding:2px 7px}
+.bu-items{margin:0;padding-left:20px;display:grid;gap:3px;font-size:13px}
+.bu-items q{font-family:var(--f-script);color:var(--muted)}
+.bu-note{display:grid;gap:4px;font-size:13px;color:var(--muted)}
+.bu-note textarea{font-family:var(--f-script);font-size:15px;color:var(--ink)}
+.bu-st{font-size:12px;color:var(--muted)}
+button.bu-st{color:var(--accent)}
+@media (max-width:960px){.board{padding:20px 16px}.brow,.ncols{grid-template-columns:minmax(0,1fr)}.tl-row{grid-template-columns:auto minmax(0,1fr)}.tl-row>*:not(input){grid-column:2}}
+
+/* AI drawer */
+.side{width:44px;flex:0 0 auto;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;display:flex;flex-direction:column;overflow:hidden}
+.side.open{width:clamp(320px,20vw,440px)}
+.side-tab{flex:1;border:0;border-radius:0;background:transparent;writing-mode:vertical-rl;font-weight:600;letter-spacing:.2em;position:relative;color:var(--muted)}
+.side-tab:hover{color:var(--ink);background:var(--accent-soft)}
+.dot{position:absolute;top:12px;left:50%;width:9px;height:9px;margin-left:-4.5px;border-radius:50%;background:var(--accent)}
+.side-h{display:flex;align-items:center;padding:8px 12px;border-bottom:1px solid var(--rule)}
+.side-h b{flex:1}
+.disclose{margin:0;padding:6px 12px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--rule)}
+.tools{display:grid;gap:8px;padding:10px 12px;border-bottom:1px solid var(--rule)}
+.tools .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.refwrap{position:relative}
+.refwrap button{width:100%}
+.reflist{position:absolute;left:0;right:0;top:calc(100% + 4px);background:var(--sheet);border:1px solid var(--rule);border-radius:8px;box-shadow:var(--shadow);padding:4px;z-index:5;display:grid;gap:2px}
+.reflist button{text-align:left;border-color:transparent}
+.reflist button:hover{background:var(--accent-soft)}
+.hint{font-size:12px;color:var(--muted)}
+.ask{display:grid;gap:6px}
+.ask .row{display:flex;justify-content:flex-end}
+.thread{flex:1;min-height:0;overflow:auto;padding:10px 12px;display:grid;gap:12px;align-content:start}
+.req{font-size:13px;display:grid;gap:6px}
+.req-q{justify-self:end;max-width:90%;background:var(--accent-soft);border-radius:10px 10px 2px 10px;padding:6px 10px}
+.req-q .lab{font-size:11px;color:var(--muted);display:block}
+.waiting{color:var(--muted);font-size:13px}
+.rcard{border:1px solid var(--rule);border-radius:8px;padding:10px;display:grid;gap:6px;background:var(--paper)}
+.rcard .meta{display:flex;gap:6px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
+.rcard .meta .pill{border:1px solid var(--rule);border-radius:10px;padding:0 6px}
+.rcard h4{margin:0;font-size:14px;font-family:var(--f-script);font-weight:600}
+.rcard p{margin:0;font-size:13px}
+.rcard blockquote{margin:0;padding-left:8px;border-left:2px solid var(--rule);font-family:var(--f-script);font-size:13px;color:var(--muted)}
+.rcard a{color:var(--accent);font-size:12px}
+.decide{display:flex;gap:4px;flex-wrap:wrap}
+.decide button{font-size:12px;padding:2px 8px}
+.decide button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.done-over{position:fixed;inset:0;z-index:80;background:color-mix(in srgb,var(--paper) 88%,transparent);display:grid;place-items:center;padding:16px}
+.done-over .box{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:28px 32px;text-align:center;box-shadow:var(--shadow)}
+.done-over h1{font-family:var(--f-script);margin:0 0 12px;font-size:24px}
+
+/* wizard */
+.wz{height:100%;display:grid;grid-template-columns:230px minmax(0,1fr) minmax(340px,420px);grid-template-rows:auto minmax(0,1fr);gap:12px;padding:12px 16px}
+.wz-h{grid-column:1/-1;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.wz-h h1{font-size:15px;margin:0;font-weight:600}
+.wz-h h1 span{font-weight:400;color:var(--muted)}
+.wz-h .spacer{flex:1}
+.panel{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.panel-h{padding:8px 12px;border-bottom:1px solid var(--rule);font-size:12px;letter-spacing:.06em;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.panel-b{flex:1;min-height:0;overflow:auto;padding:10px 12px}
+.runbtn{width:100%;text-align:left;display:grid;grid-template-columns:auto 1fr auto;gap:2px 8px;align-items:center;margin-bottom:6px;padding:8px}
+.runbtn.on{border-color:var(--accent);background:var(--accent-soft)}
+.runbtn .code{font-family:var(--f-mono);font-weight:500;font-size:15px}
+.runbtn .ago{grid-column:1/-1;font-size:11px;color:var(--muted)}
+.badge{background:var(--danger);color:#fff;border-radius:10px;font-size:11px;padding:0 7px;font-family:var(--f-mono)}
+.phase{font-size:11px;border-radius:10px;padding:0 7px;border:1px solid var(--rule);color:var(--muted)}
+.phase.task{border-color:var(--accent);color:var(--accent)}
+.phase.done{border-color:var(--ok);color:var(--ok)}
+.seg{display:inline-flex}
+.seg button{border-radius:0;margin-left:-1px}
+.seg button:first-child{border-radius:6px 0 0 6px;margin-left:0}
+.seg button:last-child{border-radius:0 6px 6px 0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:12px}
+.kv div{background:var(--paper);border-radius:6px;padding:6px 8px}
+.kv dt{font-size:11px;color:var(--muted)}
+.kv dd{margin:0;font-weight:500}
+.sec{margin:14px 0 6px;font-size:12px;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.mbeat{border:1px solid var(--rule);border-radius:6px;padding:8px 10px;margin-bottom:8px;background:var(--paper)}
+.mbeat.fresh,.mnote.fresh{outline:2px solid var(--warn)}
+.mbeat .h{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.mbeat .p{font-family:var(--f-script);font-size:15px;margin:4px 0}
+.mbeat ul{margin:4px 0 0;padding-left:18px;font-size:13px}
+.mnote{font-size:13px;border-left:3px solid var(--think-bd);padding:4px 8px;margin-bottom:6px;background:var(--paper)}
+.mnote.past{border-left-color:var(--past-bd)}
+.evlist{font-size:12px;font-family:var(--f-mono);display:grid;gap:2px}
+.evlist div{display:grid;grid-template-columns:4.5em 1fr;gap:8px}
+.markers{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.markers input{flex:1;min-width:140px;width:auto}
+.queue-item{width:100%;text-align:left;display:grid;gap:2px;margin-bottom:6px;padding:8px}
+.queue-item.on{border-color:var(--accent);background:var(--accent-soft)}
+.queue-item.answered{opacity:.6}
+.queue-item .t{display:flex;gap:6px;align-items:center;font-size:12px}
+.queue-item .t .spacer{flex:1}
+.wait{font-family:var(--f-mono);color:var(--danger)}
+.snap{background:var(--paper);border-radius:6px;padding:8px;font-size:13px;margin-bottom:8px}
+.snap .p{font-family:var(--f-script)}
+.branches{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0}
+.branches button{font-size:12px;padding:1px 8px}
+.branches button.top{border-color:var(--accent);color:var(--accent);font-weight:600}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.filters input{grid-column:1/-1}
+.pcard{display:grid;grid-template-columns:auto 1fr;gap:6px 8px;border:1px solid var(--rule);border-radius:6px;padding:8px;margin-bottom:6px;cursor:pointer;background:var(--paper)}
+.pcard.on{border-color:var(--accent);background:var(--accent-soft)}
+.pcard input{margin-top:3px}
+.pcard .meta{font-size:11px;color:var(--muted);display:flex;gap:6px;flex-wrap:wrap}
+.pcard h4{margin:0;font-size:13px}
+.pcard p{margin:0;font-size:12px;color:var(--muted)}
+.sendbar{border-top:1px solid var(--rule);padding:8px 12px;display:grid;gap:6px}
+.tl{display:grid;gap:0;font-size:13px}
+.tl-item{display:grid;grid-template-columns:5.5em 7em minmax(0,1fr);gap:8px;padding:5px 0;border-bottom:1px solid var(--rule)}
+.tl-item .el{font-family:var(--f-mono);color:var(--muted)}
+.tl-item .cat{font-size:11px}
+.tl-item.ai{background:var(--accent-soft)}
+.tl-item.mk{background:var(--think-bg)}
+.tl-item.mode{font-weight:600}
+.tl-item .d{overflow-wrap:anywhere;color:var(--muted);font-size:12px}
+.tl-item .lbl{color:var(--ink);font-size:13px}
+.chipsf{display:flex;gap:4px;flex-wrap:wrap}
+.chipsf button{font-size:12px;padding:1px 8px;border-radius:12px}
+.chipsf button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+@media (max-width:960px){
+  .app{flex-direction:column;height:auto}
+  .wrap{height:auto}
+  .work{grid-template-rows:70vh 220px}
+  .side,.side.open{width:auto;min-height:44px}
+  .side-tab{writing-mode:horizontal-tb;padding:10px}
+  .bd{grid-template-columns:minmax(0,1fr)}
+  .wz{grid-template-columns:minmax(0,1fr);grid-template-rows:auto}
+  .wz .panel{max-height:70vh}
+  .sheet{padding:20px 14px}
+}
+</style>
+<div id="root"><div class="center"><div><h1>Act &amp; Connect</h1><p>불러오는 중…</p></div></div></div>
+<div id="holdRing" aria-hidden="true"></div>
+<div id="fmenu" hidden></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const now = () => Date.now();
+const rid = () => Math.random().toString(36).slice(2, 9) + now().toString(36).slice(-5);
+const root = $('#root');
+const pad = n => String(n).padStart(2, '0');
+const fmtDur = ms => { const neg = ms < 0; ms = Math.abs(ms); const s = Math.floor(ms / 1000); const m = Math.floor(s / 60); const h = Math.floor(m / 60); const core = h ? `${h}:${pad(m % 60)}:${pad(s % 60)}` : `${pad(m)}:${pad(s % 60)}`; return (neg ? '-' : '') + core; };
+const ago = t => { if (!t) return '활동 없음'; const s = Math.round((now() - t) / 1000); if (s < 60) return `${s}초 전`; const m = Math.round(s / 60); if (m < 60) return `${m}분 전`; return `${Math.round(m / 60)}시간 전`; };
+const posCmp = (a, b) => (a.line - b.line) || (a.offset - b.offset);
+const KIND_LABEL = { think: '생각', past: '전사·비등장 시간' };
+const REQ_LABEL = { background: '시대배경', relation: '인물 관계', free: '자유 질문', reference: '레퍼런스' };
+const TYPE_LABEL = { background: '시대배경', relation: '인물 관계', reference: '레퍼런스', fallback: '안내' };
+const SRC_LABEL = { play: '희곡', performance: '공연', interview: '배우 인터뷰', history: '역사 자료' };
+const srcLabel = s => SRC_LABEL[s] || s || '';
+
+let db = null, user = null, downloads = null, uid = null, isOwner = false;
+const cfg = { script: null, practice: null, settings: { showPolarity: false }, loaded: false };
+let MODE = null; // 'participant' | 'wizard'
+const cfgListeners = [];
+
+/* ---------- toast & helpers ---------- */
+let toastTimer = null, lastMouse = { x: 0, y: 0 };
+document.addEventListener('mousemove', e => { lastMouse = { x: e.clientX, y: e.clientY }; }, { passive: true });
+function toast(msg, at) {
+  const t = $('#toast'); t.textContent = msg;
+  const p = at || { x: window.innerWidth / 2, y: window.innerHeight - 60 };
+  t.style.left = Math.max(8, Math.min(window.innerWidth - 280, p.x + 12)) + 'px';
+  t.style.top = Math.max(8, Math.min(window.innerHeight - 40, p.y + 14)) + 'px';
+  t.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('on'), 3000);
+}
+function centerMsg(title, sub = '') { root.innerHTML = `<div class="center"><div><h1>${esc(title)}</h1>${sub ? `<p>${esc(sub)}</p>` : ''}</div></div>`; }
+function armConfirm(btn, label = '정말 삭제') { if (btn.dataset.armed === '1') return true; btn.dataset.armed = '1'; const old = btn.textContent; btn.textContent = label; btn.classList.add('armed'); setTimeout(() => { if (btn.isConnected) { btn.dataset.armed = ''; btn.textContent = old; btn.classList.remove('armed'); } }, 3000); return false; }
+
+/* ---------- serialized writes: one in flight per document ---------- */
+const DEL = { del: true };
+const W = new Map();
+let writeErrorShown = false;
+function write(ref, data, how = 'set') {
+  const k = ref.path; let w = W.get(k);
+  if (!w) { w = { ref, q: [], running: false }; W.set(k, w); }
+  if (how === 'set' || data === DEL) w.q = [{ data, how }]; else w.q.push({ data, how });
+  if (!w.running) pump(w);
+}
+async function pump(w) {
+  w.running = true;
+  while (w.q.length) {
+    const { data, how } = w.q.shift();
+    try {
+      if (data === DEL) await w.ref.delete();
+      else if (how === 'update') await w.ref.update(data);
+      else await w.ref.set(data);
+    } catch (e) { onWriteError(e); }
+  }
+  w.running = false;
+}
+function onWriteError(e) {
+  const code = e && e.code;
+  if (code === 'unavailable') return;
+  if (writeErrorShown) return;
+  writeErrorShown = true;
+  const msg = code === 'quota_exceeded' ? '저장 공간이 가득 찼습니다. 연구자에게 알려 주세요' : '저장 권한이 없습니다. 연구자에게 알려 주세요';
+  const b = document.createElement('div'); b.className = 'banner danger'; b.textContent = msg; b.id = 'writeBanner';
+  const wrap = $('.wrap') || root; wrap.prepend(b);
+}
+
+/* ---------- boot ---------- */
+async function boot() {
+  if (!window.claude || typeof window.claude.use !== 'function') { centerMsg('Act & Connect', '초대받은 계정으로 로그인한 뒤 다시 열어 주세요'); return; }
+  try { [user, db] = await Promise.all([claude.use('user'), claude.use('db')]); } catch (e) { user = null; db = null; }
+  if (!user || !db) { centerMsg('Act & Connect', '초대받은 계정으로 로그인한 뒤 다시 열어 주세요'); return; }
+  downloads = await claude.use('downloads').catch(() => null);
+  isOwner = await user.isOwner().catch(() => false);
+  const me = await user.me().catch(() => null);
+  uid = me && me.id;
+  if (!uid) { centerMsg('Act & Connect', '초대받은 계정으로 로그인한 뒤 다시 열어 주세요'); return; }
+  ['script', 'practice', 'settings'].forEach(k => {
+    db.doc('config/' + k).onSnapshot(s => {
+      if (k === 'settings') cfg.settings = s.exists ? { showPolarity: false, ...s.data() } : { showPolarity: false };
+      else cfg[k] = s.exists ? s.data() : null;
+      cfgListeners.forEach(fn => fn(k));
+    }, () => {});
+  });
+  await new Promise(r => setTimeout(r, 400));
+  if (isOwner) startWizard(); else startParticipant();
+}
+
+/* =====================================================================
+   PARTICIPANT
+   ===================================================================== */
+const P = {
+  sessRef: null, runRef: null, run: null, code: null,
+  beats: new Map(), notes: new Map(), requests: new Map(), responses: new Map(), decisions: [],
+  ui: { mode: 'script', openBeatId: null, sceneId: null, sidebar: false, highlight: false, viewport: null },
+  pendingStart: null, reselect: null, sel: null, unseen: false, seen: new Set(), shown: new Set(),
+  lastType: null, unsubs: [], saved: new Map(), refOpen: false, preview: false, booted: false, boards: {},
+  bundles: new Map(), pick: new Set()
+};
+const L = { buf: [], flushing: false };
+function log(type, data = {}, target = null) {
+  if (!P.runRef) return;
+  L.buf.push({ t: now(), type, target, data });
+  P.lastType = type;
+  if (L.buf.length >= 25) flush();
+}
+async function flush() {
+  if (L.flushing || !L.buf.length || !P.runRef) return;
+  L.flushing = true;
+  const batch = L.buf.splice(0);
+  const t = now();
+  try { await P.runRef.collection('events').doc('e' + t + '_' + Math.random().toString(36).slice(2, 6)).set({ seq: t, events: batch }); }
+  catch (e) { L.buf.unshift(...batch); if (e && e.code !== 'unavailable') onWriteError(e); }
+  L.flushing = false;
+}
+setInterval(flush, 10000);
+window.addEventListener('pagehide', flush);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flush(); });
+
+let uiTimer = null;
+function saveUiSoon() {
+  clearTimeout(uiTimer);
+  uiTimer = setTimeout(() => {
+    if (!P.runRef || !P.run) return;
+    write(P.runRef, { uiMode: P.ui.mode, openBeatId: P.ui.openBeatId || null, sceneId: P.ui.sceneId || null, sidebar: !!P.ui.sidebar, viewport: P.ui.viewport || null, lastActiveAt: now() }, 'update');
+  }, 1200);
+}
+function setMode(mode, extra = {}) {
+  if (P.ui.mode !== mode) log('mode_switch', { from: P.ui.mode, to: mode, ...extra });
+  P.ui.mode = mode;
+  saveUiSoon();
+}
+
+function curKind() { return P.run && P.run.taskStartAt ? 'task' : 'practice'; }
+function curScript() { return curKind() === 'task' ? cfg.script : cfg.practice; }
+function sceneOf(id) { const sc = curScript(); return sc && sc.scenes.find(s => s.id === id); }
+function sceneIndex(id) { const sc = curScript(); return sc ? sc.scenes.findIndex(s => s.id === id) : -1; }
+function lineOf(scene, n) { return scene && scene.lines.find(l => l.n === n); }
+function sortedBeats() {
+  const k = curKind();
+  return [...P.beats.values()].filter(b => b.mode === k).sort((a, b) => (sceneIndex(a.sceneId) - sceneIndex(b.sceneId)) || posCmp(a.range.start, b.range.start));
+}
+function beatNum(id) { const i = sortedBeats().findIndex(b => b.id === id); return i < 0 ? null : i + 1; }
+function beatColor(id) { const n = beatNum(id); return n ? (n - 1) % 6 : 0; }
+function beatLines(b) {
+  const scene = sceneOf(b.sceneId); if (!scene) return [];
+  const out = [];
+  for (const l of scene.lines) {
+    if (l.n < b.range.start.line || l.n > b.range.end.line) continue;
+    const t = l.text || '';
+    const from = l.n === b.range.start.line ? b.range.start.offset : 0;
+    const to = l.n === b.range.end.line ? Math.min(b.range.end.offset, t.length - 1) : t.length - 1;
+    if (to < from) continue;
+    out.push({ n: l.n, speaker: l.speaker || '', kind: l.kind || 'line', text: t, from, to });
+  }
+  return out;
+}
+function beatText(b) { return beatLines(b).map(l => (l.kind === 'direction' ? '' : (l.speaker ? l.speaker + ': ' : '')) + l.text.slice(l.from, l.to + 1)).join('\n'); }
+function sentencesOf(b) {
+  const res = [];
+  for (const l of beatLines(b)) {
+    const t = l.text;
+    if (l.kind === 'direction') { res.push({ key: l.n + ':' + l.from, line: l.n, s: l.from, e: l.to, text: t.slice(l.from, l.to + 1) }); continue; }
+    let st = l.from;
+    while (st <= l.to && t[st] === ' ') st++;
+    for (let i = st; i <= l.to; i++) {
+      if ('.?!…。'.includes(t[i])) {
+        let j = i; while (j + 1 <= l.to && /[.?!…。"'”’)\]」』]/.test(t[j + 1])) j++;
+        res.push({ key: l.n + ':' + st, line: l.n, s: st, e: j, text: t.slice(st, j + 1) });
+        st = j + 1; while (st <= l.to && t[st] === ' ') st++; i = st - 1;
+      }
+    }
+    if (st <= l.to) res.push({ key: l.n + ':' + st, line: l.n, s: st, e: l.to, text: t.slice(st, l.to + 1) });
+  }
+  return res;
+}
+function isComplete(b) { return !!(b.purpose && b.purpose.trim()) && (b.verbs || []).some(g => g.verb && g.verb.trim()); }
+function verbGroupsOrdered(b) {
+  const sents = sentencesOf(b); const order = new Map(sents.map((s, i) => [s.key, i]));
+  return [...(b.verbs || [])].sort((x, y) => Math.min(...x.keys.map(k => order.has(k) ? order.get(k) : 9e9)) - Math.min(...y.keys.map(k => order.has(k) ? order.get(k) : 9e9)));
+}
+function snapshotOf(b) {
+  const sents = new Map(sentencesOf(b).map(s => [s.key, s.text]));
+  return {
+    number: beatNum(b.id), sceneId: b.sceneId, range: b.range, purpose: b.purpose || '', text: beatText(b),
+    verbs: verbGroupsOrdered(b).map(g => ({ verb: g.verb || '', sentences: g.keys.map(k => sents.get(k)).filter(Boolean) })),
+    memos: (b.memos || []).map(m => ({ quote: quoteOf(b, m), text: m.text || '' }))
+  };
+}
+function quoteOf(b, m) {
+  const scene = sceneOf(b.sceneId); if (!scene) return '';
+  const parts = [];
+  for (const l of scene.lines) {
+    if (l.n < m.start.line || l.n > m.end.line) continue;
+    const t = l.text || ''; const f = l.n === m.start.line ? m.start.offset : 0; const to = l.n === m.end.line ? m.end.offset : t.length - 1;
+    parts.push(t.slice(f, to + 1));
+  }
+  return parts.join(' ');
+}
+function beatData(b) { const { id, ...rest } = b; return rest; }
+function beatRef(id) { return P.runRef.collection('beats').doc(id); }
+function noteRef(id) { return P.runRef.collection('notes').doc(id); }
+function savedSnap(b) { return { purpose: b.purpose || '', verbs: new Map((b.verbs || []).map(g => [g.id, g.verb || ''])), memos: new Map((b.memos || []).map(m => [m.id, m.text || ''])) }; }
+const beatTimers = new Map();
+function saveBeatSoon(id) {
+  clearTimeout(beatTimers.get(id));
+  beatTimers.set(id, setTimeout(() => saveBeatNow(id), 800));
+}
+function saveBeatNow(id) {
+  clearTimeout(beatTimers.get(id)); beatTimers.delete(id);
+  const b = P.beats.get(id); if (!b) return;
+  const prev = P.saved.get(id) || savedSnap({});
+  if ((b.purpose || '') !== prev.purpose) log('beat_edit', { beatId: id, field: 'purpose', before: prev.purpose, after: b.purpose || '' });
+  for (const g of b.verbs || []) { const before = prev.verbs.get(g.id); if (before !== undefined && before !== (g.verb || '')) log('verb_edit', { beatId: id, groupId: g.id, before, after: g.verb || '' }); }
+  for (const m of b.memos || []) { const before = prev.memos.get(m.id); if (before !== undefined && before !== (m.text || '')) log('beat_memo_edit', { beatId: id, memoId: m.id, before, after: m.text || '' }); }
+  P.saved.set(id, savedSnap(b));
+  b.updatedAt = now();
+  write(beatRef(id), beatData(b));
+  touchActive();
+}
+let activeTimer = null;
+function touchActive() { clearTimeout(activeTimer); activeTimer = setTimeout(saveUiSoon, 50); }
+
+async function startParticipant(preview = false) {
+  MODE = 'participant'; P.preview = preview;
+  P.sessRef = db.doc('sessions/' + uid);
+  let s;
+  try { s = await P.sessRef.get(); } catch (e) { s = { exists: false }; }
+  const active = s.exists ? (s.data().activeCode || null) : null;
+  if (!cfgListeners.includes(onCfgParticipant)) cfgListeners.push(onCfgParticipant);
+  if (active) await openRun(active); else renderEntry();
+}
+function onCfgParticipant() { if (MODE === 'participant' && P.run) renderParticipant(); }
+
+function renderEntry(err = '') {
+  root.innerHTML = `<div class="wrap">${P.preview ? previewBar() : ''}<div class="center"><form class="entry" id="entry" novalidate>
+    <h1 style="text-align:center">Act &amp; Connect</h1>
+    <label for="codeInput">참여자 코드</label>
+    <input id="codeInput" type="text" autocomplete="off" inputmode="latin" placeholder="P01" maxlength="3" aria-describedby="codeErr">
+    <div class="err" id="codeErr">${esc(err)}</div>
+    <button class="pri" type="submit">입장</button></form></div></div>`;
+  bindPreviewBar();
+  const f = $('#entry'), inp = $('#codeInput'); inp.focus();
+  f.addEventListener('submit', async e => {
+    e.preventDefault();
+    const code = inp.value.trim().toUpperCase();
+    if (!/^P\d{2}$/.test(code)) { $('#codeErr').textContent = 'P와 숫자 두 자리로 입력해 주세요 (예: P01)'; return; }
+    f.querySelector('button').disabled = true;
+    await openRun(code, true);
+  });
+}
+function previewBar() { return `<div class="banner" style="background:var(--accent-soft)">참여자 화면 미리보기 · 소유자 계정의 연습용 기록입니다 <button type="button" id="backConsole" style="margin-left:8px">콘솔로 돌아가기</button></div>`; }
+function bindPreviewBar() { const b = $('#backConsole'); if (b) b.onclick = () => { stopParticipant(); startWizard(); }; }
+function stopParticipant() { flush(); P.unsubs.forEach(u => { try { u(); } catch (e) {} }); P.unsubs = []; P.runRef = null; P.run = null; P.beats.clear(); P.notes.clear(); P.requests.clear(); P.responses.clear(); P.decisions = []; P.boards = {}; P.bundles.clear(); P.pick.clear(); P.saved.clear(); P.seen.clear(); P.shown.clear(); P.ui = { mode: 'script', openBeatId: null, sceneId: null, sidebar: false, highlight: false, viewport: null }; }
+
+async function openRun(code, fromEntry = false) {
+  P.code = code;
+  P.runRef = P.sessRef.collection('runs').doc(code);
+  let r;
+  try { r = await P.runRef.get(); } catch (e) { r = { exists: false }; }
+  if (!r.exists) {
+    const data = { code, phase: 'practice', uiMode: 'script', openBeatId: null, sceneId: null, sidebar: false, viewport: null, createdAt: now(), taskStartAt: null, lastActiveAt: now() };
+    try { await P.sessRef.set({ activeCode: code, updatedAt: now() }); await P.runRef.set(data); }
+    catch (e) { P.runRef = null; if (fromEntry) renderEntry('저장 권한이 없습니다. 연구자에게 알려 주세요'); else centerMsg('Act & Connect', '저장 권한이 없습니다. 연구자에게 알려 주세요'); return; }
+    P.run = data; log('session_join', { code, resumed: false });
+  } else {
+    P.run = r.data();
+    if (fromEntry) write(P.sessRef, { activeCode: code, updatedAt: now() });
+    log('session_join', { code, resumed: true });
+  }
+  const base = P.runRef;
+  const cols = ['beats', 'notes', 'requests', 'responses', 'decisions'];
+  const snaps = await Promise.all(cols.map(c => base.collection(c).get().catch(() => ({ docs: [] }))));
+  snaps[0].docs.forEach(d => { const b = { id: d.id, ...d.data() }; P.beats.set(d.id, b); P.saved.set(d.id, savedSnap(b)); });
+  snaps[1].docs.forEach(d => P.notes.set(d.id, { id: d.id, ...d.data() }));
+  snaps[2].docs.forEach(d => P.requests.set(d.id, { id: d.id, ...d.data() }));
+  snaps[3].docs.forEach(d => { P.responses.set(d.id, { id: d.id, ...d.data() }); P.seen.add(d.id); P.shown.add(d.id); });
+  P.decisions = snaps[4].docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => a.t - b.t);
+  const bss = await base.collection('bundles').get().catch(() => ({ docs: [] }));
+  bss.docs.forEach(d => { const bu = { id: d.id, ...d.data() }; P.bundles.set(d.id, bu); bundleSaved.set(d.id, bu.note || ''); });
+  for (const k of ['practice', 'task']) { const bs = await base.collection('board').doc(k).get().catch(() => null); if (bs && bs.exists) { const { updatedAt, ...rest } = bs.data(); P.boards[k] = rest; boardSaved.set(k, { ...rest }); } }
+  P.ui.mode = P.run.uiMode === 'board' ? 'board' : P.run.uiMode === 'beat' && P.run.openBeatId && P.beats.has(P.run.openBeatId) ? 'beat' : 'script';
+  P.ui.openBeatId = P.ui.mode === 'beat' ? P.run.openBeatId : null;
+  P.ui.sceneId = P.run.sceneId || null;
+  P.ui.sidebar = !!P.run.sidebar;
+  P.unsubs.push(base.onSnapshot(snap => {
+    if (!snap.exists) return;
+    const d = snap.data();
+    const prevPhase = P.run.phase, prevStart = P.run.taskStartAt;
+    P.run.phase = d.phase; if (d.taskStartAt && !P.run.taskStartAt) P.run.taskStartAt = d.taskStartAt;
+    if (prevPhase !== P.run.phase || prevStart !== P.run.taskStartAt) renderParticipant();
+  }, () => {}));
+  P.unsubs.push(base.collection('responses').onSnapshot(snap => {
+    let added = false;
+    snap.docChanges().forEach(ch => {
+      if (ch.type === 'removed') P.responses.delete(ch.doc.id);
+      else { P.responses.set(ch.doc.id, { id: ch.doc.id, ...ch.doc.data() }); if (!P.seen.has(ch.doc.id)) { P.seen.add(ch.doc.id); added = true; } }
+    });
+    for (const r of P.responses.values()) { const q = P.requests.get(r.requestId); if (q) q.status = 'answered'; }
+    if (added) { if (P.ui.sidebar) markShown(); else P.unseen = true; }
+    if ($('#side')) renderSide();
+    if (P.ui.mode === 'board' && added) rerenderBoardKeep();
+  }, () => {}));
+  renderParticipant();
+}
+function markShown() {
+  for (const r of P.responses.values()) if (!P.shown.has(r.id)) { P.shown.add(r.id); log('ai_response_shown', { responseId: r.id, requestId: r.requestId, cards: (r.cards || []).map(c => c.cardId) }); }
+  P.unseen = false;
+}
+
+function renderParticipant() {
+  if (MODE !== 'participant' || !P.run) return;
+  const sc = curScript();
+  if (!sc || !sc.scenes || !sc.scenes.length) { root.innerHTML = `<div class="wrap">${P.preview ? previewBar() : ''}<div class="center"><div><h1>연구 준비 중입니다</h1></div></div></div>`; bindPreviewBar(); return; }
+  if (P.ui.sceneId && !sceneOf(P.ui.sceneId)) P.ui.sceneId = null;
+  if (P.ui.openBeatId && (!P.beats.has(P.ui.openBeatId) || P.beats.get(P.ui.openBeatId).mode !== curKind())) { P.ui.openBeatId = null; if (P.ui.mode === 'beat') P.ui.mode = 'script'; }
+  root.innerHTML = `<div class="wrap">${P.preview ? previewBar() : ''}<div class="narrow-note">이 화면은 데스크톱(가로 1280px 이상)에 맞춰져 있습니다.</div>
+    <div class="app"><div class="work"><section class="main" id="main" aria-label="대본과 비트"></section><section class="menu" id="menu" aria-label="비트 메뉴"></section></div>
+    <aside class="side" id="side" aria-label="AI 사이드바"></aside></div></div>
+    ${P.run.phase === 'done' ? `<div class="done-over"><div class="box"><h1>수고하셨습니다</h1><p class="muted">입력이 잠겼습니다.</p><p style="margin-top:16px"><button type="button" id="nextP" class="ghost">다음 참여자 코드 입력</button></p></div></div>` : ''}`;
+  bindPreviewBar();
+  if (writeErrorShown) { writeErrorShown = false; }
+  renderMain(); renderMenu(); renderSide();
+  const np = $('#nextP'); if (np) np.onclick = async () => { await flush(); write(P.sessRef, { activeCode: null, updatedAt: now() }); const pv = P.preview; stopParticipant(); P.preview = pv; renderEntry(); };
+  if (P.run.phase === 'done') flush();
+}
+const locked = () => !P.run || P.run.phase === 'done';
+
+/* ---------- main area ---------- */
+function renderMain() {
+  const main = $('#main'); if (!main) return;
+  if (P.ui.mode !== 'beat') hideFmenu();
+  if (P.ui.mode === 'board') renderBoard(main);
+  else if (P.ui.mode === 'beat' && P.ui.openBeatId && P.beats.has(P.ui.openBeatId)) renderBeatDetail(main);
+  else { P.ui.mode = 'script'; renderScript(main); }
+}
+function startBarHtml() { return P.run.phase === 'task' && !P.run.taskStartAt ? `<div class="startbar"><button class="pri" type="button" data-act="startTask">과제 시작</button></div>` : ''; }
+
+function renderScript(main) {
+  const sc = curScript();
+  const scene = sceneOf(P.ui.sceneId) || sc.scenes.find(s => s.isTarget) || sc.scenes[0];
+  P.ui.sceneId = scene.id;
+  const all = sortedBeats();
+  const numOf = new Map(all.map((b, i) => [b.id, i + 1]));
+  const sBeats = all.filter(b => b.sceneId === scene.id);
+  const notes = [...P.notes.values()].filter(n => n.mode === curKind() && n.sceneId === scene.id);
+  const byGap = new Map(); notes.sort((a, b) => a.createdAt - b.createdAt).forEach(n => { const k = n.afterLine; if (!byGap.has(k)) byGap.set(k, []); byGap.get(k).push(n); });
+  const ps = P.pendingStart && P.pendingStart.sceneId === scene.id ? P.pendingStart : null;
+  const target = sc.targetCharacter || '';
+  let lines = gapHtml(0, byGap.get(0));
+  for (const l of scene.lines) {
+    const t = l.text || '';
+    const ranges = [];
+    for (const b of sBeats) {
+      if (l.n < b.range.start.line || l.n > b.range.end.line) continue;
+      const from = l.n === b.range.start.line ? b.range.start.offset : 0;
+      const to = l.n === b.range.end.line ? b.range.end.offset : t.length - 1;
+      ranges.push({ id: b.id, from, to, color: (numOf.get(b.id) - 1) % 6 });
+    }
+    const at = i => ranges.find(r => i >= r.from && i <= r.to) || null;
+    let chars = '', i = 0;
+    while (i < t.length) {
+      const r = at(i); let j = i; let seg = '';
+      while (j < t.length && at(j) === r) {
+        const flag = ps && ps.line === l.n && ps.offset === j;
+        seg += (flag ? '<span class="flagtag" aria-hidden="true">시작</span>' : '') + `<span class="c${flag ? ' flag' : ''}" data-o="${j}">${esc(t[j])}</span>`;
+        j++;
+      }
+      chars += r ? `<span class="bt b${r.color}" data-b="${r.id}">${seg}</span>` : seg;
+      i = j;
+    }
+    const chipsHtml = sBeats.filter(b => b.range.start.line === l.n).map(b => `<span class="bchip k${(numOf.get(b.id) - 1) % 6}" data-b="${b.id}" title="비트 ${numOf.get(b.id)}">B${numOf.get(b.id)}</span>`).join('');
+    const isDir = l.kind === 'direction';
+    const tl = !isDir && P.ui.highlight && target && l.speaker === target;
+    lines += `<div class="ln${isDir ? ' dir' : ''}${tl ? ' tline' : ''}" data-n="${l.n}"><span class="no">${chipsHtml}<span>${l.n}</span></span><div class="lt">${!isDir && l.speaker ? `<span class="spk">${esc(l.speaker)}</span>` : ''}${chars}</div></div>`;
+    lines += gapHtml(l.n, byGap.get(l.n));
+  }
+  const tabs = sc.scenes.map(s => `<button type="button" class="tab${s.id === scene.id ? ' on' : ''}" data-scene="${esc(s.id)}">${esc(s.title)}${s.isTarget ? '<span class="tag">표적</span>' : ''}</button>`).join('');
+  const reb = P.reselect && P.beats.get(P.reselect);
+  main.innerHTML = `${startBarHtml()}${reb ? `<div class="resel" role="status">비트 ${beatNum(reb.id)} 범위 다시 선택 중 <button type="button" data-act="cancelResel">취소</button></div>` : ''}
+    <div class="bar">${tabs}<span class="spacer"></span><button type="button" data-act="openBoard">완성보드</button>${target ? `<label class="tgl"><input type="checkbox" id="hlTarget" ${P.ui.highlight ? 'checked' : ''}> ${esc(target)} 대사 강조</label>` : ''}</div>
+    <div class="script-scroll" id="scriptScroll"><div class="sheet script" data-scene="${esc(scene.id)}"><h2 class="scene-title">${esc(scene.title)}</h2>${lines}</div></div>`;
+  const sc2 = $('#scriptScroll');
+  if (P.scrollTo != null) { const el = sc2.querySelector(`.ln[data-n="${P.scrollTo}"]`); if (el) sc2.scrollTop = el.offsetTop - 80; P.scrollTo = null; }
+  else if (P.scrollMem && P.scrollMem[scene.id] != null) sc2.scrollTop = P.scrollMem[scene.id];
+  sc2.addEventListener('scroll', onScriptScroll, { passive: true });
+  if (P.flashBeat) { const id = P.flashBeat; P.flashBeat = null; $$(`.bt[data-b="${id}"]`).forEach(x => x.classList.add('flash')); setTimeout(() => $$(`.bt[data-b="${id}"]`).forEach(x => x.classList.remove('flash')), 1600); }
+  setTimeout(computeViewport, 300);
+}
+function gapHtml(after, notes) {
+  const list = (notes || []).map(noteHtml).join('');
+  return `<div class="gap${list ? ' has' : ''}" data-after="${after}">${list}<button type="button" class="gap-add" data-act="addNote" data-after="${after}">+ 메모</button></div>`;
+}
+function noteHtml(n) {
+  const first = (n.text || '').split('\n')[0];
+  return `<div class="note${n.kind === 'past' ? ' past' : ''}" data-note="${n.id}">
+    <div class="note-h"><span class="seg" role="group" aria-label="메모 종류"><button type="button" data-act="noteKind" data-kind="think" aria-pressed="${n.kind !== 'past'}">생각</button><button type="button" data-act="noteKind" data-kind="past" aria-pressed="${n.kind === 'past'}">전사·비등장 시간</button></span>
+    <span class="spacer"></span><button type="button" data-act="noteToggle">${n.collapsed ? '펼치기' : '접기'}</button><button type="button" class="danger" data-act="noteDel">삭제</button></div>
+    ${n.collapsed ? `<div class="note-prev" data-act="noteToggle">${esc(first) || '<span class="muted">(빈 메모)</span>'}</div>` : `<textarea id="note-${n.id}" data-note-input="${n.id}" rows="3" aria-label="${KIND_LABEL[n.kind] || '생각'} 메모">${esc(n.text || '')}</textarea>`}</div>`;
+}
+let vpTimer = null;
+function onScriptScroll() {
+  const sc = $('#scriptScroll'); if (!sc) return;
+  P.scrollMem = P.scrollMem || {}; P.scrollMem[P.ui.sceneId] = sc.scrollTop;
+  clearTimeout(vpTimer); vpTimer = setTimeout(computeViewport, 2000);
+}
+function computeViewport() {
+  const sc = $('#scriptScroll'); if (!sc) return;
+  const top = sc.scrollTop, bot = top + sc.clientHeight; let from = null, to = null;
+  for (const el of $$('.ln', sc)) { const y = el.offsetTop, h = el.offsetHeight; if (y + h > top && y < bot) { const n = +el.dataset.n; if (from == null) from = n; to = n; } }
+  const vp = { sceneId: P.ui.sceneId, from, to };
+  const prev = P.ui.viewport;
+  if (!prev || prev.sceneId !== vp.sceneId || prev.from !== vp.from || prev.to !== vp.to) { P.ui.viewport = vp; log('viewport', vp); saveUiSoon(); }
+}
+
+/* hold-to-start, click-to-end */
+let H = null;
+function charPos(c) { const sheet = c.closest('.script'); const ln = c.closest('.ln'); return { sceneId: sheet.dataset.scene, line: +ln.dataset.n, offset: +c.dataset.o }; }
+function ringOn(x, y) { const r = $('#holdRing'); r.style.left = x + 'px'; r.style.top = y + 'px'; r.classList.remove('on'); void r.offsetWidth; r.classList.add('on'); }
+function ringOff() { $('#holdRing').classList.remove('on'); }
+document.addEventListener('mousedown', e => {
+  if (MODE !== 'participant' || locked() || e.button !== 0) return;
+  const c = e.target.closest('.script .c'); if (!c) return;
+  e.preventDefault();
+  const pos = charPos(c);
+  H = { x: e.clientX, y: e.clientY, pos, fired: false, moved: false };
+  H.timer = setTimeout(() => { if (!H) return; H.fired = true; ringOff(); setStart(pos); }, 1000);
+  ringOn(e.clientX, e.clientY);
+});
+document.addEventListener('mousemove', e => { if (H && !H.fired && !H.moved && Math.hypot(e.clientX - H.x, e.clientY - H.y) > 5) { H.moved = true; clearTimeout(H.timer); ringOff(); } });
+document.addEventListener('mouseup', () => {
+  if (!H) return; const h = H; H = null; ringOff();
+  if (h.fired || h.moved) return;
+  clearTimeout(h.timer);
+  if (P.pendingStart) setEnd(h.pos);
+});
+function setStart(pos) {
+  const scene = sceneOf(pos.sceneId);
+  if (!scene || !scene.isTarget) { toast('비트는 표적 장면에서 만들 수 있습니다', lastMouse); return; }
+  P.pendingStart = pos; log('beat_start_set', pos);
+  renderScript($('#main'));
+}
+function overlaps(a1, b1, a2, b2) { return posCmp(a1, b2) <= 0 && posCmp(a2, b1) <= 0; }
+function setEnd(pos) {
+  const st = P.pendingStart;
+  if (pos.sceneId !== st.sceneId) { toast('시작점과 같은 장면에서 끝점을 골라 주세요', lastMouse); return; }
+  if (posCmp(pos, st) === 0) { P.pendingStart = null; log('beat_select_cancel', { reason: 'start_clicked' }); renderScript($('#main')); return; }
+  let a = { line: st.line, offset: st.offset }, b = { line: pos.line, offset: pos.offset };
+  if (posCmp(a, b) > 0) [a, b] = [b, a];
+  const clash = sortedBeats().find(x => x.sceneId === st.sceneId && x.id !== P.reselect && overlaps(a, b, x.range.start, x.range.end));
+  if (clash) { log('beat_overlap_rejected', { start: a, end: b, with: clash.id }); toast(`비트 ${beatNum(clash.id)}와 겹쳐서 저장하지 않았습니다`, lastMouse); return; }
+  log('beat_end_set', { sceneId: st.sceneId, ...b });
+  P.pendingStart = null;
+  if (P.reselect) {
+    const bt = P.beats.get(P.reselect); const before = bt.range;
+    bt.range = { start: a, end: b }; bt.text = beatText(bt); bt.updatedAt = now();
+    write(beatRef(bt.id), beatData(bt)); log('beat_range_change', { beatId: bt.id, before, after: bt.range });
+    P.reselect = null; P.ui.openBeatId = bt.id; setMode('beat'); renderMain(); renderMenu(); renderSide(); return;
+  }
+  const id = rid();
+  const beat = { id, mode: curKind(), sceneId: st.sceneId, range: { start: a, end: b }, text: '', purpose: '', verbs: [], memos: [], attachedCards: [], attachedCardIds: [], createdAt: now(), updatedAt: now() };
+  beat.text = beatText(beat);
+  P.beats.set(id, beat); P.saved.set(id, savedSnap(beat));
+  write(beatRef(id), beatData(beat)); log('beat_create', { beatId: id, sceneId: st.sceneId, range: beat.range });
+  touchActive();
+  renderScript($('#main')); renderMenu(); renderSide();
+}
+
+/* ---------- beat detail ---------- */
+function renderBeatDetail(main) {
+  const b = P.beats.get(P.ui.openBeatId);
+  const scene = sceneOf(b.sceneId);
+  const num = beatNum(b.id), col = (num - 1) % 6;
+  const sents = sentencesOf(b);
+  const groups = verbGroupsOrdered(b);
+  const gIndex = new Map(groups.map((g, i) => [g.id, i]));
+  const keyGroup = new Map(); groups.forEach(g => g.keys.forEach(k => keyGroup.set(k, g.id)));
+  const firstKey = new Map(); groups.forEach(g => { const k = sents.find(s => g.keys.includes(s.key)); if (k) firstKey.set(k.key, g.id); });
+  const memos = b.memos || [];
+  const memoAt = (line, o) => memos.filter(m => posCmp(m.start, { line, offset: o }) <= 0 && posCmp({ line, offset: o }, m.end) <= 0).map(m => m.id);
+  const sel = P.sel;
+  const inSel = (line, o) => sel && posCmp(sel.start, { line, offset: o }) <= 0 && posCmp({ line, offset: o }, sel.end) <= 0;
+  let body = '';
+  for (const l of beatLines(b)) {
+    const isDir = l.kind === 'direction';
+    let inner = '';
+    const ls = sents.filter(s => s.line === l.n);
+    let cursor = l.from;
+    for (const s of ls) {
+      if (s.s > cursor) inner += charsHtml(l, cursor, s.s - 1, memoAt, inSel);
+      const gid = keyGroup.get(s.key);
+      const gi = gid != null ? gIndex.get(gid) % 6 : null;
+      const lab = firstKey.get(s.key) ? `<span class="glab k${gi}" aria-hidden="true">동사${gIndex.get(gid) + 1}</span>` : '';
+      inner += `<span class="sen${gid != null ? ' g' + gi : ''}" data-key="${s.key}"${gid != null ? ` data-g="${gid}"` : ''}>${lab}${charsHtml(l, s.s, s.e, memoAt, inSel)}</span>`;
+      cursor = s.e + 1;
+    }
+    if (cursor <= l.to) inner += charsHtml(l, cursor, l.to, memoAt, inSel);
+    body += `<span class="bd-line${isDir ? ' dir' : ''}" data-l="${l.n}">${!isDir && l.speaker ? `<span class="spk">${esc(l.speaker)}</span>` : ''}${inner}</span>`;
+  }
+  const keySet = new Set(sents.map(s => s.key));
+  const inRange = p => posCmp(b.range.start, p) <= 0 && posCmp(p, b.range.end) <= 0;
+  const gCards = groups.map((g, i) => {
+    const oor = g.keys.some(k => !keySet.has(k));
+    const txt = g.keys.map(k => (sents.find(s => s.key === k) || {}).text).filter(Boolean).join(' ');
+    return `<div class="mcard" data-g="${g.id}"><div class="row"><span class="gname k${i % 6}">동사${i + 1}</span>${oor ? '<span class="oor">일부 범위 밖</span>' : ''}<span class="spacer"></span><button type="button" class="ghost danger" data-act="verbDel" data-g="${g.id}">삭제</button></div>
+      <div class="q">${esc(txt) || '<span class="oor">범위 밖</span>'}</div>
+      <input type="text" id="verb-${g.id}" data-verb="${g.id}" value="${esc(g.verb || '')}" placeholder="상대를 ~하다" aria-label="동사${i + 1} 행동동사"></div>`;
+  }).join('');
+  const mCards = [...memos].sort((x, y) => posCmp(x.start, y.start)).map(m => {
+    const oor = !inRange(m.start) || !inRange(m.end);
+    return `<div class="mcard" data-m="${m.id}"><div class="row"><span class="muted" style="font-size:12px">메모</span>${oor ? '<span class="oor">범위 밖</span>' : ''}<span class="spacer"></span><button type="button" class="ghost danger" data-act="memoDel" data-m="${m.id}">삭제</button></div>
+      <div class="q">${esc(quoteOf(b, m))}</div>
+      <textarea id="memo-${m.id}" data-memo="${m.id}" rows="2" aria-label="메모">${esc(m.text || '')}</textarea></div>`;
+  }).join('');
+  const chips = (b.attachedCards || []).map(c => `<span class="chip" title="채택한 레퍼런스">${esc(c.title)}</span>`).join('');
+  main.innerHTML = `${startBarHtml()}<div class="bd-head"><button type="button" data-act="back">← 대본으로</button>
+    <span class="title"><span class="bchip k${col}">B${num}</span> 비트 ${num}</span><span class="muted mono" style="font-size:12px">${esc(scene ? scene.title : '')} · ${b.range.start.line}–${b.range.end.line}행</span>
+    ${isComplete(b) ? '<span class="done-mark">✓ 완성</span>' : ''}<span class="spacer"></span>
+    <button type="button" data-act="openBoard">완성보드</button><button type="button" data-act="reselect">범위 다시 선택</button><button type="button" class="danger" data-act="delBeat">삭제</button></div>
+    <div class="bd-scroll" id="bdScroll">${chips ? `<div class="chips">${chips}</div>` : ''}
+    <div class="bd-purpose"><label for="purpose-${b.id}">목적</label><input type="text" id="purpose-${b.id}" data-purpose="${b.id}" value="${esc(b.purpose || '')}" placeholder="~하기 위해"></div>
+    <div class="bd"><div class="bd-text" id="bdText">${body}</div>
+    <div class="margin"><section><h3>행동동사</h3>${gCards || '<p class="empty" style="padding:0">본문을 드래그해 문장을 고르세요</p>'}</section><section><h3>메모</h3>${mCards || '<p class="empty" style="padding:0">없음</p>'}</section></div></div></div>`;
+  if (P.bdScroll != null) { $('#bdScroll').scrollTop = P.bdScroll; }
+  $('#bdScroll').addEventListener('scroll', e => { P.bdScroll = e.target.scrollTop; }, { passive: true });
+}
+function charsHtml(l, from, to, memoAt, inSel) {
+  let s = '';
+  for (let o = from; o <= to; o++) {
+    const ms = memoAt(l.n, o);
+    const cls = 'c' + (ms.length ? ' mu' + (ms.length > 1 ? ' mm' : '') + ms.map(id => ' m-' + id).join('') : '') + (inSel(l.n, o) ? ' selx' : '');
+    s += `<span class="${cls}" data-l="${l.n}" data-o="${o}">${esc(l.text[o])}</span>`;
+  }
+  return s;
+}
+function bdPos(c) { return { line: +c.dataset.l, offset: +c.dataset.o }; }
+function selectionToSel() {
+  const box = $('#bdText'); const s = window.getSelection();
+  if (!box || !s || s.rangeCount === 0 || s.isCollapsed) return null;
+  const r = s.getRangeAt(0);
+  if (!box.contains(r.commonAncestorContainer)) return null;
+  const cs = $$('.c', box).filter(x => r.intersectsNode(x));
+  if (!cs.length) return null;
+  return { start: bdPos(cs[0]), end: bdPos(cs[cs.length - 1]) };
+}
+function showFmenu() {
+  const m = $('#fmenu'); const last = $$('#bdText .selx').pop();
+  const rect = last ? last.getBoundingClientRect() : { right: lastMouse.x, bottom: lastMouse.y };
+  m.innerHTML = `<button type="button" data-f="verb">행동동사</button><button type="button" data-f="memo">메모</button><button type="button" data-f="close" aria-label="닫기">✕</button>`;
+  m.hidden = false;
+  m.style.left = Math.min(window.innerWidth - 220, rect.right + 6) + 'px';
+  m.style.top = Math.min(window.innerHeight - 50, rect.bottom + 6) + 'px';
+}
+function hideFmenu() { $('#fmenu').hidden = true; }
+function clearSel() { P.sel = null; hideFmenu(); $$('#bdText .selx').forEach(x => x.classList.remove('selx')); }
+function paintSel() { $$('#bdText .selx').forEach(x => x.classList.remove('selx')); if (!P.sel) return; $$('#bdText .c').forEach(c => { const p = bdPos(c); if (posCmp(P.sel.start, p) <= 0 && posCmp(p, P.sel.end) <= 0) c.classList.add('selx'); }); }
+document.addEventListener('mouseup', e => {
+  if (MODE !== 'participant' || P.ui.mode !== 'beat' || locked()) return;
+  if (e.target.closest('#fmenu')) return;
+  if (!e.target.closest('#bdText')) return;
+  if (e.shiftKey) return;
+  const sel = selectionToSel();
+  if (!sel) { if (!e.target.closest('#fmenu')) clearSel(); return; }
+  P.sel = sel; window.getSelection().removeAllRanges(); paintSel(); showFmenu();
+});
+document.addEventListener('mousedown', e => {
+  if (MODE !== 'participant' || P.ui.mode !== 'beat' || !e.shiftKey || !P.sel) return;
+  const c = e.target.closest('#bdText .c'); if (!c) return;
+  e.preventDefault();
+  const b = P.beats.get(P.ui.openBeatId); const p = bdPos(c);
+  const s = sentencesOf(b).find(x => x.line === p.line && p.offset >= x.s && p.offset <= x.e);
+  const ps = s ? { line: s.line, offset: s.s } : p, pe = s ? { line: s.line, offset: s.e } : p;
+  if (posCmp(ps, P.sel.start) < 0) P.sel.start = ps;
+  if (posCmp(pe, P.sel.end) > 0) P.sel.end = pe;
+  paintSel(); showFmenu();
+});
+$('#fmenu').addEventListener('click', e => {
+  const f = e.target.closest('[data-f]'); if (!f) return;
+  const b = P.beats.get(P.ui.openBeatId); const sel = P.sel;
+  if (f.dataset.f === 'close' || !b || !sel) { clearSel(); return; }
+  if (f.dataset.f === 'verb') {
+    const keys = sentencesOf(b).filter(s => posCmp({ line: s.line, offset: s.s }, sel.end) <= 0 && posCmp(sel.start, { line: s.line, offset: s.e }) <= 0).map(s => s.key);
+    if (!keys.length) { clearSel(); return; }
+    const kept = [];
+    for (const g of b.verbs || []) {
+      const moved = g.keys.filter(k => keys.includes(k));
+      if (moved.length) { log('verb_remove', { beatId: b.id, groupId: g.id, sentences: moved, reason: 'reassigned' }); g.keys = g.keys.filter(k => !keys.includes(k)); }
+      if (g.keys.length) kept.push(g);
+    }
+    const g = { id: rid(), keys, verb: '' };
+    b.verbs = [...kept, g];
+    log('verb_assign', { beatId: b.id, groupId: g.id, sentences: keys });
+    clearSel(); saveBeatNow(b.id); renderBeatDetail($('#main')); renderMenu();
+    const inp = $('#verb-' + g.id); if (inp) inp.focus();
+  } else if (f.dataset.f === 'memo') {
+    const m = { id: rid(), start: sel.start, end: sel.end, text: '', createdAt: now() };
+    b.memos = [...(b.memos || []), m];
+    log('beat_memo_create', { beatId: b.id, memoId: m.id, start: m.start, end: m.end, quote: quoteOf(b, m) });
+    clearSel(); saveBeatNow(b.id); renderBeatDetail($('#main')); renderMenu();
+    const ta = $('#memo-' + m.id); if (ta) ta.focus();
+  }
+});
+
+/* ---------- main area events ---------- */
+document.addEventListener('click', e => {
+  if (MODE !== 'participant') return;
+  const main = $('#main'); if (!main || !main.contains(e.target)) return;
+  const bl = e.target.closest('a[data-blink]'); if (bl) { log('ref_link_open', { cardId: bl.dataset.blink, url: bl.href, from: 'board' }); return; }
+  const t = e.target.closest('[data-act],[data-scene]'); if (!t) return;
+  const act = t.dataset.act;
+  if (t.dataset.scene && !act) {
+    if (P.ui.sceneId !== t.dataset.scene) { P.ui.sceneId = t.dataset.scene; log('scene_open', { sceneId: P.ui.sceneId }); P.ui.viewport = null; saveUiSoon(); renderScript(main); }
+    return;
+  }
+  if (act === 'startTask') {
+    P.run.taskStartAt = now(); write(P.runRef, { taskStartAt: P.run.taskStartAt }, 'update');
+    log('task_start', {}); flush();
+    P.ui = { ...P.ui, mode: 'script', openBeatId: null, sceneId: null, viewport: null }; P.pendingStart = null; P.reselect = null; saveUiSoon(); renderParticipant(); return;
+  }
+  if (act === 'openBoard') { if (P.ui.mode === 'beat' && P.ui.openBeatId) saveBeatNow(P.ui.openBeatId); clearSel(); P.pendingStart = null; P.reselect = null; P.boardScroll = null; setMode('board'); renderMain(); renderMenu(); return; }
+  if (act === 'boardBack') { setMode('script'); renderMain(); renderMenu(); return; }
+  if (act === 'boardBeat') { const id = t.dataset.beat; if (!P.beats.has(id)) return; P.ui.openBeatId = id; P.bdScroll = null; log('beat_open', { beatId: id, from: 'board' }); setMode('beat', { beatId: id }); renderMain(); renderMenu(); return; }
+  if (act === 'boardNote') { P.ui.sceneId = t.dataset.nscene; P.scrollTo = Math.max(1, +t.dataset.nline); setMode('script', { from: 'board' }); renderMain(); renderMenu(); return; }
+  if (act === 'boardExport') { exportBoard(); return; }
+  if (locked()) return;
+  if (act === 'cancelResel') { const id = P.reselect; P.reselect = null; P.pendingStart = null; log('beat_select_cancel', { reason: 'reselect_cancel', beatId: id }); P.ui.openBeatId = id; setMode('beat'); renderMain(); return; }
+  if (act === 'addNote') {
+    const after = +t.dataset.after; const id = rid();
+    const n = { id, mode: curKind(), sceneId: P.ui.sceneId, afterLine: after, kind: 'think', text: '', collapsed: false, createdAt: now(), updatedAt: now() };
+    P.notes.set(id, n); write(noteRef(id), noteData(n)); log('note_create', { noteId: id, sceneId: n.sceneId, afterLine: after, kind: n.kind });
+    renderScript(main); const ta = $('#note-' + id); if (ta) ta.focus(); return;
+  }
+  const noteEl = t.closest('[data-note]');
+  if (noteEl) {
+    const n = P.notes.get(noteEl.dataset.note); if (!n) return;
+    if (act === 'noteKind') { const k = t.dataset.kind; if (n.kind !== k) { const before = n.kind; n.kind = k; n.updatedAt = now(); write(noteRef(n.id), noteData(n)); log('note_edit', { noteId: n.id, field: 'kind', before, after: k }); renderScript(main); } return; }
+    if (act === 'noteToggle') { flushNote(n.id); n.collapsed = !n.collapsed; n.updatedAt = now(); write(noteRef(n.id), noteData(n)); log('note_toggle', { noteId: n.id, collapsed: n.collapsed }); renderScript(main); return; }
+    if (act === 'noteDel') { if (!armConfirm(t)) return; P.notes.delete(n.id); write(noteRef(n.id), DEL); log('note_delete', { noteId: n.id, text: n.text || '' }); renderScript(main); return; }
+  }
+  if (act === 'back') {
+    const b = P.beats.get(P.ui.openBeatId); clearSel();
+    if (b) { P.ui.sceneId = b.sceneId; P.scrollTo = b.range.start.line; P.flashBeat = b.id; }
+    setMode('script', { beatId: b && b.id }); P.ui.openBeatId = null; P.bdScroll = null; renderMain(); renderMenu(); return;
+  }
+  if (act === 'reselect') { const b = P.beats.get(P.ui.openBeatId); clearSel(); P.reselect = b.id; P.pendingStart = null; P.ui.sceneId = b.sceneId; P.scrollTo = b.range.start.line; setMode('script', { reselect: b.id }); renderMain(); return; }
+  if (act === 'delBeat') {
+    if (!armConfirm(t)) return;
+    const b = P.beats.get(P.ui.openBeatId); clearSel();
+    P.beats.delete(b.id); write(beatRef(b.id), DEL); log('beat_delete', { beatId: b.id, snapshot: snapshotOf(b) });
+    P.ui.openBeatId = null; setMode('script'); renderMain(); renderMenu(); renderSide(); return;
+  }
+  if (act === 'verbDel') { const b = P.beats.get(P.ui.openBeatId); const g = (b.verbs || []).find(x => x.id === t.dataset.g); b.verbs = (b.verbs || []).filter(x => x.id !== t.dataset.g); log('verb_remove', { beatId: b.id, groupId: t.dataset.g, verb: g && g.verb, sentences: g && g.keys }); saveBeatNow(b.id); renderBeatDetail(main); renderMenu(); renderSide(); return; }
+  if (act === 'memoDel') { const b = P.beats.get(P.ui.openBeatId); const m = (b.memos || []).find(x => x.id === t.dataset.m); b.memos = (b.memos || []).filter(x => x.id !== t.dataset.m); log('beat_memo_delete', { beatId: b.id, memoId: t.dataset.m, text: m && m.text }); saveBeatNow(b.id); renderBeatDetail(main); renderMenu(); return; }
+});
+function noteData(n) { const { id, ...r } = n; return r; }
+const noteTimers = new Map(), noteSaved = new Map();
+function flushNote(id) { if (noteTimers.has(id)) { clearTimeout(noteTimers.get(id)); noteTimers.delete(id); saveNote(id); } }
+function saveNote(id) {
+  const n = P.notes.get(id); if (!n) return;
+  const before = noteSaved.has(id) ? noteSaved.get(id) : '';
+  if (before !== (n.text || '')) log('note_edit', { noteId: id, field: 'text', before, after: n.text || '' });
+  noteSaved.set(id, n.text || ''); n.updatedAt = now(); write(noteRef(id), noteData(n)); touchActive();
+}
+document.addEventListener('input', e => {
+  if (MODE !== 'participant' || locked()) return;
+  const t = e.target;
+  if (t.dataset.noteInput) { const n = P.notes.get(t.dataset.noteInput); if (!n) return; if (!noteSaved.has(n.id)) noteSaved.set(n.id, n.text || ''); n.text = t.value; clearTimeout(noteTimers.get(n.id)); noteTimers.set(n.id, setTimeout(() => { noteTimers.delete(n.id); saveNote(n.id); }, 800)); return; }
+  if (t.dataset.bundleNote) { const bu = P.bundles.get(t.dataset.bundleNote); if (!bu) return; bu.note = t.value; clearTimeout(bundleTimers.get(bu.id)); bundleTimers.set(bu.id, setTimeout(() => { bundleTimers.delete(bu.id); saveBundle(bu.id); }, 800)); return; }
+  if (t.dataset.board) { const kind = curKind(); const bd = boardOf(kind); if (!boardSaved.has(kind)) boardSaved.set(kind, { ...bd }); bd[t.dataset.board] = t.value; clearTimeout(boardTimers.get(kind)); boardTimers.set(kind, setTimeout(() => saveBoard(kind), 800)); return; }
+  const b = P.beats.get(P.ui.openBeatId); if (!b) return;
+  if (t.dataset.purpose) { b.purpose = t.value; saveBeatSoon(b.id); refreshCompletion(b); return; }
+  if (t.dataset.verb) { const g = (b.verbs || []).find(x => x.id === t.dataset.verb); if (g) { g.verb = t.value; saveBeatSoon(b.id); refreshCompletion(b); } return; }
+  if (t.dataset.memo) { const m = (b.memos || []).find(x => x.id === t.dataset.memo); if (m) { m.text = t.value; saveBeatSoon(b.id); } return; }
+});
+let lastComplete = null;
+function refreshCompletion(b) {
+  const c = isComplete(b);
+  const head = $('.bd-head');
+  if (head) { const mark = head.querySelector('.done-mark'); if (c && !mark) head.querySelector('.spacer').insertAdjacentHTML('beforebegin', '<span class="done-mark">✓ 완성</span>'); if (!c && mark) mark.remove(); }
+  const key = b.id + ':' + c;
+  if (key !== lastComplete) { lastComplete = key; renderMenu(); if ($('#side') && P.ui.sidebar) renderSide(); }
+}
+document.addEventListener('mouseover', e => {
+  if (MODE !== 'participant') return;
+  const b = e.target.closest('[data-b]'); if (b) { const id = b.dataset.b; $$(`[data-b="${id}"]`).forEach(x => x.classList.add('hov')); }
+  const g = e.target.closest('[data-g]'); if (g) $$(`[data-g="${g.dataset.g}"]`).forEach(x => x.classList.add('hov'));
+  const m = e.target.closest('[data-m]'); if (m) { $$('.m-' + m.dataset.m).forEach(x => x.classList.add('hov')); m.classList.add('hov'); }
+  const c = e.target.closest('#bdText .mu'); if (c) { c.className.split(' ').filter(x => x.startsWith('m-')).forEach(cl => { $$('.' + cl).forEach(x => x.classList.add('hov')); const card = $(`.mcard[data-m="${cl.slice(2)}"]`); if (card) card.classList.add('hov'); }); }
+});
+document.addEventListener('mouseout', e => {
+  if (MODE !== 'participant') return;
+  const b = e.target.closest('[data-b]'); if (b && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(`[data-b="${b.dataset.b}"]`))) $$(`[data-b="${b.dataset.b}"]`).forEach(x => x.classList.remove('hov'));
+  const g = e.target.closest('[data-g]'); if (g && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(`[data-g="${g.dataset.g}"]`))) $$(`[data-g="${g.dataset.g}"]`).forEach(x => x.classList.remove('hov'));
+  if (e.target.closest('[data-m],#bdText .mu')) $$('#main .hov').forEach(x => { if (x.matches('.mu,.mcard')) x.classList.remove('hov'); });
+});
+document.addEventListener('change', e => {
+  if (MODE !== 'participant') return;
+  if (e.target.id === 'hlTarget') { P.ui.highlight = e.target.checked; renderScript($('#main')); }
+});
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape' || MODE !== 'participant') return;
+  if (!$('#fmenu').hidden) { clearSel(); return; }
+  if (P.pendingStart) { P.pendingStart = null; log('beat_select_cancel', { reason: 'escape' }); renderScript($('#main')); return; }
+  if (P.reselect) { const id = P.reselect; P.reselect = null; log('beat_select_cancel', { reason: 'reselect_escape', beatId: id }); P.ui.openBeatId = id; setMode('beat'); renderMain(); return; }
+  if (P.refOpen) { P.refOpen = false; renderSide(); }
+});
+
+/* ---------- completion board ---------- */
+const josa = (w, a, b) => { const c = (w || '').charCodeAt((w || '').length - 1); return w + (c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 ? a : b); };
+const BOARD_FIELDS = [
+  ['superObjective', t => `이 장면에서 ${josa(t, '이', '가')} 원하는 것`, '~하기 위해'],
+  ['throughline', () => '관통하는 해석 한 줄', '이 장면의 비트들을 하나로 꿰는 해석'],
+  ['openQuestions', () => '아직 열어 둔 질문', '리허설에서 확인하고 싶은 것']
+];
+function boardOf(kind) { if (!P.boards[kind]) P.boards[kind] = { superObjective: '', throughline: '', openQuestions: '' }; return P.boards[kind]; }
+function boardRef(kind) { return P.runRef.collection('board').doc(kind); }
+function reviewedCards() {
+  const latest = new Map();
+  for (const d of P.decisions) latest.set(d.requestId + '|' + d.cardId, d);
+  const out = [];
+  for (const d of latest.values()) {
+    if (d.decision !== 'accept' && d.decision !== 'hold') continue;
+    const b = d.beatId && P.beats.get(d.beatId);
+    if (b && b.mode !== curKind()) continue;
+    const bu = d.bundleId && P.bundles.get(d.bundleId);
+    if (bu && bu.mode !== curKind()) continue;
+    const resp = [...P.responses.values()].find(r => r.requestId === d.requestId && (r.cards || []).some(c => c.cardId === d.cardId));
+    const c = resp && resp.cards.find(x => x.cardId === d.cardId);
+    if (c) out.push({ ...c, decision: d.decision, reason: d.reason || '', beatId: d.beatId || null, bundleId: d.bundleId || null, t: d.t });
+  }
+  return out.sort((a, b) => a.t - b.t);
+}
+function notePos(n) { const s = sceneOf(n.sceneId); return `${s ? s.title.split('·')[0].trim() : ''} ${n.afterLine === 0 ? '맨 앞' : n.afterLine + '행 뒤'}`; }
+function renderBoard(main) {
+  const sc = curScript(); const kind = curKind(); const bd = boardOf(kind);
+  const target = sc.targetCharacter || '인물';
+  const tScene = sc.scenes.find(s => s.isTarget) || sc.scenes[0];
+  const beats = sortedBeats(); const done = beats.filter(isComplete).length;
+  const notes = [...P.notes.values()].filter(n => n.mode === kind).sort((a, b) => (sceneIndex(a.sceneId) - sceneIndex(b.sceneId)) || a.afterLine - b.afterLine);
+  const refs = reviewedCards(); const acc = refs.filter(r => r.decision === 'accept'); const held = refs.filter(r => r.decision === 'hold');
+  const ro = locked() ? 'disabled' : '';
+  const flow = beats.length ? beats.map((b, i) => {
+    const vs = verbGroupsOrdered(b).filter(g => g.verb && g.verb.trim()).map(g => esc(g.verb));
+    return `<button type="button" class="fl-beat" data-act="boardBeat" data-beat="${b.id}"><span class="top"><span class="bchip k${i % 6}">B${i + 1}</span>${isComplete(b) ? '' : '<span class="missing">미완성</span>'}</span><span class="fl-v">${vs.join(' · ') || '<span class="muted">동사 없음</span>'}</span><span class="fl-p">${esc(b.purpose || '목적 없음')}</span></button>`;
+  }).join('<span class="fl-arrow" aria-hidden="true">→</span>') : '<p class="muted">아직 비트가 없습니다. 대본에서 비트를 만들면 여기에 흐름이 생깁니다.</p>';
+  const rows = beats.map((b, i) => {
+    const sents = new Map(sentencesOf(b).map(s => [s.key, s.text]));
+    const groups = verbGroupsOrdered(b);
+    const myRefs = acc.filter(r => r.beatId === b.id);
+    return `<article class="brow"><div class="left"><span class="bchip k${i % 6}" style="justify-self:start">B${i + 1}</span><span class="mono muted" style="font-size:12px">${esc((sceneOf(b.sceneId) || {}).title || '')}<br>${b.range.start.line}–${b.range.end.line}행</span><button type="button" data-act="boardBeat" data-beat="${b.id}">비트 열기</button></div>
+      <div><p class="purpose">${b.purpose && b.purpose.trim() ? esc(b.purpose) : '<span class="missing">목적이 비어 있습니다</span>'}</p>
+      <div class="lab">행동동사</div>${groups.length ? `<ul>${groups.map(g => `<li><b>${esc(g.verb || '(동사 미입력)')}</b> <q>${esc(g.keys.map(k => sents.get(k)).filter(Boolean).join(' '))}</q></li>`).join('')}</ul>` : '<p class="muted" style="margin:0">없음</p>'}
+      ${(b.memos || []).length ? `<div class="lab">메모</div><ul>${b.memos.map(m => `<li><q>${esc(quoteOf(b, m))}</q> — ${esc(m.text || '(빈 메모)')}</li>`).join('')}</ul>` : ''}
+      ${myRefs.length ? `<div class="lab">채택한 레퍼런스</div><ul>${myRefs.map(r => `<li>${esc(r.title)}${r.reason ? ` <span class="muted">— ${esc(r.reason)}</span>` : ''}</li>`).join('')}</ul>` : ''}</div></article>`;
+  }).join('');
+  const refItem = r => `<li><b>${esc(r.title)}</b> <span class="muted">${esc(srcLabel(r.sourceType))}${r.beatId && beatNum(r.beatId) ? ` · B${beatNum(r.beatId)}` : ''}${r.bundleId && bundleNum(r.bundleId) ? ` · 조합 ${bundleNum(r.bundleId)}` : ''}</span>${r.reason ? `<br><span class="muted">${esc(r.reason)}</span>` : ''}${r.sourceUrl ? ` <a href="${esc(r.sourceUrl)}" target="_blank" rel="noopener" data-blink="${esc(r.cardId)}">출처 ↗</a>` : ''}</li>`;
+  main.innerHTML = `${startBarHtml()}<div class="bd-head"><button type="button" data-act="boardBack">← 대본으로</button><span class="title">완성보드</span><span class="muted" style="font-size:12px">${kind === 'task' ? '과제' : '연습'}</span><span class="spacer"></span>
+      ${downloads ? `<button type="button" data-act="boardExport">해석본 저장 (.md)</button>` : ''}</div>
+    <div class="board-scroll" id="boardScroll"><div class="board">
+      <header><div class="eyebrow">${esc(sc.title || '')} · ${esc(tScene ? tScene.title : '')}</div><h2>${esc(target)} 캐릭터 해석본</h2>
+        <div class="stats">비트 ${beats.length} · 완성 ${done} · 대본 메모 ${notes.length} · 조합 ${sortedBundles().length} · 채택 레퍼런스 ${acc.length}</div></header>
+      <section><h3>장면 전체</h3><div class="bfields">${BOARD_FIELDS.map(([k, lab, ph]) => `<label for="board-${k}">${esc(lab(target))}<textarea id="board-${k}" data-board="${k}" rows="2" placeholder="${esc(ph)}" ${ro}>${esc(bd[k] || '')}</textarea></label>`).join('')}</div></section>
+      <section aria-labelledby="h-tl"><h3 id="h-tl">씬 순서로 보기</h3><p class="hint-s">대본 메모와 비트의 목적·행동동사·메모를 장면과 줄 순서대로 모았습니다. 함께 읽고 싶은 항목을 골라 조합으로 묶으세요.</p>${timelineHtml(ro)}</section>
+      <section aria-labelledby="h-bu"><h3 id="h-bu">조합</h3>${bundlesHtml(ro)}</section>
+      <section><h3>행동의 흐름</h3><div class="flow">${flow}</div></section>
+      <section><h3>비트별 해석</h3>${rows || '<p class="muted">비트 없음</p>'}</section>
+      <section><h3>참고한 레퍼런스</h3>${acc.length ? `<div class="lab">채택</div><ul class="refl">${acc.map(refItem).join('')}</ul>` : '<p class="muted" style="margin:0">채택한 레퍼런스가 없습니다.</p>'}${held.length ? `<div class="lab">보류</div><ul class="refl">${held.map(refItem).join('')}</ul>` : ''}</section>
+    </div></div>`;
+  if (P.boardScroll != null) $('#boardScroll').scrollTop = P.boardScroll;
+  $('#boardScroll').addEventListener('scroll', e => { P.boardScroll = e.target.scrollTop; }, { passive: true });
+}
+function boardMarkdown() {
+  const sc = curScript(); const kind = curKind(); const bd = boardOf(kind);
+  const target = sc.targetCharacter || '인물'; const tScene = sc.scenes.find(s => s.isTarget) || sc.scenes[0];
+  const beats = sortedBeats(); const refs = reviewedCards();
+  const notes = [...P.notes.values()].filter(n => n.mode === kind).sort((a, b) => (sceneIndex(a.sceneId) - sceneIndex(b.sceneId)) || a.afterLine - b.afterLine);
+  const L = [];
+  L.push(`# ${target} 캐릭터 해석본`, '', `${sc.title || ''} · ${tScene ? tScene.title : ''} · ${P.code} · ${new Date().toLocaleDateString('ko-KR')}`, '');
+  L.push('## 장면 전체', '');
+  for (const [k, lab] of BOARD_FIELDS) L.push(`- **${lab(target)}**: ${(bd[k] || '').replace(/\n/g, ' ') || '(비어 있음)'}`);
+  L.push('', '## 행동의 흐름', '', beats.map((b, i) => `B${i + 1} ${verbGroupsOrdered(b).filter(g => g.verb && g.verb.trim()).map(g => g.verb).join(' · ') || '(동사 없음)'}`).join(' → ') || '(비트 없음)', '');
+  L.push('## 비트별 해석', '');
+  beats.forEach((b, i) => {
+    const sents = new Map(sentencesOf(b).map(s => [s.key, s.text]));
+    L.push(`### B${i + 1} · ${(sceneOf(b.sceneId) || {}).title || ''} ${b.range.start.line}–${b.range.end.line}행`, '');
+    L.push(...beatText(b).split('\n').map(x => '> ' + x), '');
+    L.push(`- 목적: ${b.purpose || '(비어 있음)'}`);
+    verbGroupsOrdered(b).forEach(g => L.push(`- 행동동사: **${g.verb || '(미입력)'}** — "${g.keys.map(k => sents.get(k)).filter(Boolean).join(' ')}"`));
+    (b.memos || []).forEach(m => L.push(`- 메모: "${quoteOf(b, m)}" — ${m.text || ''}`));
+    refs.filter(r => r.decision === 'accept' && r.beatId === b.id).forEach(r => L.push(`- 채택 레퍼런스: ${r.title}`));
+    L.push('');
+  });
+  L.push('## 씬 순서로 보기', '');
+  const tl = timelineItems();
+  if (!tl.length) L.push('(없음)');
+  tl.forEach(it => L.push(`- ${itemPos(it)} · ${it.label}: ${it.quote ? `"${it.quote}" — ` : ''}${(it.text || '(비어 있음)').replace(/\n/g, ' ')}`));
+  L.push('', '## 조합', '');
+  const bus = sortedBundles();
+  if (!bus.length) L.push('(없음)', '');
+  bus.forEach(bu => {
+    const sn = bundleSnapshot(bu);
+    L.push(`### 조합 ${sn.number}`, '', `- 해석: ${(sn.note || '(비어 있음)').replace(/\n/g, ' ')}`);
+    sn.items.forEach(it => L.push(`  - ${it.where} · ${it.label}: ${it.quote ? `"${it.quote}" — ` : ''}${(it.text || '').replace(/\n/g, ' ')}`));
+    refs.filter(r => r.decision === 'accept' && r.bundleId === bu.id).forEach(r => L.push(`- 채택 레퍼런스: ${r.title}`));
+    L.push('');
+  });
+  L.push('## 참고한 레퍼런스', '');
+  if (!refs.length) L.push('(없음)');
+  refs.forEach(r => L.push(`- [${r.decision === 'accept' ? '채택' : '보류'}]${r.bundleId && bundleNum(r.bundleId) ? ` (조합 ${bundleNum(r.bundleId)})` : r.beatId && beatNum(r.beatId) ? ` (B${beatNum(r.beatId)})` : ''} ${r.title}${r.sourceType ? ` (${srcLabel(r.sourceType)})` : ''}${r.sourceUrl ? ` ${r.sourceUrl}` : ''}${r.reason ? ` — ${r.reason}` : ''}`));
+  return L.join('\n') + '\n';
+}
+const boardTimers = new Map(), boardSaved = new Map();
+function saveBoard(kind) {
+  const bd = boardOf(kind); const prev = boardSaved.get(kind) || {};
+  for (const [k] of BOARD_FIELDS) if ((prev[k] || '') !== (bd[k] || '')) log('board_edit', { kind, field: k, before: prev[k] || '', after: bd[k] || '' });
+  boardSaved.set(kind, { ...bd });
+  write(boardRef(kind), { ...bd, updatedAt: now() }); touchActive();
+}
+
+
+/* ---------- scene-order timeline & bundles ---------- */
+const TL_KIND = { purpose: '목적', verb: '행동동사', memo: '비트 메모', think: '생각', past: '전사·비등장' };
+function sceneShort(id) { const s = sceneOf(id); return s ? s.title.split('·')[0].trim() : ''; }
+function timelineItems() {
+  const kind = curKind(); const out = [];
+  for (const n of P.notes.values()) {
+    if (n.mode !== kind) continue;
+    out.push({ key: 'note:' + n.id, kind: n.kind === 'past' ? 'past' : 'think', label: KIND_LABEL[n.kind] || '생각', sceneId: n.sceneId, line: n.afterLine, offset: 1e6, sub: 0, quote: '', text: n.text || '', noteId: n.id, afterLine: n.afterLine });
+  }
+  sortedBeats().forEach((b, i) => {
+    const sents = new Map(sentencesOf(b).map(x => [x.key, x]));
+    out.push({ key: 'beat:' + b.id, kind: 'purpose', label: `B${i + 1} 목적`, sceneId: b.sceneId, line: b.range.start.line, offset: b.range.start.offset, sub: -1, quote: '', text: b.purpose || '', beatId: b.id });
+    verbGroupsOrdered(b).forEach(g => {
+      const ss = g.keys.map(k => sents.get(k)).filter(Boolean); if (!ss.length) return;
+      out.push({ key: `verb:${b.id}:${g.id}`, kind: 'verb', label: `B${i + 1} 행동동사`, sceneId: b.sceneId, line: ss[0].line, offset: ss[0].s, sub: 0, quote: ss.map(x => x.text).join(' '), text: g.verb || '', beatId: b.id });
+    });
+    (b.memos || []).forEach(m => out.push({ key: `memo:${b.id}:${m.id}`, kind: 'memo', label: `B${i + 1} 메모`, sceneId: b.sceneId, line: m.start.line, offset: m.start.offset, sub: 0.5, quote: quoteOf(b, m), text: m.text || '', beatId: b.id }));
+  });
+  return out.sort((a, b) => (sceneIndex(a.sceneId) - sceneIndex(b.sceneId)) || (a.line - b.line) || (a.offset - b.offset) || (a.sub - b.sub));
+}
+function itemPos(it) { return `${sceneShort(it.sceneId)} ${it.noteId ? (it.afterLine === 0 ? '맨 앞' : it.afterLine + '행 뒤') : it.line + '행'}`; }
+function sortedBundles() { const k = curKind(); return [...P.bundles.values()].filter(b => b.mode === k).sort((a, b) => a.createdAt - b.createdAt); }
+function bundleNum(id) { const i = sortedBundles().findIndex(b => b.id === id); return i < 0 ? null : i + 1; }
+function bundleRef(id) { return P.runRef.collection('bundles').doc(id); }
+function bundleData(bu) { const { id, ...r } = bu; return r; }
+function bundleSnapshot(bu) {
+  const map = new Map(timelineItems().map(i => [i.key, i]));
+  const sc = curScript();
+  return {
+    number: bundleNum(bu.id), note: bu.note || '', target: (sc && sc.targetCharacter) || '',
+    items: (bu.items || []).map(k => { const it = map.get(k); return it ? { key: k, kind: it.kind, label: it.label, where: itemPos(it), quote: it.quote, text: it.text } : { key: k, kind: 'missing', label: '삭제된 항목', where: '', quote: '', text: '' }; }),
+    board: { ...boardOf(curKind()) }
+  };
+}
+function timelineHtml(ro) {
+  const items = timelineItems();
+  if (!items.length) return '<p class="muted" style="margin:0">아직 메모가 없습니다. 대본 줄 사이 메모나 비트의 목적·행동동사·메모가 여기에 모입니다.</p>';
+  for (const k of [...P.pick]) if (!items.some(i => i.key === k)) P.pick.delete(k);
+  let prevScene = null; let html = '<div class="tl-list" role="group" aria-label="씬 순서 메모">';
+  for (const it of items) {
+    if (it.sceneId !== prevScene) { html += `<div class="tl-scene">${esc((sceneOf(it.sceneId) || {}).title || '')}</div>`; prevScene = it.sceneId; }
+    const on = P.pick.has(it.key);
+    const go = it.noteId ? `data-act="boardNote" data-nscene="${esc(it.sceneId)}" data-nline="${it.afterLine}"` : `data-act="boardBeat" data-beat="${it.beatId}"`;
+    html += `<label class="tl-row k-${it.kind}${on ? ' on' : ''}"><input type="checkbox" data-tlpick="${esc(it.key)}" ${on ? 'checked' : ''} ${ro}><span class="tl-pos">${esc(itemPos(it))}</span><span class="tl-kind">${esc(it.label)}</span><span class="tl-body">${it.quote ? `<q>${esc(it.quote)}</q> ` : ''}${it.text && it.text.trim() ? `<b>${esc(it.text)}</b>` : '<span class="muted">(비어 있음)</span>'}</span><button type="button" ${go}>이동</button></label>`;
+  }
+  return html + `</div><div class="pickbar" id="pickbar">${pickbarHtml(ro)}</div>`;
+}
+function pickbarHtml(ro) {
+  const n = P.pick.size;
+  return `<span class="muted">${n ? `${n}개 선택` : '항목을 골라 조합을 만드세요'}</span><button type="button" data-act="pickClear" ${n ? '' : 'disabled'}>선택 해제</button><button type="button" class="pri" data-act="bundleMake" ${n && !ro ? '' : 'disabled'}>조합 만들기</button>`;
+}
+function bundleStatus(bu) {
+  const qs = [...P.requests.values()].filter(q => q.bundleId === bu.id).sort((a, b) => b.createdAt - a.createdAt);
+  if (!qs.length) return '';
+  const q = qs[0]; const answered = [...P.responses.values()].some(r => r.requestId === q.id);
+  return answered ? '<button type="button" class="ghost bu-st" data-act="openSide">응답 도착 · AI에서 보기</button>' : '<span class="bu-st">자료를 찾는 중…</span>';
+}
+function bundlesHtml(ro) {
+  const bus = sortedBundles();
+  if (!bus.length) return '<p class="muted" style="margin:0">아직 조합이 없습니다. 위 목록에서 항목을 골라 [조합 만들기]를 누르세요.</p>';
+  return '<div class="bu-list">' + bus.map((bu, i) => {
+    const sn = bundleSnapshot(bu);
+    const chips = (bu.attachedCards || []).map(c => `<span class="chip" title="채택한 레퍼런스">${esc(c.title)}</span>`).join('');
+    return `<article class="bundle" data-bundle="${bu.id}"><div class="bu-h"><span class="buchip">조합 ${i + 1}</span><span class="muted" style="font-size:12px">${sn.items.length}개 항목</span><span class="spacer"></span>${bundleStatus(bu)}
+      <button type="button" data-act="bundleRef" ${ro}>이 조합으로 레퍼런스 찾기</button><button type="button" class="danger" data-act="bundleDel" ${ro}>삭제</button></div>
+      <ol class="bu-items">${sn.items.map(it => `<li><span class="tl-kind">${esc(it.label)}</span> <span class="tl-pos">${esc(it.where)}</span> ${it.quote ? `<q>${esc(it.quote)}</q> ` : ''}${esc(it.text || '')}</li>`).join('')}</ol>
+      <label class="bu-note">이 조합에서 읽은 것<textarea id="bundle-${bu.id}" data-bundle-note="${bu.id}" rows="2" placeholder="이 메모들을 이어 보면 …" ${ro}>${esc(bu.note || '')}</textarea></label>
+      ${chips ? `<div class="chips">${chips}</div>` : ''}</article>`;
+  }).join('') + '</div>';
+}
+const bundleTimers = new Map(), bundleSaved = new Map();
+function saveBundle(id) {
+  const bu = P.bundles.get(id); if (!bu) return;
+  const before = bundleSaved.has(id) ? bundleSaved.get(id) : '';
+  if (before !== (bu.note || '')) log('bundle_edit', { bundleId: id, field: 'note', before, after: bu.note || '' });
+  bundleSaved.set(id, bu.note || ''); bu.updatedAt = now(); write(bundleRef(id), bundleData(bu)); touchActive();
+}
+function flushBundle(id) { if (bundleTimers.has(id)) { clearTimeout(bundleTimers.get(id)); bundleTimers.delete(id); saveBundle(id); } }
+function rerenderBoardKeep() { if (P.ui.mode !== 'board') return; const sc = $('#boardScroll'); if (sc) P.boardScroll = sc.scrollTop; renderBoard($('#main')); }
+document.addEventListener('change', e => {
+  if (MODE !== 'participant' || !e.target.dataset.tlpick) return;
+  if (locked()) { e.target.checked = false; return; }
+  const k = e.target.dataset.tlpick;
+  if (e.target.checked) P.pick.add(k); else P.pick.delete(k);
+  e.target.closest('.tl-row').classList.toggle('on', e.target.checked);
+  log('bundle_pick', { key: k, on: e.target.checked });
+  const pb = $('#pickbar'); if (pb) pb.innerHTML = pickbarHtml(locked() ? 'disabled' : '');
+});
+document.addEventListener('click', e => {
+  if (MODE !== 'participant' || P.ui.mode !== 'board') return;
+  const t = e.target.closest('[data-act]'); if (!t || !$('#main').contains(t)) return;
+  const act = t.dataset.act;
+  if (act === 'pickClear') { P.pick.clear(); log('bundle_pick', { cleared: true }); rerenderBoardKeep(); return; }
+  if (act === 'openSide') { if (!P.ui.sidebar) { P.ui.sidebar = true; log('ai_panel_open', { prevEvent: P.lastType, mode: P.ui.mode, from: 'bundle' }); markShown(); saveUiSoon(); renderSide(); } return; }
+  if (locked()) return;
+  if (act === 'bundleMake') {
+    const items = timelineItems().filter(i => P.pick.has(i.key)).map(i => i.key); if (!items.length) return;
+    const id = rid(); const bu = { id, mode: curKind(), items, note: '', attachedCards: [], createdAt: now(), updatedAt: now() };
+    P.bundles.set(id, bu); bundleSaved.set(id, ''); write(bundleRef(id), bundleData(bu));
+    log('bundle_create', { bundleId: id, items, snapshot: bundleSnapshot(bu).items });
+    P.pick.clear(); touchActive(); rerenderBoardKeep(); renderSide();
+    const ta = $('#bundle-' + id); if (ta) { ta.focus(); ta.scrollIntoView({ block: 'center' }); }
+    return;
+  }
+  const card = t.closest('[data-bundle]'); const bu = card && P.bundles.get(card.dataset.bundle); if (!bu) return;
+  if (act === 'bundleDel') { if (!armConfirm(t)) return; flushBundle(bu.id); P.bundles.delete(bu.id); write(bundleRef(bu.id), DEL); log('bundle_delete', { bundleId: bu.id, snapshot: bundleSnapshot(bu) }); rerenderBoardKeep(); renderSide(); return; }
+  if (act === 'bundleRef') {
+    flushBundle(bu.id); clearTimeout(boardTimers.get(curKind())); saveBoard(curKind());
+    if (!P.ui.sidebar) { P.ui.sidebar = true; log('ai_panel_open', { prevEvent: P.lastType, mode: P.ui.mode, from: 'bundle' }); markShown(); saveUiSoon(); }
+    sendRequest('reference', '', null, bu.id); rerenderBoardKeep(); return;
+  }
+});
+async function exportBoard() {
+  if (!downloads) { toast('이 화면에서는 파일 저장을 쓸 수 없습니다'); return; }
+  const kind = curKind(); clearTimeout(boardTimers.get(kind)); saveBoard(kind);
+  try { await downloads.save({ filename: `${P.code}_해석본.md`, data: boardMarkdown() }); log('board_export', { kind }); toast('저장했습니다'); }
+  catch (e) { if (e && e.code && !['cancelled', 'declined', 'dismissed'].includes(e.code)) toast('저장하지 못했습니다'); }
+}
+/* ---------- beat strip ---------- */
+function renderMenu() {
+  const m = $('#menu'); if (!m) return;
+  const list = sortedBeats();
+  const scTitle = id => { const s = sceneOf(id); return s ? s.title : ''; };
+  m.innerHTML = `<div class="menu-h"><span>비트 ${list.length}개</span><span>· 완성 ${list.filter(isComplete).length}</span><span style="flex:1"></span><button type="button" class="ghost" data-menuboard="1" style="font-size:12px;padding:0 8px"${P.ui.mode === 'board' ? ' aria-pressed="true"' : ''}>완성보드 열기</button></div>` + (list.length ? `<div class="menu-row">${list.map((b, i) => {
+    const vc = (b.verbs || []).filter(g => g.verb && g.verb.trim()).length, mc = (b.memos || []).length, ac = (b.attachedCards || []).length;
+    return `<button type="button" class="bcard${P.ui.mode === 'beat' && P.ui.openBeatId === b.id ? ' open' : ''}" data-b="${b.id}" data-open="${b.id}">
+      <span class="top"><span class="bchip k${i % 6}">B${i + 1}</span><span class="rng">${esc(scTitle(b.sceneId))} ${b.range.start.line}–${b.range.end.line}행</span></span>
+      <span class="pur${b.purpose && b.purpose.trim() ? '' : ' none'}">${esc(b.purpose && b.purpose.trim() ? b.purpose : '목적 없음')}</span>
+      <span class="st">동사 ${vc} · 메모 ${mc} · 첨부 ${ac}${isComplete(b) ? ' · <span class="done-mark">✓ 완성</span>' : ''}</span></button>`;
+  }).join('')}</div>` : '<p class="empty">비트가 없습니다</p>');
+}
+document.addEventListener('click', e => {
+  if (MODE !== 'participant') return;
+  if (e.target.closest('#menu [data-menuboard]')) { if (P.ui.mode !== 'board') { if (P.ui.mode === 'beat' && P.ui.openBeatId) saveBeatNow(P.ui.openBeatId); clearSel(); P.pendingStart = null; P.reselect = null; P.boardScroll = null; setMode('board'); renderMain(); renderMenu(); } return; }
+  const c = e.target.closest('#menu [data-open]'); if (!c || locked()) return;
+  const id = c.dataset.open;
+  if (P.ui.mode === 'beat' && P.ui.openBeatId === id) return;
+  if (P.ui.openBeatId && P.ui.openBeatId !== id) saveBeatNow(P.ui.openBeatId);
+  clearSel(); P.pendingStart = null; P.reselect = null; P.bdScroll = null;
+  P.ui.openBeatId = id; log('beat_open', { beatId: id, from: P.ui.mode });
+  setMode('beat', { beatId: id }); renderMain(); renderMenu();
+});
+
+/* ---------- AI sidebar ---------- */
+function renderSide() {
+  const s = $('#side'); if (!s) return;
+  const prevAsk = $('#askText'); const askVal = prevAsk ? prevAsk.value : (P.askDraft || ''); const askFocus = prevAsk && document.activeElement === prevAsk;
+  const th = $('#thread'); const atBottom = !th || th.scrollHeight - th.scrollTop - th.clientHeight < 40; const thTop = th ? th.scrollTop : 0;
+  s.className = 'side' + (P.ui.sidebar ? ' open' : '');
+  if (!P.ui.sidebar) { s.innerHTML = `<button type="button" class="side-tab" data-sact="open" aria-label="AI 사이드바 열기${P.unseen ? ', 새 응답 있음' : ''}">AI${P.unseen ? '<i class="dot"></i>' : ''}</button>`; return; }
+  const done = sortedBeats().filter(isComplete);
+  const bus = sortedBundles().filter(b => (b.items || []).length);
+  const defaultId = P.ui.mode === 'beat' && P.ui.openBeatId && done.some(b => b.id === P.ui.openBeatId) ? P.ui.openBeatId : null;
+  const canRef = done.length + bus.length > 0;
+  const refList = P.refOpen && canRef ? `<div class="reflist" role="menu">${done.map(b => `<button type="button" role="menuitem" data-sact="refFor" data-beat="${b.id}">${b.id === defaultId ? '● ' : ''}비트 ${beatNum(b.id)} · ${esc(b.purpose)}</button>`).join('')}${bus.map((b, i) => `<button type="button" role="menuitem" data-sact="refFor" data-bundle="${b.id}">조합 ${bundleNum(b.id)} · ${esc((b.note || '').trim() || `${b.items.length}개 항목`)}</button>`).join('')}</div>` : '';
+  s.innerHTML = `<div class="side-h"><b>AI</b><button type="button" class="ghost" data-sact="close">접기</button></div>
+    <p class="disclose">일부 응답은 연구진이 미리 준비했습니다.</p>
+    <div class="tools"><div class="two"><button type="button" data-sact="req" data-type="background" ${locked() ? 'disabled' : ''}>시대배경</button><button type="button" data-sact="req" data-type="relation" ${locked() ? 'disabled' : ''}>인물 관계</button></div>
+      <div class="refwrap"><span title="${canRef ? '' : '비트에 목적과 행동동사를 적거나, 완성보드에서 메모를 조합해 주세요.'}" style="display:block"><button type="button" data-sact="ref" ${canRef && !locked() ? '' : 'disabled'} aria-describedby="refHint" aria-expanded="${P.refOpen}">내 해석으로 레퍼런스 찾기</button></span>${refList}
+      ${canRef ? '' : '<div class="hint" id="refHint">비트에 목적과 행동동사를 적거나, 완성보드에서 메모를 조합해 주세요.</div>'}</div>
+      <form class="ask" id="askForm"><label class="hint" for="askText">자유 질문</label><textarea id="askText" rows="2" ${locked() ? 'disabled' : ''}>${esc(askVal)}</textarea><div class="row"><button type="submit" ${locked() ? 'disabled' : ''}>보내기</button></div></form></div>
+    <div class="thread" id="thread" aria-live="polite">${threadHtml()}</div>`;
+  const nt = $('#thread'); nt.scrollTop = atBottom ? nt.scrollHeight : thTop;
+  if (askFocus) { const a = $('#askText'); a.focus(); a.setSelectionRange(a.value.length, a.value.length); }
+}
+function latestDecision(requestId, cardId) { let d = null; for (const x of P.decisions) if (x.requestId === requestId && x.cardId === cardId) d = x; return d; }
+function threadHtml() {
+  const reqs = [...P.requests.values()].sort((a, b) => a.createdAt - b.createdAt);
+  if (!reqs.length) return '<p class="empty" style="padding:0">아직 요청이 없습니다.</p>';
+  const resps = [...P.responses.values()];
+  return reqs.map(q => {
+    const bn = q.beatId ? beatNum(q.beatId) : null;
+    const lab = q.type === 'reference' ? (q.bundleId ? `레퍼런스 · 조합 ${bundleNum(q.bundleId) || (q.bundleSnapshot && q.bundleSnapshot.number) || '?'}` : `레퍼런스 · 비트 ${bn || '?'}`) : REQ_LABEL[q.type] || '';
+    const rs = resps.filter(r => r.requestId === q.id).sort((a, b) => a.sentAt - b.sentAt);
+    const body = rs.length ? rs.map(r => (r.cards || []).map(c => cardHtml(q, r, c)).join('')).join('') : '<div class="waiting">자료를 찾는 중…</div>';
+    return `<div class="req"><div class="req-q"><span class="lab">${esc(lab)}</span>${q.text ? esc(q.text) : ''}</div>${body}</div>`;
+  }).join('');
+}
+function cardHtml(q, r, c) {
+  const isRef = c.type === 'reference';
+  const d = isRef ? latestDecision(q.id, c.cardId) : null;
+  const bn = r.beatId || q.beatId ? beatNum(r.beatId || q.beatId) : null;
+  const pol = cfg.settings && cfg.settings.showPolarity && c.polarity ? `<span class="pill">${c.polarity === 'contrast' ? '대조' : '유사'}</span>` : '';
+  return `<div class="rcard" data-req="${q.id}" data-card="${esc(c.cardId)}"><div class="meta"><span class="pill">${esc(TYPE_LABEL[c.type] || c.type)}</span>${c.sourceType ? `<span class="pill">${esc(srcLabel(c.sourceType))}</span>` : ''}${pol}${isRef && q.bundleId ? `<span>조합 ${bundleNum(q.bundleId) || '?'}과 연결</span>` : isRef && bn ? `<span>비트 ${bn}과 연결</span>` : ''}</div>
+    <h4>${esc(c.title)}</h4>${c.summary ? `<p>${esc(c.summary)}</p>` : ''}${c.quote ? `<blockquote>${esc(c.quote)}</blockquote>` : ''}
+    ${c.sourceUrl ? `<a href="${esc(c.sourceUrl)}" target="_blank" rel="noopener" data-link="1">출처 열기 ↗</a>` : ''}
+    ${isRef ? `<div class="decide" role="group" aria-label="이 레퍼런스를"><button type="button" data-sact="dec" data-dec="accept" aria-pressed="${d && d.decision === 'accept'}">채택</button><button type="button" data-sact="dec" data-dec="hold" aria-pressed="${d && d.decision === 'hold'}">보류</button><button type="button" data-sact="dec" data-dec="reject" aria-pressed="${d && d.decision === 'reject'}">배제</button></div>
+      ${d ? `<input type="text" id="reason-${d.id}" data-reason="${d.id}" value="${esc(d.reason || '')}" placeholder="이유 한 줄 (선택)" aria-label="결정 이유">` : ''}` : ''}</div>`;
+}
+document.addEventListener('click', e => {
+  if (MODE !== 'participant') return;
+  const side = $('#side'); if (!side || !side.contains(e.target)) { if (P.refOpen && !e.target.closest('.refwrap')) { P.refOpen = false; renderSide(); } return; }
+  const link = e.target.closest('a[data-link]');
+  if (link) { const card = link.closest('.rcard'); log('ref_link_open', { requestId: card.dataset.req, cardId: card.dataset.card, url: link.href }); return; }
+  const t = e.target.closest('[data-sact]'); if (!t) return;
+  const a = t.dataset.sact;
+  if (a === 'open') { const prev = P.lastType; P.ui.sidebar = true; log('ai_panel_open', { prevEvent: prev, mode: P.ui.mode }); markShown(); saveUiSoon(); renderSide(); return; }
+  if (a === 'close') { P.askDraft = ($('#askText') || {}).value || ''; P.ui.sidebar = false; P.refOpen = false; log('ai_panel_close', {}); saveUiSoon(); renderSide(); return; }
+  if (locked()) return;
+  if (a === 'req') { sendRequest(t.dataset.type, '', null); return; }
+  if (a === 'ref') { P.refOpen = !P.refOpen; renderSide(); return; }
+  if (a === 'refFor') { P.refOpen = false; if (t.dataset.bundle) { const bu = P.bundles.get(t.dataset.bundle); if (bu) { flushBundle(bu.id); clearTimeout(boardTimers.get(curKind())); saveBoard(curKind()); sendRequest('reference', '', null, bu.id); rerenderBoardKeep(); } return; } const b = P.beats.get(t.dataset.beat); if (b) { saveBeatNow(b.id); sendRequest('reference', '', b.id); } return; }
+  if (a === 'dec') {
+    const card = t.closest('.rcard'); const q = P.requests.get(card.dataset.req); const cardId = card.dataset.card;
+    const resp = [...P.responses.values()].find(r => r.requestId === q.id && (r.cards || []).some(c => c.cardId === cardId));
+    const c = resp && resp.cards.find(x => x.cardId === cardId);
+    const prev = latestDecision(q.id, cardId);
+    if (prev && prev.decision === t.dataset.dec) return;
+    const beatId = q.beatId || (resp && resp.beatId) || null; const bundleId = q.bundleId || (resp && resp.bundleId) || null;
+    const d = { id: rid(), requestId: q.id, responseId: resp ? resp.id : null, cardId, beatId, bundleId, decision: t.dataset.dec, reason: '', t: now() };
+    P.decisions.push(d); const { id, ...dd } = d; write(P.runRef.collection('decisions').doc(d.id), dd);
+    log('ref_decision', { requestId: q.id, cardId, beatId, bundleId, decision: d.decision, previous: prev ? prev.decision : null });
+    const bu = bundleId && P.bundles.get(bundleId);
+    if (bu) {
+      const has = (bu.attachedCards || []).some(x => x.cardId === cardId);
+      if (d.decision === 'accept' && !has) bu.attachedCards = [...(bu.attachedCards || []), { cardId, title: c ? c.title : cardId, requestId: q.id }];
+      if (d.decision !== 'accept' && has) bu.attachedCards = bu.attachedCards.filter(x => x.cardId !== cardId);
+      bu.updatedAt = now(); write(bundleRef(bu.id), bundleData(bu)); rerenderBoardKeep();
+    }
+    const b = beatId && P.beats.get(beatId);
+    if (b) {
+      const has = (b.attachedCards || []).some(x => x.cardId === cardId);
+      if (d.decision === 'accept' && !has) b.attachedCards = [...(b.attachedCards || []), { cardId, title: c ? c.title : cardId, requestId: q.id }];
+      if (d.decision !== 'accept' && has) b.attachedCards = b.attachedCards.filter(x => x.cardId !== cardId);
+      b.attachedCardIds = (b.attachedCards || []).map(x => x.cardId);
+      saveBeatNow(b.id); renderMenu(); if (P.ui.mode === 'beat' && P.ui.openBeatId === b.id) renderBeatDetail($('#main'));
+    }
+    renderSide(); const ri = $('#reason-' + d.id); if (ri) ri.focus();
+  }
+});
+document.addEventListener('submit', e => {
+  if (MODE !== 'participant' || e.target.id !== 'askForm') return;
+  e.preventDefault(); if (locked()) return;
+  const ta = $('#askText'); const text = ta.value.trim(); if (!text) { ta.focus(); return; }
+  P.askDraft = ''; ta.value = ''; sendRequest('free', text, null);
+});
+const reasonTimers = new Map();
+document.addEventListener('input', e => {
+  if (MODE !== 'participant' || !e.target.dataset.reason) return;
+  const d = P.decisions.find(x => x.id === e.target.dataset.reason); if (!d) return;
+  d.reason = e.target.value;
+  clearTimeout(reasonTimers.get(d.id));
+  reasonTimers.set(d.id, setTimeout(() => { const { id, ...dd } = d; write(P.runRef.collection('decisions').doc(id), dd); log('ref_decision', { requestId: d.requestId, cardId: d.cardId, decision: d.decision, reason: d.reason, reasonOnly: true }); }, 900));
+});
+function sendRequest(type, text, beatId, bundleId) {
+  const id = rid(); const b = beatId && P.beats.get(beatId); const bu = bundleId && P.bundles.get(bundleId);
+  const req = { type, text: text || '', beatId: beatId || null, beatSnapshot: b ? snapshotOf(b) : null, bundleId: bundleId || null, bundleSnapshot: bu ? bundleSnapshot(bu) : null, createdAt: now(), status: 'pending', uiMode: P.ui.mode, openBeatId: P.ui.openBeatId || null };
+  P.requests.set(id, { id, ...req });
+  write(P.runRef.collection('requests').doc(id), req);
+  log('ai_request', { requestId: id, type, text: text || '', beatId: beatId || null, bundleId: bundleId || null });
+  flush(); renderSide();
+}
+
+/* =====================================================================
+   WIZARD CONSOLE (owner)
+   ===================================================================== */
+const Z = {
+  runs: new Map(), pending: new Map(), uidUnsubs: new Map(), runUnsubs: new Map(), unsubs: [],
+  sel: null, selUnsubs: [], d: null, pool: new Map(), tab: 'live', selReq: null, picked: new Set(),
+  f: { type: '', branch: '', q: '' }, note: '', sound: false, tl: null, tlFilter: 'all', fresh: new Map(), markerNote: ''
+};
+function runKey(r) { return r.uid + '/' + r.code; }
+function runBase(r) { return db.doc(`sessions/${r.uid}/runs/${r.code}`); }
+function startWizard() {
+  MODE = 'wizard'; flush();
+  root.innerHTML = `<div class="wz"><header class="wz-h"><h1>Act &amp; Connect <span>· 위저드 콘솔</span></h1><span class="spacer"></span>
+    <button type="button" id="zSound" aria-pressed="false">알림음 꺼짐</button><button type="button" id="zPreview">참여자 화면 미리보기</button></header>
+    <section class="panel" aria-label="세션 목록"><div class="panel-h">세션</div><div class="panel-b" id="zList"></div></section>
+    <section class="panel" aria-label="선택한 세션"><div id="zMain" style="display:flex;flex-direction:column;min-height:0;height:100%"></div></section>
+    <section class="panel" aria-label="요청과 응답 풀"><div id="zRight" style="display:flex;flex-direction:column;min-height:0;height:100%"></div></section></div>`;
+  $('#zSound').onclick = e => { Z.sound = !Z.sound; e.target.textContent = Z.sound ? '알림음 켜짐' : '알림음 꺼짐'; e.target.setAttribute('aria-pressed', Z.sound); if (Z.sound) beep(); };
+  $('#zPreview').onclick = () => { stopWizard(); startParticipant(true); };
+  Z.unsubs.push(db.collection('pool').onSnapshot(s => { Z.pool = new Map(s.docs.map(d => [d.id, { id: d.id, ...d.data() }])); renderRight(); }, () => {}));
+  Z.unsubs.push(db.collection('sessions').onSnapshot(s => {
+    const ids = new Set(s.docs.map(d => d.id));
+    for (const id of ids) if (!Z.uidUnsubs.has(id)) Z.uidUnsubs.set(id, db.collection(`sessions/${id}/runs`).onSnapshot(rs => onRuns(id, rs), () => {}));
+    for (const [id, u] of Z.uidUnsubs) if (!ids.has(id)) { u(); Z.uidUnsubs.delete(id); }
+  }, () => {}));
+  if (!cfgListeners.includes(onCfgWizard)) cfgListeners.push(onCfgWizard);
+  renderList(); renderZMain(); renderRight();
+}
+function onCfgWizard() { if (MODE === 'wizard') renderZMain(); }
+function stopWizard() {
+  Z.unsubs.forEach(u => u()); Z.unsubs = [];
+  Z.uidUnsubs.forEach(u => u()); Z.uidUnsubs.clear();
+  Z.runUnsubs.forEach(u => u()); Z.runUnsubs.clear();
+  Z.selUnsubs.forEach(u => u()); Z.selUnsubs = [];
+  Z.runs.clear(); Z.pending.clear(); Z.sel = null; Z.d = null; Z.selReq = null; Z.picked.clear();
+}
+function onRuns(u, snap) {
+  const seen = new Set();
+  snap.docs.forEach(d => {
+    const r = { uid: u, code: d.id, ...d.data() }; const k = runKey(r); seen.add(k); Z.runs.set(k, r);
+    if (!Z.runUnsubs.has(k)) Z.runUnsubs.set(k, runBase(r).collection('requests').where('status', '==', 'pending').onSnapshot(s => {
+      const prev = Z.pending.get(k) || 0; Z.pending.set(k, s.size);
+      if (s.size > prev && Z.sound) beep();
+      renderList();
+    }, () => {}));
+  });
+  for (const k of [...Z.runs.keys()]) if (k.startsWith(u + '/') && !seen.has(k)) { Z.runs.delete(k); const un = Z.runUnsubs.get(k); if (un) { un(); Z.runUnsubs.delete(k); } if (Z.sel === k) selectRun(null); }
+  renderList();
+  if (Z.sel && Z.runs.has(Z.sel)) { renderZHead(); renderLive(); }
+}
+let audioCtx = null;
+function beep() { try { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); const o = audioCtx.createOscillator(), g = audioCtx.createGain(); o.frequency.value = 880; g.gain.value = 0.08; o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime + 0.18); } catch (e) {} }
+function renderList() {
+  const el = $('#zList'); if (!el) return;
+  const runs = [...Z.runs.values()].sort((a, b) => (b.lastActiveAt || 0) - (a.lastActiveAt || 0));
+  el.innerHTML = runs.length ? runs.map(r => { const k = runKey(r); const p = Z.pending.get(k) || 0; return `<button type="button" class="runbtn${Z.sel === k ? ' on' : ''}" data-run="${esc(k)}"><span class="code">${esc(r.code)}</span><span><span class="phase ${r.phase}">${r.phase === 'practice' ? '연습' : r.phase === 'task' ? '과제' : '완료'}</span>${r.uid === uid ? ' <span class="muted" style="font-size:11px">미리보기</span>' : ''}</span>${p ? `<span class="badge" aria-label="대기 요청 ${p}건">${p}</span>` : '<span></span>'}<span class="ago" data-ago="${r.lastActiveAt || 0}">${ago(r.lastActiveAt)}</span></button>`; }).join('') : '<p class="empty" style="padding:0">아직 입장한 참여자가 없습니다. 참여자가 코드를 입력하면 여기에 나타납니다.</p>';
+}
+document.addEventListener('click', e => {
+  if (MODE !== 'wizard') return;
+  const b = e.target.closest('[data-run]'); if (b) { selectRun(b.dataset.run); }
+});
+function selectRun(k) {
+  Z.selUnsubs.forEach(u => u()); Z.selUnsubs = []; Z.sel = k; Z.selReq = null; Z.picked.clear(); Z.tl = null; Z.tab = Z.tab || 'live'; Z.fresh.clear();
+  Z.d = { beats: new Map(), notes: new Map(), requests: new Map(), responses: new Map(), decisions: new Map(), board: new Map(), bundles: new Map(), events: [] };
+  renderList();
+  if (!k) { renderZMain(); renderRight(); return; }
+  const r = Z.runs.get(k); const base = runBase(r);
+  let first = {};
+  for (const c of ['beats', 'notes', 'requests', 'responses', 'decisions', 'board', 'bundles']) {
+    Z.selUnsubs.push(base.collection(c).onSnapshot(s => {
+      s.docChanges().forEach(ch => { if (ch.type === 'removed') Z.d[c].delete(ch.doc.id); else { Z.d[c].set(ch.doc.id, { id: ch.doc.id, ...ch.doc.data() }); if (first[c]) Z.fresh.set(ch.doc.id, now()); } });
+      first[c] = true;
+      if (c === 'requests' || c === 'responses') renderRight();
+      renderLive();
+    }, () => {}));
+  }
+  Z.selUnsubs.push(base.collection('events').orderBy('seq', 'desc').limit(3).onSnapshot(s => { Z.d.events = s.docs.flatMap(d => d.data().events || []).sort((a, b) => b.t - a.t).slice(0, 10); renderLive(); }, () => {}));
+  renderZMain(); renderRight();
+}
+function selRun() { return Z.sel ? Z.runs.get(Z.sel) : null; }
+function renderZMain() {
+  const el = $('#zMain'); if (!el) return;
+  const r = selRun();
+  if (!r) { el.innerHTML = `<div class="panel-h">세션</div><div class="panel-b"><p class="muted">왼쪽에서 세션을 고르세요.</p>${!cfg.script ? '<p class="muted">아직 config/script가 없습니다. 참여자 화면에는 "연구 준비 중입니다"가 보입니다.</p>' : ''}</div>`; return; }
+  el.innerHTML = `<div class="panel-h" id="zHead"></div>
+    <div style="padding:8px 12px;border-bottom:1px solid var(--rule)" class="markers"><span class="muted" style="font-size:12px">관찰 마커</span>${['멈칫', '탐색 전환', 'AI 반영', '기타'].map(m => `<button type="button" data-mark="${m}">${m}</button>`).join('')}<input type="text" id="zMarkNote" placeholder="마커 메모 (선택)" aria-label="마커 메모" value="${esc(Z.markerNote)}"></div>
+    <div style="padding:6px 12px;border-bottom:1px solid var(--rule)" class="chipsf" role="tablist"><button type="button" data-ztab="live" aria-pressed="${Z.tab === 'live'}">실시간</button><button type="button" data-ztab="tl" aria-pressed="${Z.tab === 'tl'}">사후 타임라인</button></div>
+    <div class="panel-b" id="zBody"></div>`;
+  renderZHead(); if (Z.tab === 'tl') renderTimeline(); else renderLive();
+}
+function renderZHead() {
+  const h = $('#zHead'); const r = selRun(); if (!h || !r) return;
+  h.innerHTML = `<b class="mono" style="font-size:15px;color:var(--ink)">${esc(r.code)}</b>
+    <span class="seg" role="group" aria-label="단계">${['practice', 'task', 'done'].map(p => `<button type="button" data-phase="${p}" aria-pressed="${r.phase === p}">${p === 'practice' ? '연습' : p === 'task' ? '과제' : '완료'}</button>`).join('')}</span>
+    <span class="mono">${r.taskStartAt ? `과제 경과 <b data-since="${r.taskStartAt}">${fmtDur(now() - r.taskStartAt)}</b>` : (r.phase === 'task' ? '참여자가 [과제 시작]을 누르기 전' : '')}</span>
+    <span class="spacer" style="flex:1"></span>
+    <button type="button" data-zact="json">JSON 내보내기</button><button type="button" data-zact="csv">이벤트 CSV</button>
+    <button type="button" class="danger" data-zact="del" ${r.exportedAt ? '' : 'disabled title="내보내기를 먼저 하세요"'}>세션 데이터 삭제</button>`;
+}
+function renderLive() {
+  if (Z.tab !== 'live') return;
+  const el = $('#zBody'); const r = selRun(); if (!el || !r || !Z.d) return;
+  const script = r.taskStartAt ? cfg.script : cfg.practice;
+  const kind = r.taskStartAt ? 'task' : 'practice';
+  const sceneT = id => { const s = script && script.scenes.find(x => x.id === id); return s ? s.title : id || '-'; };
+  const sIdx = id => script ? script.scenes.findIndex(x => x.id === id) : 0;
+  const beats = [...Z.d.beats.values()].filter(b => b.mode === kind).sort((a, b) => (sIdx(a.sceneId) - sIdx(b.sceneId)) || posCmp(a.range.start, b.range.start));
+  const num = new Map(beats.map((b, i) => [b.id, i + 1]));
+  const fresh = id => (now() - (Z.fresh.get(id) || 0)) < 4000 ? ' fresh' : '';
+  const vp = r.viewport;
+  const ob = r.openBeatId && num.get(r.openBeatId);
+  const sentText = (b, keys) => keys.map(k => { const [ln, s] = k.split(':').map(Number); const sc = script && script.scenes.find(x => x.id === b.sceneId); const l = sc && sc.lines.find(x => x.n === ln); if (!l) return ''; const t = l.text || ''; let e = t.length - 1; for (let i = s; i < t.length; i++) if ('.?!…。'.includes(t[i])) { e = i; break; } return t.slice(s, e + 1); }).join(' ');
+  el.innerHTML = `<dl class="kv"><div><dt>모드</dt><dd>${r.uiMode === 'board' ? '완성보드' : r.uiMode === 'beat' ? `비트 상세${ob ? ` (B${ob})` : ''}` : '대본'}</dd></div><div><dt>장면</dt><dd>${esc(sceneT(r.sceneId))}</dd></div><div><dt>보는 줄</dt><dd class="mono">${vp && vp.from != null ? `${vp.from}–${vp.to}` : '-'}</dd></div><div><dt>AI 사이드바</dt><dd>${r.sidebar ? '열림' : '닫힘'}</dd></div><div><dt>단계 대본</dt><dd>${kind === 'task' ? '과제' : '연습'}</dd></div><div><dt>마지막 활동</dt><dd data-ago="${r.lastActiveAt || 0}">${ago(r.lastActiveAt)}</dd></div></dl>
+    ${(() => { const bd = Z.d.board.get(kind); if (!bd) return ''; return `<div class="sec">완성보드</div><div class="mbeat${fresh(kind)}"><div><span class="muted">원하는 것</span> ${esc(bd.superObjective || '-')}</div><div><span class="muted">관통 해석</span> ${esc(bd.throughline || '-')}</div><div><span class="muted">열린 질문</span> ${esc(bd.openQuestions || '-')}</div></div>`; })()}
+    <div class="sec">비트 ${beats.length}</div>${beats.map(b => `<div class="mbeat${fresh(b.id)}"><div class="h"><span class="bchip k${(num.get(b.id) - 1) % 6}">B${num.get(b.id)}</span><span class="mono">${esc(sceneT(b.sceneId))} ${b.range.start.line}–${b.range.end.line}행</span>${isComplete(b) ? '<span class="done-mark">✓ 완성</span>' : ''}${(b.attachedCards || []).map(c => `<span class="chip">${esc(c.title)}</span>`).join('')}</div>
+      <div class="p">${b.purpose ? esc(b.purpose) : '<span class="muted">목적 없음</span>'}</div>
+      ${(b.verbs || []).length ? `<ul>${b.verbs.map(g => `<li><b>${esc(g.verb || '(동사 미입력)')}</b> — <span class="muted">${esc(sentText(b, g.keys))}</span></li>`).join('')}</ul>` : ''}
+      ${(b.memos || []).length ? `<ul>${b.memos.map(m => `<li>메모: ${esc(m.text || '(빈 메모)')}</li>`).join('')}</ul>` : ''}</div>`).join('') || '<p class="muted">비트 없음</p>'}
+    <div class="sec">조합 ${[...Z.d.bundles.values()].filter(b => b.mode === kind).length}</div>${[...Z.d.bundles.values()].filter(b => b.mode === kind).sort((a, b) => a.createdAt - b.createdAt).map((bu, i) => `<div class="mbeat${fresh(bu.id)}"><div class="h"><span class="buchip">조합 ${i + 1}</span><span class="muted">${(bu.items || []).length}개 항목</span>${(bu.attachedCards || []).map(c => `<span class="chip">${esc(c.title)}</span>`).join('')}</div><div class="p">${bu.note ? esc(bu.note) : '<span class="muted">해석 없음</span>'}</div><div class="muted" style="font-size:12px">${esc((bu.items || []).map(k => k.split(':')[0] === 'note' ? '대본 메모' : k.split(':')[0] === 'beat' ? '목적' : k.split(':')[0] === 'verb' ? '행동동사' : '비트 메모').join(' · '))}</div></div>`).join('') || '<p class="muted">없음</p>'}
+    <div class="sec">대본 메모</div>${[...Z.d.notes.values()].filter(n => n.mode === kind).sort((a, b) => (sIdx(a.sceneId) - sIdx(b.sceneId)) || a.afterLine - b.afterLine).map(n => `<div class="mnote${n.kind === 'past' ? ' past' : ''}${fresh(n.id)}"><span class="muted">${esc(sceneT(n.sceneId))} ${n.afterLine}행 뒤 · ${KIND_LABEL[n.kind] || ''}</span><br>${esc(n.text || '(빈 메모)')}</div>`).join('') || '<p class="muted">없음</p>'}
+    <div class="sec">최근 이벤트 (최대 10초 지연)</div><div class="evlist">${Z.d.events.map(ev => `<div><span>${new Date(ev.t).toLocaleTimeString('ko-KR', { hour12: false })}</span><span>${esc(evLabel(ev))}</span></div>`).join('') || '<span class="muted">없음</span>'}</div>`;
+}
+const EV = { bundle_pick: '조합 항목 선택', bundle_create: '조합 만들기', bundle_edit: '조합 해석 수정', bundle_delete: '조합 삭제', board_edit: '완성보드 수정', board_export: '해석본 저장', session_join: '입장', task_start: '과제 시작', mode_switch: '모드 전환', scene_open: '장면 이동', viewport: '보는 줄', beat_start_set: '비트 시작점', beat_end_set: '비트 끝점', beat_select_cancel: '비트 선택 취소', beat_overlap_rejected: '겹침 거부', beat_create: '비트 생성', beat_range_change: '범위 변경', beat_delete: '비트 삭제', beat_open: '비트 열기', beat_edit: '목적 수정', verb_assign: '동사 지정', verb_edit: '동사 수정', verb_remove: '동사 해제', beat_memo_create: '비트 메모 생성', beat_memo_edit: '비트 메모 수정', beat_memo_delete: '비트 메모 삭제', note_create: '대본 메모 생성', note_edit: '대본 메모 수정', note_toggle: '대본 메모 접기/펴기', note_delete: '대본 메모 삭제', ai_panel_open: 'AI 열기', ai_panel_close: 'AI 닫기', ai_request: 'AI 요청', ai_response_shown: 'AI 응답 표시', ref_link_open: '출처 열기', ref_decision: '레퍼런스 결정' };
+function evLabel(ev) {
+  const d = ev.data || {}; let x = '';
+  if (ev.type === 'mode_switch') x = `${d.from}→${d.to}`;
+  else if (ev.type === 'viewport') x = `${d.from}–${d.to}`;
+  else if (ev.type === 'ai_request') x = REQ_LABEL[d.type] + (d.text ? ` "${d.text}"` : '');
+  else if (ev.type === 'ref_decision') x = d.decision + (d.reason ? ` · ${d.reason}` : '');
+  else if (ev.type === 'beat_edit' || ev.type === 'verb_edit') x = `"${d.after}"`;
+  else if (ev.type === 'board_edit') x = `${d.field}: "${d.after}"`;
+  else if (ev.type === 'bundle_edit') x = `"${d.after}"`;
+  else if (ev.type === 'bundle_create') x = `${(d.items || []).length}개 항목`;
+  else if (ev.type === 'bundle_pick') x = d.cleared ? '전체 해제' : (d.on ? '선택 ' : '해제 ') + (d.key || '').split(':')[0];
+  else if (ev.type === 'ai_panel_open') x = `직전: ${EV[d.prevEvent] || d.prevEvent || '-'}`;
+  return (EV[ev.type] || ev.type) + (x ? ' · ' + x : '');
+}
+document.addEventListener('click', async e => {
+  if (MODE !== 'wizard') return;
+  const r = selRun();
+  const tab = e.target.closest('[data-ztab]'); if (tab) { Z.tab = tab.dataset.ztab; renderZMain(); return; }
+  const ph = e.target.closest('[data-phase]'); if (ph && r) { if (r.phase !== ph.dataset.phase) { r.phase = ph.dataset.phase; renderZHead(); renderList(); write(runBase(r), { phase: ph.dataset.phase, phaseChangedAt: now() }, 'update'); db.collection('wizardlog').doc(rid()).set({ runKey: runKey(r), uid: r.uid, code: r.code, t: now(), kind: 'phase', label: ph.dataset.phase, note: '' }).catch(() => {}); } return; }
+  const mk = e.target.closest('[data-mark]'); if (mk && r) { const note = ($('#zMarkNote') || {}).value || ''; await db.collection('wizardlog').doc(rid()).set({ runKey: runKey(r), uid: r.uid, code: r.code, t: now(), kind: 'marker', label: mk.dataset.mark, note }).catch(() => {}); Z.markerNote = ''; const i = $('#zMarkNote'); if (i) i.value = ''; toast(`마커 기록: ${mk.dataset.mark}`); return; }
+  const za = e.target.closest('[data-zact]'); if (!za || !r) return;
+  if (za.dataset.zact === 'json' || za.dataset.zact === 'csv') await exportRun(r, za.dataset.zact);
+  if (za.dataset.zact === 'del') { if (!armConfirm(za, '한 번 더 누르면 삭제')) return; await deleteRun(r); }
+  if (za.dataset.zact === 'tlReload') { Z.tl = null; renderTimeline(); }
+});
+document.addEventListener('input', e => { if (MODE === 'wizard' && e.target.id === 'zMarkNote') Z.markerNote = e.target.value; });
+async function gatherRun(r) {
+  const base = runBase(r);
+  const get = async c => (await base.collection(c).get()).docs.map(d => ({ id: d.id, ...d.data() }));
+  const [beats, notes, requests, responses, decisions, evb, board, bundles] = await Promise.all(['beats', 'notes', 'requests', 'responses', 'decisions', 'events', 'board', 'bundles'].map(get));
+  const wl = (await db.collection('wizardlog').where('runKey', '==', runKey(r)).get()).docs.map(d => ({ id: d.id, ...d.data() }));
+  const runDoc = (await base.get()).data();
+  const events = evb.flatMap(b => b.events || []).sort((a, b) => a.t - b.t);
+  return { run: runDoc, board, bundles, beats, notes, requests, responses, decisions, events, eventBatches: evb.map(b => b.id), wizardlog: wl };
+}
+async function exportRun(r, kind) {
+  if (!downloads) { toast('이 화면에서는 파일 저장을 쓸 수 없습니다'); return; }
+  try {
+    const all = await gatherRun(r);
+    let filename, data;
+    if (kind === 'json') { filename = `${r.code}_session.json`; data = JSON.stringify({ exportedAt: new Date().toISOString(), code: r.code, ...all }, null, 2); }
+    else {
+      const t0 = all.run.taskStartAt || null;
+      const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+      const rows = [['time_iso', 'elapsed_from_task_start', 'type', 'label', 'target', 'data'].join(',')].concat(all.events.map(ev => [new Date(ev.t).toISOString(), t0 ? fmtDur(ev.t - t0) : '', ev.type, EV[ev.type] || '', ev.target || '', JSON.stringify(ev.data || {})].map(q).join(',')));
+      filename = `${r.code}_events.csv`; data = '﻿' + rows.join('\n');
+    }
+    await downloads.save({ filename, data });
+    write(runBase(r), { exportedAt: now() }, 'update'); r.exportedAt = now(); renderZHead(); toast('저장했습니다');
+  } catch (e) { if (e && e.code !== 'cancelled' && e.code !== 'declined') toast('저장하지 못했습니다' + (e && e.code ? ` (${e.code})` : '')); }
+}
+async function deleteRun(r) {
+  const base = runBase(r);
+  try {
+    for (const c of ['beats', 'notes', 'requests', 'responses', 'decisions', 'events', 'board', 'bundles']) { const s = await base.collection(c).get(); for (const d of s.docs) await base.collection(c).doc(d.id).delete(); }
+    const wl = await db.collection('wizardlog').where('runKey', '==', runKey(r)).get(); for (const d of wl.docs) await db.collection('wizardlog').doc(d.id).delete();
+    await base.delete();
+    const sd = await db.doc('sessions/' + r.uid).get(); if (sd.exists && sd.data().activeCode === r.code) await db.doc('sessions/' + r.uid).update({ activeCode: null, updatedAt: now() });
+    toast(`${r.code} 데이터를 삭제했습니다`); selectRun(null);
+  } catch (e) { toast('삭제 중 오류가 났습니다' + (e && e.code ? ` (${e.code})` : '')); }
+}
+async function renderTimeline() {
+  const el = $('#zBody'); const r = selRun(); if (!el || !r) return;
+  if (!Z.tl) {
+    el.innerHTML = '<p class="muted">불러오는 중…</p>';
+    try { const all = await gatherRun(r); Z.tl = buildTimeline(all); } catch (e) { el.innerHTML = '<p class="muted">불러오지 못했습니다.</p>'; return; }
+    if (Z.tab !== 'tl' || selRun() !== r) return;
+  }
+  const t0 = r.taskStartAt;
+  const cats = { all: '전체', ai: 'AI', beat: '비트', note: '대본 메모', view: '화면', mk: '마커' };
+  const items = Z.tl.filter(i => Z.tlFilter === 'all' || i.cat === Z.tlFilter);
+  el.innerHTML = `<div class="markers" style="margin-bottom:8px"><div class="chipsf">${Object.entries(cats).map(([k, v]) => `<button type="button" data-tlf="${k}" aria-pressed="${Z.tlFilter === k}">${v}</button>`).join('')}</div><span class="spacer" style="flex:1"></span><button type="button" data-zact="tlReload">새로 불러오기</button></div>
+    <p class="muted" style="font-size:12px;margin:0 0 6px">경과 시간은 [과제 시작] 기준입니다. 음수는 연습 단계입니다.</p>
+    <div class="tl">${items.map(i => `<div class="tl-item ${i.cat === 'ai' ? 'ai' : ''}${i.cat === 'mk' ? ' mk' : ''}${i.type === 'mode_switch' ? ' mode' : ''}"><span class="el">${t0 ? fmtDur(i.t - t0) : new Date(i.t).toLocaleTimeString('ko-KR', { hour12: false })}</span><span class="cat">${esc(i.catLabel)}</span><span><span class="lbl">${esc(i.label)}</span>${i.detail ? `<br><span class="d">${esc(i.detail)}</span>` : ''}</span></div>`).join('') || '<p class="muted">기록 없음</p>'}</div>`;
+}
+function buildTimeline(all) {
+  const catOf = t => t.startsWith('ai_') || t.startsWith('ref_') ? 'ai' : t.startsWith('note_') ? 'note' : (t.startsWith('beat') || t.startsWith('verb') || t.startsWith('board') || t.startsWith('bundle')) ? 'beat' : 'view';
+  const CL = { ai: 'AI', beat: '비트', note: '대본 메모', view: '화면', mk: '마커' };
+  const items = all.events.map(ev => { const c = catOf(ev.type); return { t: ev.t, type: ev.type, cat: c, catLabel: CL[c], label: evLabel(ev), detail: ev.type === 'ai_request' || ev.type === 'ref_decision' || ev.type === 'beat_range_change' ? '' : '' }; });
+  for (const r of all.responses) items.push({ t: r.sentAt, type: 'response', cat: 'ai', catLabel: 'AI', label: '응답 전송', detail: (r.cards || []).map(c => c.title).join(' / ') });
+  for (const w of all.wizardlog) items.push({ t: w.t, type: 'wizard', cat: 'mk', catLabel: w.kind === 'marker' ? '마커' : w.kind === 'choice' ? '위저드 선택' : '단계', label: w.kind === 'phase' ? `단계 → ${w.label}` : w.label, detail: w.note || '' });
+  return items.sort((a, b) => a.t - b.t);
+}
+document.addEventListener('click', e => { if (MODE !== 'wizard') return; const f = e.target.closest('[data-tlf]'); if (f) { Z.tlFilter = f.dataset.tlf; renderTimeline(); } });
+
+/* right column: queue + pool */
+function renderRight() {
+  const el = $('#zRight'); if (!el) return;
+  const r = selRun();
+  if (!r) { el.innerHTML = `<div class="panel-h">요청</div><div class="panel-b"><p class="muted">세션을 고르면 요청이 보입니다.</p><p class="muted">응답 풀 카드 ${Z.pool.size}장</p></div>`; return; }
+  const reqs = [...Z.d.requests.values()].sort((a, b) => ((a.status === 'pending') === (b.status === 'pending') ? b.createdAt - a.createdAt : a.status === 'pending' ? -1 : 1));
+  if (Z.selReq && !Z.d.requests.has(Z.selReq)) Z.selReq = null;
+  if (!Z.selReq) { const p = reqs.find(q => q.status === 'pending'); if (p) selectReq(p, true); }
+  const q = Z.selReq && Z.d.requests.get(Z.selReq);
+  const keep = { q: ($('#pq') || {}).value, note: ($('#zNote') || {}).value, focus: document.activeElement && document.activeElement.id };
+  el.innerHTML = `<div class="panel-h">요청 ${reqs.filter(x => x.status === 'pending').length}건 대기</div>
+    <div class="panel-b" style="flex:0 1 auto;max-height:34%">${reqs.map(x => `<button type="button" class="queue-item${x.id === Z.selReq ? ' on' : ''}${x.status !== 'pending' ? ' answered' : ''}" data-q="${x.id}"><span class="t"><b>${esc(x.type === 'reference' ? (x.bundleSnapshot ? `레퍼런스 · 조합 ${x.bundleSnapshot.number || '?'}` : `레퍼런스 · B${x.beatSnapshot && x.beatSnapshot.number || '?'}`) : REQ_LABEL[x.type])}</b><span class="spacer"></span>${x.status === 'pending' ? `<span class="wait" data-since="${x.createdAt}">${fmtDur(now() - x.createdAt)}</span>` : '<span class="muted">응답함</span>'}</span>${x.text ? `<span>${esc(x.text)}</span>` : ''}</button>`).join('') || '<p class="muted">요청 없음</p>'}</div>
+    <div class="panel-h">응답 풀</div><div class="panel-b">${q ? reqDetail(q) : ''}${poolHtml()}</div>
+    <div class="sendbar"><input type="text" id="zNote" placeholder="선택 사유 한 줄 (참여자에게 보이지 않음)" aria-label="선택 사유"><button type="button" class="pri" id="zSend" ${q && q.status === 'pending' && Z.picked.size ? '' : 'disabled'}>보내기 (${Z.picked.size}장)</button></div>`;
+  if (keep.q != null && $('#pq')) $('#pq').value = keep.q;
+  if (keep.note != null) $('#zNote').value = keep.note;
+  if (keep.focus && $('#' + keep.focus)) { const f = $('#' + keep.focus); f.focus(); if (f.setSelectionRange && f.value) f.setSelectionRange(f.value.length, f.value.length); }
+}
+function selectReq(q, silent) {
+  Z.selReq = q.id; Z.picked.clear();
+  Z.f.type = q.type === 'free' ? '' : q.type; Z.f.branch = '';
+  if (!silent) renderRight();
+}
+function reqText(q) { const s = q.beatSnapshot, u = q.bundleSnapshot; return [q.text, s && s.purpose, s && s.verbs.map(v => v.verb + ' ' + v.sentences.join(' ')).join(' '), s && s.memos.map(m => m.text + ' ' + m.quote).join(' '), u && u.note, u && u.items.map(i => i.text + ' ' + i.quote).join(' '), u && u.board && Object.values(u.board).join(' ')].filter(Boolean).join(' ').toLowerCase(); }
+function branchRank(q) {
+  const txt = reqText(q); const by = new Map();
+  for (const c of Z.pool.values()) { if (c.type !== 'reference' || !c.branch) continue; if (!by.has(c.branch)) by.set(c.branch, new Set()); (c.keywords || []).forEach(k => by.get(c.branch).add(String(k).toLowerCase())); }
+  return [...by.entries()].map(([b, ks]) => ({ b, n: [...ks].reduce((s, k) => s + (k && txt.split(k).length - 1), 0) })).sort((a, b) => b.n - a.n);
+}
+function reqDetail(q) {
+  const s = q.beatSnapshot;
+  const ranks = q.type === 'reference' ? branchRank(q) : [];
+  return `<div class="snap"><b>${esc(REQ_LABEL[q.type])}</b>${q.text ? ` · ${esc(q.text)}` : ''}
+    ${q.bundleSnapshot ? bundleDetail(q.bundleSnapshot) : ''}
+    ${s ? `<div class="p">B${s.number || '?'} 목적: ${esc(s.purpose)}</div>${s.verbs.map(v => `<div>· <b>${esc(v.verb)}</b> <span class="muted">${esc(v.sentences.join(' '))}</span></div>`).join('')}${s.memos.map(m => `<div>· 메모: ${esc(m.text)} <span class="muted">「${esc(m.quote)}」</span></div>`).join('')}` : ''}
+    ${ranks.length ? `<div class="branches" aria-label="분기 후보">${ranks.map((x, i) => `<button type="button" data-branch="${esc(x.b)}" class="${i === 0 && x.n ? 'top' : ''}" aria-pressed="${Z.f.branch === x.b}">${esc(x.b)} ${x.n}</button>`).join('')}</div>` : ''}</div>`;
+}
+function bundleDetail(u) {
+  const BL = { superObjective: '원하는 것', throughline: '관통 해석', openQuestions: '열린 질문' };
+  return `<div class="p">조합 ${u.number || '?'} 해석: ${u.note ? esc(u.note) : '<span class="muted">(비어 있음)</span>'}</div>${u.items.map(i => `<div>· <b>${esc(i.label)}</b> <span class="muted">${esc(i.where)}</span> ${i.quote ? `<span class="muted">「${esc(i.quote)}」</span> ` : ''}${esc(i.text || '')}</div>`).join('')}${u.board ? Object.entries(BL).filter(([k]) => u.board[k]).map(([k, l]) => `<div class="muted">완성보드 ${l}: ${esc(u.board[k])}</div>`).join('') : ''}`;
+}
+function poolHtml() {
+  const types = ['', 'background', 'relation', 'reference', 'fallback'];
+  const branches = [...new Set([...Z.pool.values()].map(c => c.branch).filter(Boolean))];
+  const qv = (Z.f.q || '').toLowerCase();
+  const list = [...Z.pool.values()].filter(c => (!Z.f.type || c.type === Z.f.type || c.type === 'fallback') && (!Z.f.branch || c.branch === Z.f.branch || c.type !== 'reference') && (!qv || [c.title, c.summary, (c.tags || []).join(' ')].join(' ').toLowerCase().includes(qv)))
+    .sort((a, b) => (a.type === 'fallback') - (b.type === 'fallback') || String(a.branch || '').localeCompare(String(b.branch || '')) || String(a.id).localeCompare(String(b.id)));
+  return `<div class="filters"><select id="pt" aria-label="유형">${types.map(t => `<option value="${t}" ${Z.f.type === t ? 'selected' : ''}>${t ? TYPE_LABEL[t] : '모든 유형'}</option>`).join('')}</select>
+    <select id="pb" aria-label="분기"><option value="">모든 분기</option>${branches.map(b => `<option ${Z.f.branch === b ? 'selected' : ''}>${esc(b)}</option>`).join('')}</select>
+    <input type="text" id="pq" placeholder="제목·요약·태그 검색" aria-label="검색" value="${esc(Z.f.q)}"></div>
+    ${list.map(c => `<label class="pcard${Z.picked.has(c.id) ? ' on' : ''}"><input type="checkbox" data-pick="${esc(c.id)}" ${Z.picked.has(c.id) ? 'checked' : ''}><span><span class="meta"><span>${esc(TYPE_LABEL[c.type] || c.type)}</span>${c.branch ? `<span>분기 ${esc(c.branch)}</span>` : ''}${c.polarity ? `<span>${c.polarity === 'contrast' ? '대조' : '유사'}</span>` : ''}${c.sourceType ? `<span>${esc(srcLabel(c.sourceType))}</span>` : ''}</span><h4>${esc(c.title)}</h4><p>${esc(c.summary || '')}</p></span></label>`).join('') || '<p class="muted">조건에 맞는 카드가 없습니다.</p>'}`;
+}
+document.addEventListener('click', e => {
+  if (MODE !== 'wizard') return;
+  const q = e.target.closest('[data-q]'); if (q) { const x = Z.d.requests.get(q.dataset.q); if (x) selectReq(x); return; }
+  const br = e.target.closest('[data-branch]'); if (br) { Z.f.branch = Z.f.branch === br.dataset.branch ? '' : br.dataset.branch; Z.f.type = 'reference'; renderRight(); return; }
+  if (e.target.id === 'zSend') zSend();
+});
+document.addEventListener('change', e => {
+  if (MODE !== 'wizard') return;
+  const t = e.target;
+  if (t.dataset.pick) { if (t.checked) { if (Z.picked.size >= 4) { t.checked = false; toast('최대 4장까지 보낼 수 있습니다'); return; } Z.picked.add(t.dataset.pick); } else Z.picked.delete(t.dataset.pick); renderRight(); return; }
+  if (t.id === 'pt') { Z.f.type = t.value; renderRight(); }
+  if (t.id === 'pb') { Z.f.branch = t.value; renderRight(); }
+});
+let pqTimer = null;
+document.addEventListener('input', e => { if (MODE === 'wizard' && e.target.id === 'pq') { Z.f.q = e.target.value; clearTimeout(pqTimer); pqTimer = setTimeout(renderRight, 300); } });
+document.addEventListener('keydown', e => {
+  if (MODE !== 'wizard' || !Z.selReq) return;
+  const tag = (document.activeElement && document.activeElement.tagName) || '';
+  if (tag === 'INPUT' && document.activeElement.type === 'text' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+  if (/^[1-4]$/.test(e.key)) { const boxes = $$('#zRight [data-pick]'); const b = boxes[+e.key - 1]; if (b) { b.checked = !b.checked; b.dispatchEvent(new Event('change', { bubbles: true })); } }
+  if (e.key === 'Enter' && Z.picked.size) { e.preventDefault(); zSend(); }
+});
+async function zSend() {
+  const r = selRun(); const q = Z.selReq && Z.d.requests.get(Z.selReq); if (!r || !q || !Z.picked.size) return;
+  const cards = [...Z.picked].map(id => Z.pool.get(id)).filter(Boolean).map(c => ({ cardId: c.id, type: c.type, branch: c.branch || '', polarity: c.polarity || '', title: c.title || '', sourceType: c.sourceType || '', summary: c.summary || '', quote: c.quote || '', sourceUrl: c.sourceUrl || '' }));
+  const note = ($('#zNote') || {}).value || '';
+  const btn = $('#zSend'); if (btn) btn.disabled = true;
+  try {
+    const base = runBase(r); const respId = rid();
+    await base.collection('responses').doc(respId).set({ requestId: q.id, beatId: q.beatId || null, bundleId: q.bundleId || null, cards, sentAt: now(), origin: 'pool', waitMs: now() - q.createdAt });
+    await base.collection('requests').doc(q.id).update({ status: 'answered', answeredAt: now(), responseId: respId });
+    await db.collection('wizardlog').doc(rid()).set({ runKey: runKey(r), uid: r.uid, code: r.code, t: now(), kind: 'choice', label: REQ_LABEL[q.type], note, requestId: q.id, cardIds: cards.map(c => c.cardId), branch: Z.f.branch || '' });
+    Z.picked.clear(); Z.selReq = null; toast(`${cards.length}장 보냈습니다`);
+  } catch (e) { toast('보내지 못했습니다' + (e && e.code ? ` (${e.code})` : '')); }
+  renderRight();
+}
+
+/* live counters */
+setInterval(() => {
+  $$('[data-since]').forEach(el => { el.textContent = fmtDur(now() - +el.dataset.since); });
+  $$('[data-ago]').forEach(el => { el.textContent = ago(+el.dataset.ago || 0); });
+  if (MODE === 'wizard' && Z.fresh.size && Z.tab === 'live') { let stale = false; for (const [k, t] of Z.fresh) if (now() - t > 4000) { Z.fresh.delete(k); stale = true; } if (stale) renderLive(); }
+}, 1000);
+
+boot();
+})();
+
+</script>
+
+</body></html>

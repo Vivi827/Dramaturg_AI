@@ -1,0 +1,107 @@
+{
+  "bg-01": {
+    "branch": "",
+    "keywords": [],
+    "polarity": "",
+    "quote": "",
+    "sourceType": "history",
+    "sourceUrl": "",
+    "summary": "샘플 카드입니다. 실제 연구에서는 작품 배경에 맞는 검증된 역사·사회 자료로 교체합니다. 가족이 고인의 방을 언제, 누가 정리하는지는 애도의 속도와 가족 내 역할을 드러내는 단서가 됩니다.",
+    "tags": [
+      "유품",
+      "애도"
+    ],
+    "title": "[샘플] 장례 후 유품 정리의 관습",
+    "type": "background"
+  },
+  "fb-01": {
+    "branch": "",
+    "keywords": [],
+    "polarity": "",
+    "quote": "",
+    "sourceType": "",
+    "sourceUrl": "",
+    "summary": "이 프로토타입에서는 이 질문에 대한 자료를 제공하지 않습니다. 대본 안에서 단서를 찾아보시거나 다른 도구를 이용해 보세요.",
+    "tags": [],
+    "title": "준비된 자료 범위 밖의 질문입니다",
+    "type": "fallback"
+  },
+  "ref-a1": {
+    "branch": "회피",
+    "keywords": [
+      "숨기",
+      "피하",
+      "돌리",
+      "회피",
+      "모른 척",
+      "말하지"
+    ],
+    "polarity": "similar",
+    "quote": "",
+    "sourceType": "play",
+    "sourceUrl": "",
+    "summary": "샘플 카드입니다. 귀향한 인물이 사정을 말하지 않고 일상적인 요구로 화제를 돌리는 장면 사례가 들어갈 자리입니다. 실제 카드는 출처를 확인할 수 있는 희곡·공연으로 채웁니다.",
+    "tags": [
+      "귀향",
+      "침묵"
+    ],
+    "title": "[샘플] 말하지 않음으로 버티는 귀향 장면",
+    "type": "reference"
+  },
+  "ref-a2": {
+    "branch": "회피",
+    "keywords": [
+      "숨기",
+      "피하",
+      "회피",
+      "말하지"
+    ],
+    "polarity": "contrast",
+    "quote": "",
+    "sourceType": "performance",
+    "sourceUrl": "",
+    "summary": "샘플 카드입니다. 같은 상황을 '털어놓기 위해 왔다'로 읽은 공연 사례가 들어갈 자리입니다. 대조 사례는 참여자의 해석과 다른 목적을 보여줍니다.",
+    "tags": [
+      "귀향",
+      "고백"
+    ],
+    "title": "[샘플] 귀향하자마자 고백하는 해석",
+    "type": "reference"
+  },
+  "ref-b1": {
+    "branch": "화해",
+    "keywords": [
+      "화해",
+      "다가가",
+      "풀",
+      "가까워",
+      "숟가락",
+      "돌아"
+    ],
+    "polarity": "similar",
+    "quote": "",
+    "sourceType": "interview",
+    "sourceUrl": "",
+    "summary": "샘플 카드입니다. 배우가 대사보다 소품을 다루는 행동으로 관계 회복을 표현했다고 말한 인터뷰가 들어갈 자리입니다.",
+    "tags": [
+      "소품",
+      "화해"
+    ],
+    "title": "[샘플] 사소한 행동으로 건네는 화해",
+    "type": "reference"
+  },
+  "rel-01": {
+    "branch": "",
+    "keywords": [],
+    "polarity": "",
+    "quote": "",
+    "sourceType": "",
+    "sourceUrl": "",
+    "summary": "샘플 카드입니다. 수진은 어머니에게 퇴사 사실을 숨기고, 민호는 그 비밀을 알고 있습니다(2장 4행). 아빠 방 정리는 수진이 맡겠다고 약속했던 일입니다(1장 8행).",
+    "tags": [
+      "관계"
+    ],
+    "title": "[샘플] 수진 · 어머니 · 민호의 관계",
+    "type": "relation"
+  }
+}
