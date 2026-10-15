@@ -13,15 +13,20 @@ RUNTIME = r'''(function(){
 'use strict';
 var KEY = 'actconnect-demo-v1';
 var SEED = __SEED__;
-var params = new URLSearchParams(location.search);
 var WIZARD_PIN = '0827';
-var OWNER = false;
-if (params.get('role') === 'wizard') {
-  var entered = null; try { entered = sessionStorage.getItem('actconnect-wizard-pin'); } catch (e) {}
-  if (entered !== WIZARD_PIN) entered = window.prompt('연구자 PIN을 입력하세요');
-  if (entered === WIZARD_PIN) { try { sessionStorage.setItem('actconnect-wizard-pin', entered); } catch (e) {} OWNER = true; }
-  else { params.delete('role'); var qs = params.toString(); location.replace(location.pathname + (qs ? '?' + qs : '')); }
+var OWNER = false, me = null;
+var roleResolve; var roleReady = new Promise(function(res){ roleResolve = res; });
+function finishRole(wizard){
+  OWNER = wizard; me = wizard ? 'demo-researcher' : 'demo-participant';
+  var gate = document.getElementById('roleGate'); if (gate) gate.remove();
+  roleResolve();
 }
+window.ActConnectChooseRole = function(wantWizard){
+  if (!wantWizard) { finishRole(false); return; }
+  var ok = false; try { ok = sessionStorage.getItem('actconnect-wizard-pin') === WIZARD_PIN; } catch (e) {}
+  if (!ok) { var entered = window.prompt('연구자 PIN을 입력하세요'); ok = entered === WIZARD_PIN; if (ok) { try { sessionStorage.setItem('actconnect-wizard-pin', entered); } catch (e) {} } }
+  if (ok) finishRole(true); else { alert('PIN이 올바르지 않습니다. 참여자 화면으로 진행합니다.'); finishRole(false); }
+};
 var store = new Map();
 function load(){ store.clear(); var raw = null; try { raw = localStorage.getItem(KEY); } catch (e) {}
   var obj = raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(SEED)); for (var k in obj) store.set(k, obj[k]); if (!raw) save(); }
@@ -58,9 +63,8 @@ function colRef(path, filters, ord, lim){ filters = filters || []; var q = { pat
     subs.add(f); setTimeout(f, 0); return function(){ subs.delete(f); }; } };
   return q; }
 var db = { doc: docRef, collection: function(p){ return colRef(p); } };
-var me = OWNER ? 'demo-researcher' : 'demo-participant';
-var user = { isOwner: async function(){ return OWNER; }, canEdit: async function(){ return true; }, can: async function(){ return null; },
-  id: async function(){ return me; }, me: async function(){ return { id: me, name: '', email: null }; } };
+var user = { isOwner: async function(){ await roleReady; return OWNER; }, canEdit: async function(){ return true; }, can: async function(){ return null; },
+  id: async function(){ await roleReady; return me; }, me: async function(){ await roleReady; return { id: me, name: '', email: null }; } };
 var downloads = { save: async function(r){ var blob = new Blob([r.data], { type: 'text/plain;charset=utf-8' }); var a = document.createElement('a');
   a.href = URL.createObjectURL(blob); a.download = r.filename; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000); return { status: 'saved' }; } };
 window.claude = { use: async function(n){ return ({ db: db, user: user, downloads: downloads })[n] || null; } };
@@ -73,8 +77,16 @@ BAR = '''<style>
 #demoBar .sp{flex:1}#demoBar .muted{color:#a5adb5}
 body #root{height:calc(100% - 30px)}
 @media (max-width:640px){#demoBar .muted{display:none}}
+#roleGate{position:fixed;inset:0;background:#15181b;color:#e6e8ea;display:flex;align-items:center;justify-content:center;z-index:9999;font:14px/1.5 "IBM Plex Sans KR",system-ui,sans-serif;text-align:center}
+#roleGate h2{margin:0 0 8px;font-size:18px;font-weight:600}
+#roleGate p{margin:0 0 20px;color:#a5adb5}
+#roleGate .choices{display:flex;gap:10px;justify-content:center}
+#roleGate button{padding:10px 20px;border-radius:6px;border:1px solid #3a4046;background:#262b30;color:#e6e8ea;cursor:pointer;font:inherit}
+#roleGate button:hover{background:#2f353b}
 </style>
-<div id="demoBar" role="note"><b>Act &amp; Connect 데모</b><span class="muted">claude.ai 없이 이 브라우저에서만 동작합니다. 참여자 화면입니다.</span><span class="sp"></span>
+<div id="roleGate"><div><h2>Act &amp; Connect 데모</h2><p>참여자이신가요, 연구자이신가요?</p>
+<div class="choices"><button type="button" onclick="ActConnectChooseRole(false)">참여자</button><button type="button" onclick="ActConnectChooseRole(true)">연구자</button></div></div></div>
+<div id="demoBar" role="note"><b>Act &amp; Connect 데모</b><span class="muted">claude.ai 없이 이 브라우저에서만 동작합니다.</span><span class="sp"></span>
 <button type="button" onclick="if(confirm('데모 데이터를 모두 지우고 처음 상태로 돌립니다.'))ActConnectDemo.reset()">초기화</button></div>
 '''
 
