@@ -1,35 +1,30 @@
 # Act & Connect — Phase 1 프로토타입
 
-드라마투르기 기반 AI 인터랙티브 시스템을 활용한 **배우의 캐릭터 해석 지원 연구**(이화여자대학교)의 Phase 1 형성 연구용 프로토타입입니다. 배우가 대본에 메모하고, 그 메모를 구조화하고, 구조화한 해석을 근거로 레퍼런스를 얻는 과정에서 AI를 언제·어떻게 찾는지 관찰하기 위해 만들었습니다.
+드라마투르기 기반 AI 인터랙티브 시스템을 활용한 **배우의 캐릭터 해석 지원 연구**(이화여자대학교)의 Phase 1 형성 연구용 프로토타입입니다. 구현 기준은 [SPEC.md](SPEC.md)(v2, 연구계획서 ver1.1과 기획안 0811에 맞춘 명세)입니다.
 
-**▶ 데모:** [`demo/`](demo/) — GitHub Pages를 켜면 `https://vivi827.github.io/Dramaturg_AI/phase1/demo/`에서 바로 써 볼 수 있습니다. 데모는 claude.ai 없이 브라우저 안에서만 동작하며, 데이터는 그 브라우저에만 저장됩니다. 처음 열면 "참여자이신가요, 연구자이신가요?" 화면이 뜹니다. 참여자를 고르면 바로 참여자 화면으로, 연구자를 고르면 PIN(`build_demo.py`의 `WIZARD_PIN`, 기본값 `0827`)을 입력해야 콘솔이 열립니다. 클라이언트 전용 데모라 PIN은 소스에 그대로 들어 있어 참여자가 실수로 들어가는 것만 막아줄 뿐, 진짜 보안은 아닙니다.
+- **RQ1.** 분산된 캐릭터 정보를 하나의 서사적 흐름 안에서 연결하는 상호작용은 배우의 캐릭터 해석을 어떻게 지원하는가?
+- **RQ2.** AI가 배우의 캐릭터 해석을 기반으로 제공하는 드라마투르기적 레퍼런스는 기존 해석을 확장하고 새로운 연기 가능성을 탐색하는 데 어떻게 활용되는가?
 
-![대본 뷰어](docs/images/01-script-viewer.png)
+원칙: **AI는 정보를 분류하거나 해석하지 않습니다.** 참여자가 대본에서 직접 고르고 구조화한 정보를 시스템이 시각화하고, 레퍼런스는 참여자가 구성한 해석을 맥락으로만 제안합니다. 레퍼런스 응답은 실제 LLM이 아니라 연구자가 미리 검증한 카드를 골라 보내는 Wizard-of-Oz 방식입니다.
 
-## Phase 1 최소 기능
+**▶ 데모:** [`demo/`](demo/) — GitHub Pages를 켜면 `https://vivi827.github.io/Dramaturg_AI/phase1/demo/`에서 바로 써 볼 수 있습니다. 데모는 claude.ai 없이 브라우저 안에서만 동작하며, 데이터는 그 브라우저에만 저장됩니다. 처음 열면 "참여자이신가요, 연구자이신가요?" 화면이 뜹니다. 연구자를 고르면 PIN(`build_demo.py`의 `WIZARD_PIN`, 기본값 `0827`)을 입력해야 콘솔이 열립니다. 클라이언트 전용 데모라 PIN은 소스에 그대로 들어 있어 실수로 들어가는 것만 막아 줄 뿐, 보안 장치는 아닙니다. 참여자 탭과 연구자 탭을 같은 브라우저에 나란히 열면 요청과 응답이 서로 반영됩니다.
 
-| 단계 | 기능 | 화면 |
+## 화면
+
+| 화면 1 · 수집·정리 | 화면 2 · 연결·해석 |
+| --- | --- |
+| ![수집·정리](docs/images/01-collect.png) | ![연결·해석](docs/images/02-connect-agent.png) |
+
+| 영역 | 기획안 대응 | 하는 일 |
 | --- | --- | --- |
-| ① 극에 메모 | 대본 줄 사이 메모(생각·전사), 비트 나누기(1초 누르기 → 클릭), 비트별 목적·행동동사·메모 | 대본 뷰어, 비트 상세 |
-| ② 메모 구조화 | 모든 메모를 장면·줄 순서로 한 목록에 모아 보고, 함께 읽을 항목을 골라 **조합**으로 묶고 한 줄 해석 달기 | 완성보드 · 씬 순서로 보기 / 조합 |
-| ③ 레퍼런스 얻기 | 조합(또는 완성된 비트)을 근거로 레퍼런스 요청 → 연구자가 미리 검증한 카드를 골라 응답(Wizard-of-Oz) → 채택·보류·배제 | AI 사이드바, 위저드 콘솔 |
+| **Character Journey** | 와이어프레임 (1) | Backstory와 장면 목록. 장면마다 범주 색 점, 표적 인물 등장 여부. 누르면 Scripts가 그 장면으로 이동 |
+| **Character Notes** | 와이어프레임 (1)·(2) | 참여자가 직접 만든 범주(이름·색·순서)에 모먼트를 정리. 끌어서 범주 이동, 메모 한 줄, [강조]로 한 범주만 보기 |
+| **Scripts** | 와이어프레임 (1) | 모든 장면에서 문구를 드래그 → [모먼트로 저장] → 범주 선택(또는 새 범주). 범주 색 하이라이트. Backstory 칸에서는 대본 밖 정보를 자유 기술 모먼트로 추가 |
+| **Connections** | 와이어프레임 (2) | 모먼트를 캔버스로 끌어 노드로 만들고, [+ 해석]으로 해석 노드(해석명·해석 작성)를 만든 뒤 모먼트 오른쪽 점을 해석 노드로 끌어 연결 |
+| **Dramaturgy Agent** | 와이어프레임 (2) | 연결 모먼트 2개 이상 + 해석 작성이 있는 해석으로 레퍼런스 요청 → "'해석명' 참조됨"과 카드 → 채택·보류·배제와 이유. 채택하면 해석 노드에 "참고: …" 칩 |
+| 위저드 콘솔 | — | 실시간 미러(화면·장면·범주·모먼트·해석), 요청 큐와 해석 스냅샷, 분기 후보, 응답 풀, 관찰 마커, 사후 타임라인, JSON·CSV 내보내기, 세션 삭제 |
 
-| 비트 상세 | 완성보드 · 씬 순서로 보기 |
-| --- | --- |
-| ![비트 상세](docs/images/02-beat-detail.png) | ![씬 순서로 보기](docs/images/03-board-scene-order.png) |
-| **완성보드 · 조합과 조합 레퍼런스** | **위저드 콘솔** |
-| ![조합](docs/images/04-board-bundle.png) | ![위저드 콘솔](docs/images/05-wizard-console.png) |
-
-## 화면 구성
-
-| 화면 | 역할 |
-| --- | --- |
-| 대본 뷰어 (위 75%) | 장면별 대본, 비트 범위 표시, 줄 사이 대본 메모 |
-| 비트 메뉴 (아래 25%) | 만든 비트 카드 목록과 완성 여부, [완성보드 열기] |
-| 비트 상세 | 목적, 문장 드래그로 행동동사 나누기와 메모 |
-| 완성보드 | 씬 순서로 보기, 조합 만들기·조합 레퍼런스 요청, 캐릭터 해석본, .md 저장 |
-| AI 사이드바 (오른쪽 세로) | 시대배경·인물 관계·자유 질문·레퍼런스 요청, 카드 채택/보류/배제 |
-| 위저드 콘솔 (게시자 전용) | 실시간 미러, 요청 큐(대기 시간), 응답 풀·분기 후보, 관찰 마커, 사후 타임라인, 내보내기 |
+![위저드 콘솔](docs/images/03-wizard-console.png)
 
 ## 두 가지 실행 방식
 
@@ -37,16 +32,15 @@
 | --- | --- | --- |
 | 실행 위치 | claude.ai에 게시한 Artifact | GitHub Pages 또는 로컬 브라우저 |
 | 데이터 | Artifact `db` (서버, 참여자별 접근 규칙) | 브라우저 localStorage (이 기기에만) |
-| 참여자·연구자 구분 | 초대받은 계정 / 게시자 계정 | URL (`?role=wizard`) |
-| 용도 | 실제 Phase 1 세션 | 포트폴리오 공유, 사용성 시연, 조작 연습 |
+| 참여자·연구자 구분 | 초대받은 연구용 계정 / 게시자 계정 | 첫 화면에서 선택(연구자는 PIN) |
+| 용도 | 실제 Phase 1 세션 | 시연, 조작 연습, 파일럿 |
 
-`src/act-connect.html`은 claude.ai Artifact의 runtime capabilities(`db`, `user`, `downloads`)에 의존하므로 그대로 열면 "초대받은 계정으로 로그인한 뒤 다시 열어 주세요"만 표시됩니다. `demo/index.html`은 같은 소스에 브라우저용 대체 런타임과 샘플 데이터를 붙인 것으로, `demo/build_demo.py`로 다시 만들 수 있습니다.
+`src/act-connect.html`은 claude.ai Artifact의 runtime capabilities(`db`, `user`, `downloads`)에 의존하므로 그대로 열면 "초대받은 계정으로 로그인한 뒤 다시 열어 주세요"만 표시됩니다. `demo/index.html`은 같은 소스에 브라우저용 대체 런타임과 샘플 데이터를 붙인 것으로, `phase1/` 폴더에서 `python3 demo/build_demo.py .`로 다시 만듭니다. 소스를 고치면 데모도 다시 만들어 함께 커밋합니다.
 
 ### 데모를 GitHub Pages로 공개하기
 
 1. 저장소 **Settings → Pages**에서 Source를 *Deploy from a branch*, Branch를 `main` / `(root)`로 저장합니다.
 2. 1~2분 뒤 `https://vivi827.github.io/Dramaturg_AI/phase1/demo/`가 열립니다.
-3. 소스를 고친 뒤에는 `phase1/` 폴더에서 `python3 demo/build_demo.py .`로 데모를 다시 만들어 함께 커밋합니다.
 
 버전별 변경은 [CHANGELOG.md](CHANGELOG.md)에 적습니다.
 
@@ -54,14 +48,15 @@
 
 | 경로 | 내용 |
 | --- | --- |
+| `SPEC.md` | 설계 명세 v2 (구현 기준) |
 | `src/act-connect.html` | 게시된 Artifact 소스(HTML·CSS·JS 단일 파일). 게시 시 문서 골격이 자동으로 덧붙으므로 `<html>`·`<body>` 태그가 없습니다 |
 | `demo/index.html` | 브라우저 데모(대체 런타임 + 샘플 데이터 포함). `demo/build_demo.py`로 생성 |
 | `docs/images/` | README 화면 캡처(샘플 데이터) |
 | `data/capabilities.json` | 게시할 때 선언하는 capabilities와 db 접근 규칙 |
 | `data/sample-config.json` | `config/script`, `config/practice`, `config/settings` 샘플(지어낸 장면) |
-| `data/sample-pool.json` | `pool/*` 응답 카드 샘플(모두 [샘플] 표시, 출처 없음) |
+| `data/sample-pool.json` | `pool/*` 레퍼런스 카드 샘플(모두 [샘플] 표시, 출처 없음) |
+| `docs/MANUAL.md` | 연구 세션 운영 매뉴얼 |
 | `CHANGELOG.md` | 버전별 변경 기록 |
-| `docs/MANUAL.md` | 참여자 초대, 세션 진행, AI 사이드바 운영, 데이터 처리 매뉴얼 |
 
 ## 다시 게시하기
 
@@ -72,28 +67,36 @@
 ## 데이터 구조 (Artifact db)
 
 ```
-config/script | practice | settings     모두 읽기, 소유자만 쓰기
-pool/{cardId}                           소유자만
-wizardlog/{id}                          소유자만 (선택 사유, 관찰 마커, 단계 변경)
-sessions/{uid}                          {activeCode}
-sessions/{uid}/runs/{code}              {phase, taskStartAt, uiMode, openBeatId, sceneId, viewport, ...}
-  .../beats/{id}      {mode, sceneId, range{start,end}, purpose, verbs[{id,keys[],verb}], memos[{id,start,end,text}], attachedCards[]}
-  .../notes/{id}      {mode, sceneId, afterLine, kind: think|past, text, collapsed}
-  .../requests/{id}   {type: background|relation|free|reference, text, beatId, beatSnapshot, bundleId, bundleSnapshot, status}
-  .../responses/{id}  {requestId, beatId, cards[], sentAt, origin, waitMs}
-  .../decisions/{id}  {requestId, cardId, beatId, decision: accept|hold|reject, reason}
-  .../board/{practice|task}  {superObjective, throughline, openQuestions, updatedAt}
-  .../bundles/{id}    {mode, items["note:id"|"beat:id"|"verb:beat:group"|"memo:beat:memo"], note, attachedCards[]}
-  .../events/{id}     {seq, events[{t, type, target, data}]}   10초 또는 25개 단위 묶음
+config/script | practice | settings         모두 읽기, 소유자만 쓰기
+pool/{cardId}                               소유자만  {type: reference|fallback, title, play, character, sourceType, branch, polarity, summary, quote, sourceUrl, keywords[], tags[]}
+wizardlog/{id}                              소유자만  {runKey, t, kind: marker|choice|phase, label, note}
+sessions/{uid}                              {activeCode}
+sessions/{uid}/runs/{code}                  {phase, taskStartAt, ui{screen, sceneId, highlight, focusCategoryId, selectedInterpId, canvasScroll, viewport}, lastActiveAt}
+  .../categories/{id}   {mode, name, color, order}
+  .../moments/{id}      {mode, source: script|backstory, sceneId, range, quote, text, categoryId, memo, evidence}
+  .../nodes/{momentId}  {mode, x, y}
+  .../interps/{id}      {mode, name, body, x, y, attachedCards[]}
+  .../links/{id}        {mode, momentId, interpId}
+  .../requests/{id}     {mode, interpId, snapshot{name, body, label, moments[]}, status}
+  .../responses/{id}    {requestId, interpId, cards[], sentAt, waitMs}
+  .../decisions/{id}    {requestId, cardId, interpId, decision: accept|hold|reject, reason, t}
+  .../events/{id}       {seq, events[{t, type, target, data}]}   10초 또는 25개 단위 묶음
 ```
 
-참여자(편집자로 초대)는 `config`와 자기 `sessions/{uid}` 아래만 읽고 씁니다. 응답 풀과 위저드 기록은 볼 수 없습니다. 한 계정을 여러 참여자가 쓰는 경우를 위해 기록은 참여자 코드(`runs/{code}`)별로 나뉩니다.
+참여자(연구용 계정)는 `config`와 자기 `sessions/{uid}` 아래만 읽고 씁니다. 응답 풀과 위저드 기록은 볼 수 없습니다. 한 계정을 여러 참여자가 쓰므로 기록은 참여자 코드(`runs/{code}`)별로 나뉩니다. `mode`는 `practice` | `task`입니다.
 
-## 이벤트 유형
+## 이벤트 유형 (연구계획서 수집 항목 대응)
 
-입장·단계 `session_join`, `task_start` · 화면 `mode_switch`, `scene_open`, `viewport` · 비트 만들기 `beat_start_set`, `beat_end_set`, `beat_select_cancel`, `beat_overlap_rejected`, `beat_create`, `beat_range_change`, `beat_delete`, `beat_open` · 비트 편집 `beat_edit`, `verb_assign`, `verb_edit`, `verb_remove`, `beat_memo_create|edit|delete` · 대본 메모 `note_create|edit|toggle|delete` · AI `ai_panel_open`, `ai_panel_close`, `ai_request`, `ai_response_shown`, `ref_link_open`, `ref_decision` · 완성보드 `board_edit`(필드별 before/after), `board_export` · 조합 `bundle_pick`, `bundle_create`, `bundle_edit`, `bundle_delete`
+| 수집 항목 | 이벤트 |
+| --- | --- |
+| 공통 | `session_join`, `task_start`, `screen_switch`, `scene_open`, `backstory_open`, `viewport`, `category_focus` |
+| 모먼트 생성 | `moment_select_open`, `moment_create`, `moment_edit`(memo·text·category, before/after), `moment_delete`, `moment_jump` |
+| 정리(범주) | `category_create`, `category_rename`, `category_recolor`, `category_reorder`, `category_delete` |
+| 연결 | `node_place`, `node_move`, `node_remove`, `link_create`, `link_delete` |
+| 캐릭터 해석 작성 | `interp_create`, `interp_edit`(name·body, before/after), `interp_select`, `interp_delete` |
+| 레퍼런스 탐색·선택 | `ref_request`(해석 스냅샷), `ref_response_shown`(waitMs), `ref_link_open`, `ref_decision`, `ref_chip_open` |
 
 ## 연구 데이터 관련
 
-- 참여자 기록(내보낸 JSON·CSV, 녹화, 전사)은 **이 저장소에 커밋하지 않습니다.** IRB 계획서에 따라 연구책임자의 암호화된 컴퓨터에만 보관합니다.
+- 참여자 기록(내보낸 JSON·CSV, 녹음, 전사)은 **이 저장소에 커밋하지 않습니다.** 연구계획서에 따라 연구책임자의 암호화된 컴퓨터에만 보관합니다.
 - 실제 대본은 저작권(번역본 포함)을 확인한 뒤에만 커밋합니다.
