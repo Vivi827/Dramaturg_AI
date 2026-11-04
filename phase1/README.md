@@ -1,6 +1,6 @@
 # Act & Connect — Phase 1 프로토타입
 
-드라마투르기 기반 AI 인터랙티브 시스템을 활용한 **배우의 캐릭터 해석 지원 연구**(이화여자대학교)의 Phase 1 형성 연구용 프로토타입입니다. 구현 기준은 [SPEC.md](SPEC.md)(v2.1, 연구계획서 ver1.1과 기획안 0811에 맞춘 명세)입니다. v2.1에서 연구진 논의에 따라 정리 단위를 사용자 범주에서 **비트**로 바꿨습니다(SPEC 2.2).
+드라마투르기 기반 AI 인터랙티브 시스템을 활용한 **배우의 캐릭터 해석 지원 연구**(이화여자대학교)의 Phase 1 형성 연구용 프로토타입입니다. 구현 기준은 [SPEC.md](SPEC.md)(v2.2, 연구계획서 ver1.1과 기획안 0811에 맞춘 명세)입니다. v2.1에서 연구진 논의에 따라 정리 단위를 사용자 범주에서 **비트**로 바꿨습니다(SPEC 2.2).
 
 - **RQ1.** 분산된 캐릭터 정보를 하나의 서사적 흐름 안에서 연결하는 상호작용은 배우의 캐릭터 해석을 어떻게 지원하는가?
 - **RQ2.** AI가 배우의 캐릭터 해석을 기반으로 제공하는 드라마투르기적 레퍼런스는 기존 해석을 확장하고 새로운 연기 가능성을 탐색하는 데 어떻게 활용되는가?
@@ -17,10 +17,10 @@
 
 | 영역 | 기획안 대응 | 하는 일 |
 | --- | --- | --- |
-| **Character Journey** | 와이어프레임 (1) | Backstory와 장면 목록. 장면마다 비트 번호 칩(완료하면 채워짐), 표적 인물 등장 여부. 누르면 Scripts가 그 장면으로 이동 |
-| **Beats** | 와이어프레임 (1)·(2)의 Character Notes 자리 | Backstory → 장면별 비트 목록. 비트를 펼쳐 **목적**, 문장 단위 **행동동사**, **메모**를 편집. 목적 + 행동동사가 있으면 ✓ 완료. 범위 다시 선택, 삭제 |
-| **Scripts** | 와이어프레임 (1) | 모든 장면에서 드래그 → 빈 곳이면 [비트로 만들기], 비트 안이면 [행동동사] [메모]. 비트 배경·B 칩, 행동동사 밑줄·동사 라벨, 메모 점선. 선택은 끊김 없는 하이라이트. Backstory 칸에서는 대본 밖 정보를 추가 |
-| **Connections** | 와이어프레임 (2) | 비트를 캔버스로 끌어 노드(목적·인용·행동동사)로 만들고, [+ 해석]으로 해석 노드(해석명·해석 작성)를 만든 뒤 비트 오른쪽 점을 해석 노드로 끌어 연결 |
+| **Character Journey** | 와이어프레임 (1) | 장면 목록. 비트가 있는 장면은 개수와 펼침 아이콘이 있고, 펼치면 비트 번호 칩(완료하면 채워짐). 표적 인물이 없는 장면은 옅게. 누르면 Scripts가 그 장면으로 이동 |
+| **Beats** | 와이어프레임 (1)·(2)의 Character Notes 자리 | Backstory → 장면별 비트 목록. 접힌 카드는 B 칩과 목적(없으면 대사) 한 줄. 펼쳐서 **목적**, 문장 단위 **행동동사**, **메모** 편집. 목적 + 행동동사가 있으면 칩이 채워짐(완료) |
+| **Scripts** | 와이어프레임 (1) | 모든 장면에서 드래그 → 빈 곳이면 [비트로 만들기], 비트 안이면 [행동동사] [메모], 어디서든 [Backstory](근거 = 드래그한 대사). 비트 배경·B 칩, 행동동사 밑줄·동사 라벨, 메모 점선, Backstory 근거 줄 옆 점 |
+| **Connections** | 와이어프레임 (2) | 비트를 캔버스로 끌어 노드(B 칩·목적·대사)로 만들고, [+ 해석]으로 해석 노드(해석명·해석 작성)를 만든 뒤 비트 오른쪽 점을 해석 노드로 끌어 연결 |
 | **Dramaturgy Agent** | 와이어프레임 (2) | 연결 비트 2개 이상 + 해석 작성이 있는 해석으로 레퍼런스 요청 → "'해석명' 참조됨"과 카드 → 채택·보류·배제와 이유. 채택하면 해석 노드에 "참고: …" 칩 |
 | 위저드 콘솔 | — | 실시간 미러(화면·장면·비트의 목적·행동동사·메모·해석), 요청 큐와 해석 스냅샷, 분기 후보, 응답 풀, 관찰 마커, 사후 타임라인, JSON·CSV 내보내기, 세션 삭제 |
 
@@ -48,7 +48,7 @@
 
 | 경로 | 내용 |
 | --- | --- |
-| `SPEC.md` | 설계 명세 v2.1 (구현 기준) |
+| `SPEC.md` | 설계 명세 v2.2 (구현 기준) |
 | `src/act-connect.html` | 게시된 Artifact 소스(HTML·CSS·JS 단일 파일). 게시 시 문서 골격이 자동으로 덧붙으므로 `<html>`·`<body>` 태그가 없습니다 |
 | `demo/index.html` | 브라우저 데모(대체 런타임 + 샘플 데이터 포함). `demo/build_demo.py`로 생성 |
 | `docs/images/` | README 화면 캡처(샘플 데이터) |
@@ -88,8 +88,8 @@ sessions/{uid}/runs/{code}                  {phase, taskStartAt, ui{screen, scen
 
 | 수집 항목 | 이벤트 |
 | --- | --- |
-| 공통 | `session_join`, `task_start`, `screen_switch`, `scene_open`, `backstory_open`, `viewport` |
-| 모먼트 생성 (= 비트·Backstory) | `beat_select_open`, `beat_create`, `beat_overlap_rejected`, `beat_open`, `beat_edit`(목적, before/after), `beat_reselect_start`, `beat_range_change`, `beat_select_cancel`, `beat_delete`, `backstory_create`, `backstory_edit`, `backstory_delete` |
+| 공통 | `session_join`, `task_start`, `screen_switch`, `scene_open`, `journey_toggle`, `viewport` |
+| 모먼트 생성 (= 비트·Backstory) | `beat_select_open`, `beat_create`, `beat_overlap_rejected`, `beat_open`, `beat_edit`(목적, before/after), `beat_reselect_start`, `beat_range_change`, `beat_select_cancel`, `beat_delete`, `backstory_select_open`, `backstory_compose_open`, `backstory_create`, `backstory_edit`, `backstory_delete`, `backstory_evidence_open` |
 | 비트 안 해석 | `beat_inner_select_open`, `verb_assign`, `verb_edit`(before/after), `verb_remove`, `beat_memo_create`, `beat_memo_edit`(before/after), `beat_memo_delete` |
 | 연결 | `node_place`, `node_move`, `node_remove`, `link_create`, `link_delete` |
 | 캐릭터 해석 작성 | `interp_create`, `interp_edit`(name·body, before/after), `interp_select`, `interp_delete` |

@@ -122,7 +122,14 @@ button.danger{color:var(--danger)}
 button.armed{background:var(--danger);color:#fff;border-color:var(--danger)}
 button.sm{font-size:12px;padding:1px 8px}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-input[type=text],textarea,select{background:var(--sheet);border:1px solid var(--rule);border-radius:6px;padding:6px 8px;width:100%}
+input[type=text],textarea,select{background-color:var(--sheet);border:1px solid var(--rule);border-radius:6px;padding:6px 10px;width:100%}
+select{appearance:none;-webkit-appearance:none;padding-right:36px;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4' fill='none' stroke='%23808890' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:14px 14px}
+.chev{display:block;flex:0 0 auto;transition:transform .15s}
+button.x{border:0;background:transparent;color:var(--faint);padding:2px 6px;line-height:1;font-size:12px;border-radius:4px;flex:0 0 auto}
+button.x:hover{color:var(--danger);background:var(--paper)}
+button.link{border:0;background:transparent;padding:2px 0;font-size:12px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+button.link:hover{color:var(--ink)}
+button.link.danger{color:var(--danger)}
 textarea{resize:vertical}
 #root{height:100%}
 .center{height:100%;display:grid;place-items:center;padding:24px 16px;text-align:center}
@@ -170,48 +177,60 @@ textarea{resize:vertical}
 .tgl input{width:auto}
 
 /* Character Journey */
-.jlist{list-style:none;margin:0;padding:8px}
-.jrow{width:100%;text-align:left;display:grid;gap:4px;padding:8px 10px;margin-bottom:6px;background:var(--paper);border:1px solid var(--rule);border-radius:6px}
+.jlist{list-style:none;margin:0;padding:8px;display:grid;gap:6px}
+.jrow{background:var(--paper);border:1px solid var(--rule);border-radius:6px}
 .jrow.on{border-color:var(--ink);box-shadow:inset 3px 0 0 var(--ink)}
-.jrow.absent .jt{color:var(--muted)}
-.jrow .jt{font-family:var(--f-script);font-size:14px;line-height:1.35}
-.jrow .jm{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:11px;color:var(--muted)}
-.jrow .tag{font-size:10px;letter-spacing:.04em;padding:0 6px;border-radius:9px;border:1px solid currentColor}
-.jdots{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
-.jb{font-family:var(--f-mono);font-size:10px;font-weight:600;line-height:16px;padding:0 4px;border-radius:3px;border:1px solid var(--hc);color:var(--hc)}
-.jb.done{background:var(--hc);color:var(--sheet)}
+.jhead{display:flex;align-items:center;gap:2px;padding-right:6px}
+.jopen{flex:1;min-width:0;text-align:left;border:0;background:transparent;padding:9px 8px 9px 12px;border-radius:6px}
+.jopen:hover{border:0}
+.jt{font-family:var(--f-script);font-size:14px;line-height:1.35}
+.jrow.absent .jt{color:var(--faint)}
+.tog{display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;color:var(--muted);padding:6px 10px;border-radius:6px;flex:0 0 auto}
+.tog:hover{background:var(--sheet);color:var(--ink);border:0}
+.tog[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.tog .cnt{font-family:var(--f-mono);font-size:11px}
+.jdots{display:flex;gap:4px;flex-wrap:wrap;padding:0 12px 10px}
+button.bchip{border:0;cursor:pointer}
 
 /* Beats pane */
-.bwrap{padding:8px 10px 24px;display:grid;gap:8px;align-content:start}
-.bsec{display:flex;gap:6px;align-items:center;font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--muted);margin:6px 2px 0}
-.bsec .spacer{flex:1}
-.bchip{display:inline-block;font-family:var(--f-mono);font-size:11px;font-weight:600;line-height:17px;padding:0 5px;border-radius:4px;background:var(--hc);color:var(--sheet);user-select:none;-webkit-user-select:none;white-space:nowrap}
-.bt{border:1px solid var(--rule);border-left:4px solid var(--hc);border-radius:6px;background:var(--paper);padding:6px 8px;display:grid;gap:4px;cursor:pointer}
+.bwrap{padding:8px 10px 24px;display:grid;gap:6px;align-content:start}
+.bsec{font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--muted);margin:8px 2px 0}
+.bsec:first-child{margin-top:2px}
+.bchip{display:inline-block;font-family:var(--f-mono);font-size:11px;font-weight:600;line-height:18px;padding:0 6px;border-radius:4px;background:var(--hc);color:var(--sheet);user-select:none;-webkit-user-select:none;white-space:nowrap;flex:0 0 auto}
+.bchip.hollow{background:transparent;color:var(--hc);box-shadow:inset 0 0 0 1px var(--hc)}
+.bt{border:1px solid var(--rule);border-left:3px solid var(--hc);border-radius:6px;background:var(--paper);cursor:pointer}
 .bt:hover,.bt.hov{border-color:var(--muted);border-left-color:var(--hc)}
 .bt.open{background:var(--sheet);border-color:var(--ink);border-left-color:var(--hc);cursor:default}
-.bt.open .bt-h{cursor:pointer}
+.bt.oncv{opacity:.72}
 .bt.flash{box-shadow:0 0 0 2px var(--accent)}
-.bt-h{display:flex;gap:6px;align-items:center;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
-.bt-h .spacer{flex:1}
-.bt .ok,.node .ok{font-family:var(--f-ui);font-size:11px;color:var(--ok);font-weight:600}
-.oncv{font-family:var(--f-ui);font-size:10px;border:1px solid var(--muted);border-radius:8px;padding:0 5px}
-.bt .q{font-family:var(--f-script);font-size:14px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.bt .q.full{display:block;-webkit-line-clamp:unset;font-size:13px;color:var(--muted)}
-.bt .pp{font-size:12px;font-weight:500}
-.bt .vs{display:flex;gap:4px;flex-wrap:wrap}
-.bt .vs span{font-size:11px;border:1px solid var(--hc);color:var(--ink);border-radius:9px;padding:0 6px}
-.bt-ed{display:grid;gap:8px;padding-top:6px;border-top:1px dashed var(--rule)}
-.bt-ed label{display:grid;gap:2px;font-size:11px;color:var(--muted)}
-.bt-ed label input{font-family:var(--f-script);font-size:14px;color:var(--ink)}
-.bt-ed .sub{font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--muted);margin-top:2px}
-.bt-ed .row,.vg .row,.vm .row{display:flex;gap:6px;align-items:center}
-.bt-ed .row .spacer,.vg .row .spacer,.vm .row .spacer{flex:1}
-.vg,.vm{border:1px solid var(--rule);border-radius:6px;padding:6px 8px;display:grid;gap:4px;background:var(--paper)}
-.vg .q,.vm .q{display:block;-webkit-line-clamp:unset;font-size:13px}
+.bt-h{display:flex;align-items:flex-start;gap:8px;padding:8px 10px 8px 10px}
+.bt.open .bt-h{cursor:pointer}
+.bt-t{flex:1;min-width:0;font-size:13px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bt-t.quote{font-family:var(--f-script);font-size:14px;color:var(--muted)}
+.bt-t.full{display:block;-webkit-line-clamp:unset;font-size:13px}
+.tog-i{color:var(--faint);padding:2px 2px 0 6px;margin-right:2px}
+.tog-i.up .chev{transform:rotate(180deg)}
+.bt-ed{display:grid;gap:8px;padding:2px 12px 12px}
+.fld{display:grid;gap:3px}
+.fl{font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--muted)}
+.fld input{font-family:var(--f-script);font-size:14px}
+.vg,.vm{display:grid;gap:3px}
+.vrow{display:flex;gap:6px;align-items:center}
+.vrow input,.vrow textarea{flex:1;min-width:0}
 .vg input{font-family:var(--f-script);font-size:14px}
 .vm textarea{font-size:13px}
-.gname{font-size:11px;font-weight:600;color:var(--hc)}
-.oor{font-size:11px;color:var(--warn)}
+.gname{font-family:var(--f-mono);font-size:11px;font-weight:600;color:var(--hc);flex:0 0 auto;width:3.2em}
+.src{font-family:var(--f-script);font-size:12px;color:var(--muted);padding-left:3.6em;line-height:1.45}
+.vm .src{padding-left:0}
+.oor{font-family:var(--f-ui);font-size:11px;color:var(--warn)}
+.hint{font-size:12px;color:var(--faint);margin:0}
+.bt-foot{display:flex;gap:12px;align-items:center;padding-top:2px}
+.bt-foot .spacer{flex:1}
+.evq{display:grid;gap:3px}
+.evbtn{text-align:left;border:0;background:var(--paper);border-left:2px solid var(--muted);border-radius:0 4px 4px 0;padding:4px 8px;font-family:var(--f-script);font-size:13px;color:var(--ink)}
+.evbtn:hover{background:var(--accent-soft)}
+.compose{cursor:default}
+.compose textarea{font-family:var(--f-script);font-size:14px}
 .cat-ph{color:var(--faint);font-size:13px;padding:6px 4px;line-height:1.6;margin:0}
 
 /* Scripts */
@@ -219,7 +238,10 @@ textarea{resize:vertical}
 .sheet{max-width:48em;margin:16px auto 40px;background:var(--sheet);border:1px solid var(--rule);padding:24px 28px 44px}
 .scene-title{font-family:var(--f-script);font-weight:600;font-size:17px;margin:0 0 14px;padding-left:4.2em}
 .ln{display:grid;grid-template-columns:3.6em minmax(0,1fr);column-gap:.6em;font-family:var(--f-script);font-size:16px;line-height:1.85}
-.ln .no{font-family:var(--f-mono);font-size:11px;color:var(--faint);text-align:right;padding-top:.45em;user-select:none;-webkit-user-select:none}
+.ln .no{font-family:var(--f-mono);font-size:11px;color:var(--faint);text-align:right;padding-top:.45em;user-select:none;-webkit-user-select:none;display:flex;justify-content:flex-end;align-items:flex-start;gap:5px}
+.bsm{width:9px;height:9px;padding:0;margin-top:3px;border-radius:50%;border:0;background:var(--muted);flex:0 0 auto}
+.bsm:hover{background:var(--accent);border:0}
+.evx{background:color-mix(in srgb,var(--muted) 28%,transparent)}
 .ln .lt{white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere}
 .ln .spk{font-weight:600;margin-right:.5em;font-family:var(--f-ui);font-size:14px;user-select:none;-webkit-user-select:none}
 .ln.dir .lt{font-style:italic;color:var(--muted)}
@@ -240,20 +262,12 @@ textarea{resize:vertical}
 #fmenu button{border-color:transparent;display:inline-flex;align-items:center;gap:6px}
 #fmenu button:hover{background:var(--accent-soft)}
 #fmenu .lab{width:100%;font-size:11px;color:var(--muted);padding:2px 6px}
-#fmenu form{display:flex;gap:4px;width:100%}
-#fmenu form input{font-size:13px;padding:3px 6px}
-
-/* Backstory panel */
-.bs{max-width:44em;margin:16px auto 40px;background:var(--sheet);border:1px solid var(--rule);padding:22px 26px 30px;display:grid;gap:14px}
-.bs h3{font-family:var(--f-script);font-weight:600;font-size:17px;margin:0}
-.bs .help{font-size:13px;color:var(--muted);margin:-8px 0 0}
-.bs-form{display:grid;gap:8px;border:1px dashed var(--rule);border-radius:8px;padding:10px}
-.bs-form .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.bs-form .row select{width:auto}
-.bs-form .row input{width:5em}
-.bs-item{border-left:3px solid var(--hc);background:var(--paper);border-radius:4px;padding:8px 10px;display:grid;gap:6px}
-.bs-item textarea{font-family:var(--f-script);font-size:15px;background:transparent}
-.bs-item .meta{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
+#fmenu .fm-bs{display:grid;gap:6px;width:300px;padding:4px}
+#fmenu .fm-bs textarea{font-family:var(--f-script);font-size:14px}
+.fm-row{display:flex;gap:4px;align-items:center}
+.fm-row .spacer{flex:1}
+#fmenu .fm-bs button.pri{background:var(--accent);color:var(--accent-ink)}
+#fmenu .fm-bs button.pri:hover{background:var(--accent)}
 
 /* Connections canvas */
 .cv{position:relative;flex:1;min-height:0;overflow:auto;background:
@@ -272,8 +286,11 @@ textarea{resize:vertical}
 .node .nh button{font-size:11px;padding:0 6px;line-height:18px}
 .mnode{width:220px}
 .mnode .nb{padding:6px 10px 8px;display:grid;gap:3px}
-.mnode .pp{font-size:12px;font-weight:600}
-.mnode .vl{margin:0;padding-left:16px;font-size:12px;color:var(--muted)}
+.mnode .pp{font-size:13px;font-weight:600;line-height:1.4}
+.mnode .q{color:var(--muted);font-size:13px;-webkit-line-clamp:2}
+.node .nh .x{opacity:0;transition:opacity .12s}
+.node:hover .nh .x,.node .nh .x:focus-visible{opacity:1}
+.inode .iname{font-family:var(--f-script);font-weight:600;font-size:15px;padding:5px 8px}
 .mnode .q{font-family:var(--f-script);font-size:14px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .mnode.hov{border-color:var(--ink)}
 .port{position:absolute;right:-8px;top:50%;width:16px;height:16px;margin-top:-8px;border-radius:50%;background:var(--sheet);border:2px solid var(--hc,var(--muted));cursor:crosshair}
@@ -419,6 +436,7 @@ const srcLabel = s => SRC_LABEL[s] || s || '';
 const DISCLOSE = '응답은 연구진이 미리 준비한 자료 중에서 골라 보내 드립니다.';
 const AGENT_INTRO = '비슷한 상황에 처한 인물들을 알려드릴게요. 이 인물들은 어떻게 행동했는지 살펴보세요.';
 const MIN_LINKS = 2;
+const CHEV = '<svg class="chev" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 let db = null, user = null, downloads = null, uid = null, isOwner = false;
 const cfg = { script: null, practice: null, settings: { showPolarity: false } };
@@ -559,8 +577,15 @@ function verbGroupsIn(sc, b) {
   return [...(b.verbs || [])].sort((x, y) => at(x) - at(y));
 }
 function isComplete(b) { return !isBS(b) && !!(b.purpose && b.purpose.trim()) && (b.verbs || []).some(g => g.verb && g.verb.trim()); }
+// Backstory evidence: {sceneId, range, quote}. Older records stored {sceneId, line}.
+function evOf(sc, b) {
+  const e = b && b.evidence; if (!e || !e.sceneId) return null;
+  if (e.range) return { sceneId: e.sceneId, range: e.range, quote: e.quote || quoteIn(sc, e.sceneId, e.range) };
+  if (e.line) { const range = { start: { line: e.line, offset: 0 }, end: { line: e.line, offset: 9999 } }; return { sceneId: e.sceneId, range, quote: quoteIn(sc, e.sceneId, range) }; }
+  return null;
+}
 function beatWhereIn(sc, b) {
-  if (isBS(b)) return b.evidence && b.evidence.sceneId ? `근거 ${sceneShortIn(sc, b.evidence.sceneId)}${b.evidence.line ? ' ' + b.evidence.line + '행' : ''}` : '';
+  if (isBS(b)) { const e = evOf(sc, b); return e ? `근거 ${sceneShortIn(sc, e.sceneId)} ${e.range.start.line}행 “${e.quote}”` : ''; }
   const r = b.range; return `${sceneShortIn(sc, b.sceneId)} ${r.start.line === r.end.line ? r.start.line + '행' : r.start.line + '–' + r.end.line + '행'}`;
 }
 const beatTextOf = b => isBS(b) ? (b.text || '') : (b.quote || '');
@@ -581,7 +606,8 @@ const P = {
   requests: new Map(), responses: new Map(), decisions: [],
   ui: { screen: 'collect', sceneId: null, highlight: false, openBeat: null, selInterp: null, cvScroll: null, viewport: null },
   sel: null, fmenuStage: null, selBeat: null, reselect: null, unseen: false, seen: new Set(), shown: new Set(), lastType: null, unsubs: [], preview: false,
-  agentFilter: 'all', selLink: null, flashBid: null, flashHl: null, scrollLine: null, scrollMem: {}
+  agentFilter: 'all', selLink: null, flashBid: null, flashHl: null, flashRange: null, scrollLine: null, scrollMem: {},
+  jOpen: new Set(), bsCompose: false
 };
 const L = { buf: [], flushing: false };
 function log(type, data = {}, target = null) {
@@ -667,7 +693,7 @@ function stopParticipant() {
   flush(); clearTimeout(uiTimer); uiTimer = null;
   P.unsubs.forEach(u => { try { u(); } catch (e) {} }); P.unsubs = []; P.runRef = null; P.run = null;
   ['beats', 'nodes', 'interps', 'links', 'requests', 'responses'].forEach(k => P[k].clear());
-  P.decisions = []; P.seen.clear(); P.shown.clear(); P.sel = null; P.selLink = null; P.reselect = null; resetUi(); hideFmenu();
+  P.decisions = []; P.seen.clear(); P.shown.clear(); P.sel = null; P.selLink = null; P.reselect = null; P.jOpen.clear(); P.bsCompose = false; resetUi(); hideFmenu();
 }
 
 const COLS = ['beats', 'nodes', 'interps', 'links', 'requests', 'responses', 'decisions'];
@@ -728,7 +754,7 @@ function renderParticipant() {
   const sc = curScript();
   hideFmenu();
   if (!sc || !sc.scenes || !sc.scenes.length) { root.innerHTML = `<div class="wrap">${P.preview ? previewBar() : ''}<div class="center"><div><h1>연구 준비 중입니다</h1></div></div></div>`; bindPreviewBar(); return; }
-  if (P.ui.sceneId && P.ui.sceneId !== BACKSTORY && !sceneOf(P.ui.sceneId)) P.ui.sceneId = null;
+  if (P.ui.sceneId && !sceneOf(P.ui.sceneId)) P.ui.sceneId = null;
   if (P.ui.openBeat && !beatOf(P.ui.openBeat)) P.ui.openBeat = null;
   if (P.reselect && !beatOf(P.reselect)) P.reselect = null;
   const si = P.ui.selInterp && P.interps.get(P.ui.selInterp); if (!si || si.mode !== curKind()) P.ui.selInterp = null;
@@ -774,86 +800,91 @@ function renderAllCurrent() {
 /* ---------- Character Journey ---------- */
 function renderJourney() {
   const el = $('#journey'); if (!el) return;
-  const sc = curScript(); const nm = numMap(); const sb = scriptBeats(); const bsN = backstories().length;
-  const chip = b => `<span class="jb ${classIn(b, nm)}${isComplete(b) ? ' done' : ''}" data-jb="${b.id}" title="${labelIn(b, nm)}${isComplete(b) ? ' · 완료' : ''}">${labelIn(b, nm)}</span>`;
-  const rows = [`<li><button type="button" class="jrow${P.ui.sceneId === BACKSTORY ? ' on' : ''}" data-jscene="${BACKSTORY}"><span class="jt">Backstory</span><span class="jm">대본 이전 이야기 · 전사${bsN ? ` · ${bsN}개` : ''}</span></button></li>`];
-  for (const s of sc.scenes) {
-    const appears = targetAppears(sc, s);
-    const list = sb.filter(b => b.sceneId === s.id);
-    rows.push(`<li><button type="button" class="jrow${P.ui.sceneId === s.id ? ' on' : ''}${appears ? '' : ' absent'}" data-jscene="${esc(s.id)}"><span class="jt">${esc(s.title)}</span><span class="jm">${s.isTarget ? '<span class="tag">표적</span>' : ''}${appears ? '' : '<span>등장 X</span>'}</span>${list.length ? `<span class="jdots">${list.map(chip).join('')}</span>` : ''}</button></li>`);
-  }
-  el.innerHTML = `<div class="pane-h"><h2>Character Journey</h2></div><div class="pane-b"><ol class="jlist">${rows.join('')}</ol></div>`;
+  const sc = curScript(); const nm = numMap(); const sb = scriptBeats();
+  const chip = b => `<button type="button" class="bchip ${classIn(b, nm)}${isComplete(b) ? '' : ' hollow'}" data-jb="${b.id}" data-cb="${b.id}" title="${labelIn(b, nm)}${isComplete(b) ? ' · 완료' : ''}">${labelIn(b, nm)}</button>`;
+  const rows = sc.scenes.map(s => {
+    const appears = targetAppears(sc, s); const list = sb.filter(b => b.sceneId === s.id); const open = list.length && P.jOpen.has(s.id);
+    return `<li class="jrow${P.ui.sceneId === s.id ? ' on' : ''}${appears ? '' : ' absent'}"><div class="jhead">
+      <button type="button" class="jopen" data-jscene="${esc(s.id)}"${appears ? '' : ` title="${esc(sc.targetCharacter)} 등장하지 않음"`}><span class="jt">${esc(s.title)}</span></button>
+      ${list.length ? `<button type="button" class="tog" data-jtog="${esc(s.id)}" aria-expanded="${!!open}" aria-label="비트 ${list.length}개 ${open ? '접기' : '펼치기'}"><span class="cnt">${list.length}</span>${CHEV}</button>` : ''}</div>
+      ${open ? `<div class="jdots">${list.map(chip).join('')}</div>` : ''}</li>`;
+  }).join('');
+  el.innerHTML = `<div class="pane-h"><h2>Character Journey</h2></div><div class="pane-b"><ol class="jlist">${rows}</ol></div>`;
 }
 
 /* ---------- Beats pane (replaces the category view) ---------- */
 function renderBeats() {
   const el = $('#beats'); if (!el) return;
   const keepTop = $('#beatsBody') ? $('#beatsBody').scrollTop : null;
+  const focusId = document.activeElement && el.contains(document.activeElement) ? document.activeElement.id : null;
   const sc = curScript(); const nm = numMap(); const connect = P.ui.screen === 'connect';
   const nodeSet = new Set(mine(P.nodes).map(n => n.id));
   const sb = scriptBeats(); const bs = backstories();
+  const dis = locked() ? 'disabled' : '';
+  const x = (act, attrs, label) => locked() ? '' : `<button type="button" class="x" data-act="${act}" ${attrs} aria-label="${label}" title="${label}">✕</button>`;
   const card = b => {
     const open = P.ui.openBeat === b.id; const k = classIn(b, nm);
-    const onCv = connect && nodeSet.has(b.id) ? '<span class="oncv">캔버스</span>' : '';
-    const drag = `draggable="${locked() ? 'false' : 'true'}"`;
+    const cls = `bt ${k}${open ? ' open' : ''}${connect && nodeSet.has(b.id) ? ' oncv' : ''}${isBS(b) ? ' bsc' : ''}`;
+    const head = (chipText, chipCls, text, textCls) => `<div class="bt-h"><span class="bchip ${k}${chipCls}" data-cb="${b.id}">${chipText}</span><span class="bt-t${textCls}">${text}</span><span class="tog-i${open ? ' up' : ''}">${CHEV}</span></div>`;
+    const attrs = `class="${cls}" data-bid="${b.id}" draggable="${locked() ? 'false' : 'true'}" tabindex="0"${connect && nodeSet.has(b.id) ? ' title="캔버스에 있음"' : ''}`;
     if (isBS(b)) {
-      return `<article class="bt bsc ${k}${open ? ' open' : ''}" data-bid="${b.id}" ${drag} tabindex="0"><div class="bt-h"><span class="bchip ${k}">Backstory</span><span>${esc(beatWhereIn(sc, b))}</span><span class="spacer"></span>${onCv}</div>
-        ${open ? `<div class="bt-ed"><textarea rows="3" data-bstext="${b.id}" aria-label="Backstory 내용" ${locked() ? 'disabled' : ''}>${esc(b.text || '')}</textarea>${locked() ? '' : `<div class="row"><span class="spacer"></span><button type="button" class="sm danger" data-act="bsDel" data-bid="${b.id}">삭제</button></div>`}</div>` : `<div class="q">${esc(b.text || '') || '<span class="muted">(빈 내용)</span>'}</div>`}</article>`;
+      const ev = evOf(sc, b);
+      if (!open) return `<article ${attrs}>${head('Backstory', '', esc(b.text || ''), '')}</article>`;
+      return `<article ${attrs}>${head('Backstory', '', '', ' muted')}<div class="bt-ed">
+        <textarea rows="3" data-bstext="${b.id}" aria-label="Backstory 내용" ${dis}>${esc(b.text || '')}</textarea>
+        ${ev ? `<div class="evq"><span class="fl">근거 대사</span><button type="button" class="evbtn" data-bsev="${b.id}">“${esc(ev.quote)}”</button></div>` : ''}
+        ${locked() ? '' : `<div class="bt-foot"><span class="spacer"></span><button type="button" class="link danger" data-act="bsDel" data-bid="${b.id}">삭제</button></div>`}</div></article>`;
     }
     const done = isComplete(b);
-    const groups = verbGroupsIn(sc, b);
-    const sents = sentencesIn(sc, b); const keySet = new Set(sents.map(s => s.key));
-    const sentText = k2 => (sents.find(s => s.key === k2) || {}).text;
-    let body;
+    const chipCls = done ? '' : ' hollow';
     if (!open) {
-      const vs = groups.filter(g => (g.verb || '').trim()).map(g => g.verb.trim());
-      body = `<div class="q">${esc(b.quote)}</div>${b.purpose ? `<div class="pp">목적 · ${esc(b.purpose)}</div>` : ''}${vs.length ? `<div class="vs">${vs.map(v => `<span>${esc(v)}</span>`).join('')}</div>` : ''}${(b.memos || []).length ? `<div class="muted" style="font-size:11px">메모 ${(b.memos || []).length}</div>` : ''}`;
-    } else {
-      const dis = locked() ? 'disabled' : '';
-      const gHtml = groups.map((g, i) => {
-        const oor = g.keys.some(x => !keySet.has(x));
-        return `<div class="vg"><div class="row"><span class="gname">동사${i + 1}</span>${oor ? '<span class="oor">일부 범위 밖</span>' : ''}<span class="spacer"></span>${locked() ? '' : `<button type="button" class="sm ghost danger" data-act="verbDel" data-bid="${b.id}" data-g="${g.id}">삭제</button>`}</div>
-          <div class="q">${esc(g.keys.map(sentText).filter(Boolean).join(' ')) || '<span class="oor">범위 밖</span>'}</div>
-          <input type="text" id="verb-${g.id}" data-verb="${g.id}" data-bid="${b.id}" value="${esc(g.verb || '')}" placeholder="상대를 ~하다" aria-label="동사${i + 1} 행동동사" ${dis}></div>`;
-      }).join('');
-      const mHtml = [...(b.memos || [])].sort((x, y) => posCmp(x.start, y.start)).map(m => {
-        const oor = !inBeat(b, m.start) || !inBeat(b, m.end);
-        return `<div class="vm"><div class="row"><span class="gname" style="color:var(--warn)">메모</span>${oor ? '<span class="oor">범위 밖</span>' : ''}<span class="spacer"></span>${locked() ? '' : `<button type="button" class="sm ghost danger" data-act="memoDel" data-bid="${b.id}" data-m="${m.id}">삭제</button>`}</div>
-          <div class="q">${esc(quoteIn(sc, b.sceneId, m))}</div>
-          <textarea id="bmemo-${m.id}" data-bmemo="${m.id}" data-bid="${b.id}" rows="2" aria-label="메모" ${dis}>${esc(m.text || '')}</textarea></div>`;
-      }).join('');
-      body = `<div class="q full">${esc(b.quote)}</div><div class="bt-ed">
-        <label>목적<input type="text" id="purpose-${b.id}" data-purpose="${b.id}" value="${esc(b.purpose || '')}" placeholder="~하기 위해" ${dis}></label>
-        <div class="sub">행동동사</div>${gHtml || '<p class="empty" style="padding:0">대본에서 이 비트 안의 문장을 드래그하면 행동동사를 달 수 있습니다.</p>'}
-        <div class="sub">메모</div>${mHtml || '<p class="empty" style="padding:0">없음</p>'}
-        ${locked() || connect ? '' : `<div class="row"><button type="button" class="sm" data-act="reselect" data-bid="${b.id}">범위 다시 선택</button><span class="spacer"></span><button type="button" class="sm danger" data-act="beatDel" data-bid="${b.id}">비트 삭제</button></div>`}</div>`;
+      const t = (b.purpose || '').trim();
+      return `<article ${attrs}>${head(labelIn(b, nm), chipCls, t ? esc(t) : esc(b.quote), t ? '' : ' quote')}</article>`;
     }
-    return `<article class="bt ${k}${open ? ' open' : ''}" data-bid="${b.id}" ${drag} tabindex="0"><div class="bt-h"><span class="bchip ${k}">${labelIn(b, nm)}</span><span>${esc(beatWhereIn(sc, b))}</span><span class="spacer"></span>${onCv}<span class="ok" data-ok="${b.id}" ${done ? '' : 'hidden'}>✓ 완료</span></div>${body}</article>`;
+    const groups = verbGroupsIn(sc, b);
+    const sents = sentencesIn(sc, b); const keySet = new Set(sents.map(z => z.key));
+    const sentText = k2 => (sents.find(z => z.key === k2) || {}).text;
+    const gHtml = groups.map((g, i) => {
+      const oor = g.keys.some(z => !keySet.has(z));
+      return `<div class="vg"><div class="vrow"><span class="gname">동사${i + 1}</span><input type="text" id="verb-${g.id}" data-verb="${g.id}" data-bid="${b.id}" value="${esc(g.verb || '')}" placeholder="상대를 ~하다" aria-label="동사${i + 1} 행동동사" ${dis}>${x('verbDel', `data-bid="${b.id}" data-g="${g.id}"`, `동사${i + 1} 삭제`)}</div>
+        <div class="src">${esc(g.keys.map(sentText).filter(Boolean).join(' '))}${oor ? ' <span class="oor">· 범위 밖</span>' : ''}</div></div>`;
+    }).join('');
+    const mHtml = [...(b.memos || [])].sort((m1, m2) => posCmp(m1.start, m2.start)).map(m => {
+      const oor = !inBeat(b, m.start) || !inBeat(b, m.end);
+      return `<div class="vm"><div class="src">“${esc(quoteIn(sc, b.sceneId, m))}”${oor ? ' <span class="oor">· 범위 밖</span>' : ''}</div><div class="vrow"><textarea id="bmemo-${m.id}" data-bmemo="${m.id}" data-bid="${b.id}" rows="2" aria-label="메모" ${dis}>${esc(m.text || '')}</textarea>${x('memoDel', `data-bid="${b.id}" data-m="${m.id}"`, '메모 삭제')}</div></div>`;
+    }).join('');
+    return `<article ${attrs}>${head(labelIn(b, nm), chipCls, esc(b.quote), ' quote full')}<div class="bt-ed">
+      <label class="fld"><span class="fl">목적</span><input type="text" id="purpose-${b.id}" data-purpose="${b.id}" value="${esc(b.purpose || '')}" placeholder="~하기 위해" ${dis}></label>
+      ${gHtml ? `<div class="fl">행동동사</div>${gHtml}` : '<p class="hint">이 비트 안의 문장을 드래그해 행동동사를 달 수 있습니다.</p>'}
+      ${mHtml ? `<div class="fl">메모</div>${mHtml}` : ''}
+      ${locked() || connect ? '' : `<div class="bt-foot"><button type="button" class="link" data-act="reselect" data-bid="${b.id}">범위 다시 선택</button><span class="spacer"></span><button type="button" class="link danger" data-act="beatDel" data-bid="${b.id}">삭제</button></div>`}</div></article>`;
   };
-  let html = `<div class="bsec">Backstory<span class="mono">${bs.length || ''}</span><span class="spacer"></span>${!connect && !locked() ? '<button type="button" class="sm" data-act="bsOpen">+ Backstory</button>' : ''}</div>${bs.map(card).join('')}`;
-  for (const s of sc.scenes) { const list = sb.filter(b => b.sceneId === s.id); if (list.length) html += `<div class="bsec">${esc(s.title)}</div>${list.map(card).join('')}`; }
-  if (!sb.length) html += '<p class="cat-ph">대본에서 문구를 드래그해 비트를 만드세요.</p>';
-  el.innerHTML = `<div class="pane-h"><h2>Beats</h2><span class="spacer"></span><span class="muted mono" style="font-size:11px" id="beatCount">${beatCountText(sb)}</span></div>
+  let html = '';
+  if (P.bsCompose && !locked()) html += `<form class="bt bsc kx compose" id="bsCompose"><div class="bt-h"><span class="bchip kx">Backstory</span></div><div class="bt-ed"><textarea id="bsNew" rows="3" placeholder="대본 밖에 있는 인물의 과거나 비등장 시간" aria-label="Backstory 내용"></textarea><div class="bt-foot"><span class="spacer"></span><button type="button" class="link" data-act="bsCancel">취소</button><button type="submit" class="sm pri">추가</button></div></div></form>`;
+  if (bs.length || P.bsCompose) html = `<div class="bsec">Backstory</div>` + html + bs.map(card).join('');
+  for (const sc0 of sc.scenes) { const list = sb.filter(b => b.sceneId === sc0.id); if (list.length) html += `<div class="bsec">${esc(sc0.title)}</div>${list.map(card).join('')}`; }
+  if (!sb.length && !bs.length && !P.bsCompose) html += '<p class="cat-ph">대본에서 문구를 드래그해 비트를 만드세요.</p>';
+  el.innerHTML = `<div class="pane-h"><h2>Beats</h2><span class="spacer"></span>${locked() ? '' : '<button type="button" class="sm ghost" data-act="bsAdd">+ Backstory</button>'}</div>
     <div class="pane-b" id="beatsBody"><div class="bwrap">${html}</div></div>`;
   if (keepTop != null) $('#beatsBody').scrollTop = keepTop;
+  if (focusId && $('#' + focusId)) $('#' + focusId).focus({ preventScroll: true });
   if (P.flashBid) { const c = $(`#beats .bt[data-bid="${P.flashBid}"]`); P.flashBid = null; if (c) { c.scrollIntoView({ block: 'nearest' }); c.classList.add('flash'); setTimeout(() => c.classList.remove('flash'), 1400); } }
 }
-const beatCountText = sb => sb.length ? `비트 ${sb.length} · 완료 ${sb.filter(isComplete).length}` : '';
 function refreshDone(b) {
   const d = isComplete(b);
-  $$(`[data-ok="${b.id}"]`).forEach(x => { x.hidden = !d; });
-  $$(`[data-jb="${b.id}"]`).forEach(x => x.classList.toggle('done', d));
-  const c = $('#beatCount'); if (c) c.textContent = beatCountText(scriptBeats());
+  $$(`[data-cb="${b.id}"]`).forEach(x => { if (!isBS(b)) x.classList.toggle('hollow', !d); });
 }
 function openBeat(id, from) {
   const b = beatOf(id); if (!b) return;
   if (P.ui.openBeat !== id) { flushAllEdits(); P.ui.openBeat = id; log('beat_open', { beatId: id, from }); saveUiSoon(); }
   P.flashBid = id;
   if (P.ui.screen === 'collect') {
-    const sid = isBS(b) ? BACKSTORY : b.sceneId;
-    if (P.ui.sceneId !== sid) { P.ui.sceneId = sid; P.ui.viewport = null; log(sid === BACKSTORY ? 'backstory_open' : 'scene_open', { sceneId: sid, from: 'beat' }); saveUiSoon(); renderJourney(); P.scrollLine = isBS(b) ? null : b.range.start.line; }
-    else if (from !== 'script' && !isBS(b)) P.scrollLine = b.range.start.line;
-    P.flashHl = id; renderBeats(); renderScripts();
+    const ev = isBS(b) ? evOf(curScript(), b) : null;
+    const sid = isBS(b) ? (ev ? ev.sceneId : null) : b.sceneId;
+    if (sid && P.ui.sceneId !== sid) { P.ui.sceneId = sid; P.ui.viewport = null; log('scene_open', { sceneId: sid, from: 'beat' }); saveUiSoon(); P.scrollLine = isBS(b) ? ev.range.start.line : b.range.start.line; }
+    else if (sid && from !== 'script' && from !== 'marker') P.scrollLine = isBS(b) ? ev.range.start.line : b.range.start.line;
+    if (isBS(b)) { if (ev) P.flashRange = ev.range; } else P.flashHl = id;
+    renderJourney(); renderBeats(); renderScripts();
   } else {
     renderBeats();
     const n = $(`#cvIn .mnode[data-bid="${id}"]`);
@@ -899,10 +930,11 @@ function deleteBeat(id) {
 function renderScripts() {
   const el = $('#scripts'); if (!el) return;
   const sc = curScript();
-  if (P.ui.sceneId === BACKSTORY) { renderBackstory(el); return; }
   const scene = sceneOf(P.ui.sceneId) || sc.scenes.find(s => s.isTarget) || sc.scenes[0];
   P.ui.sceneId = scene.id;
   const nm = numMap(); const target = sc.targetCharacter || '';
+  const bsAt = new Map(); // line -> backstories whose evidence starts there
+  for (const b of backstories()) { const e = evOf(sc, b); if (e && e.sceneId === scene.id) { const n = e.range.start.line; if (!bsAt.has(n)) bsAt.set(n, []); bsAt.get(n).push(b); } }
   const info = scriptBeats().filter(b => b.sceneId === scene.id).map(b => {
     const sents = sentencesIn(sc, b); const groups = verbGroupsIn(sc, b);
     const gIdx = new Map(groups.map((g, i) => [g.id, i])); const keyG = new Map(); groups.forEach(g => g.keys.forEach(k => keyG.set(k, g.id)));
@@ -936,7 +968,8 @@ function renderScripts() {
     }
     const isDir = l.kind === 'direction';
     const tl = !isDir && P.ui.highlight && target && l.speaker === target;
-    lines += `<div class="ln${isDir ? ' dir' : ''}${tl ? ' tline' : ''}" data-n="${l.n}"><span class="no">${l.n}</span><div class="lt">${!isDir && l.speaker ? `<span class="spk">${esc(l.speaker)}</span>` : ''}${out}</div></div>`;
+    const marks = (bsAt.get(l.n) || []).map(b => `<button type="button" class="bsm" data-bsm="${b.id}" title="Backstory: ${esc(b.text || '')}" aria-label="Backstory 보기"></button>`).join('');
+    lines += `<div class="ln${isDir ? ' dir' : ''}${tl ? ' tline' : ''}" data-n="${l.n}"><span class="no">${marks}${l.n}</span><div class="lt">${!isDir && l.speaker ? `<span class="spk">${esc(l.speaker)}</span>` : ''}${out}</div></div>`;
   }
   const rb = P.reselect && beatOf(P.reselect);
   el.innerHTML = `<div class="pane-h"><h2>Scripts</h2><span class="sub">${esc(scene.title)}</span><span class="spacer"></span>${target ? `<label class="tgl"><input type="checkbox" id="hlTarget" ${P.ui.highlight ? 'checked' : ''}> ${esc(target)} 대사 강조</label>` : ''}</div>
@@ -947,6 +980,7 @@ function renderScripts() {
   else if (P.scrollMem[scene.id] != null) ss.scrollTop = P.scrollMem[scene.id];
   ss.addEventListener('scroll', onScriptScroll, { passive: true });
   if (P.flashHl) { const id = P.flashHl; P.flashHl = null; $$('.b-' + id).forEach(x => x.classList.add('flash')); setTimeout(() => $$('.b-' + id).forEach(x => x.classList.remove('flash')), 1500); }
+  if (P.flashRange) { const r = P.flashRange; P.flashRange = null; const cs = $$('#scriptText .c').filter(c => { const p = { line: +c.closest('.ln').dataset.n, offset: +c.dataset.o }; return posCmp(r.start, p) <= 0 && posCmp(p, r.end) <= 0; }); cs.forEach(c => c.classList.add('evx')); setTimeout(() => cs.forEach(c => c.classList.remove('evx')), 1800); }
   setTimeout(computeViewport, 300);
 }
 let vpTimer = null;
@@ -956,7 +990,7 @@ function onScriptScroll() {
   clearTimeout(vpTimer); vpTimer = setTimeout(computeViewport, 2000);
 }
 function computeViewport() {
-  const ss = $('#scriptScroll'); if (!ss || P.ui.sceneId === BACKSTORY) return;
+  const ss = $('#scriptScroll'); if (!ss) return;
   const top = ss.scrollTop, bot = top + ss.clientHeight; let from = null, to = null;
   for (const e of $$('.ln', ss)) { const y = e.offsetTop, h = e.offsetHeight; if (y + h > top && y < bot) { const n = +e.dataset.n; if (from == null) from = n; to = n; } }
   const vp = { sceneId: P.ui.sceneId, from, to }; const prev = P.ui.viewport;
@@ -965,7 +999,7 @@ function computeViewport() {
 function openScene(id, from) {
   if (P.ui.sceneId === id) return;
   P.ui.sceneId = id; P.sel = null; hideFmenu(); P.ui.viewport = null;
-  log(id === BACKSTORY ? 'backstory_open' : 'scene_open', { sceneId: id, from });
+  log('scene_open', { sceneId: id, from });
   saveUiSoon(); renderJourney(); renderScripts();
 }
 
@@ -993,13 +1027,17 @@ function placeFmenu() {
   m.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, rect.right + 6)) + 'px';
   m.style.top = Math.max(8, Math.min(window.innerHeight - h - 8, rect.bottom + 6)) + 'px';
 }
-function showFmenu(stage) {
+function showFmenu(stage, note) {
   const m = $('#fmenu'); P.fmenuStage = stage; const nm = numMap();
   const x = '<button type="button" data-f="close" aria-label="닫기">✕</button>';
-  if (stage === 'new') m.innerHTML = `<button type="button" data-f="mkbeat">비트로 만들기</button>${x}`;
-  else if (stage === 'in') { const b = beatOf(P.selBeat); m.innerHTML = `<span class="lab">${b ? labelIn(b, nm) : ''} 안에서</span><button type="button" data-f="verb">행동동사</button><button type="button" data-f="memo">메모</button>${x}`; }
+  const bsBtn = '<button type="button" data-f="bs">Backstory</button>';
+  if (stage === 'new') m.innerHTML = `<button type="button" data-f="mkbeat">비트로 만들기</button>${bsBtn}${x}`;
+  else if (stage === 'in') { const b = beatOf(P.selBeat); m.innerHTML = `<span class="lab">${b ? labelIn(b, nm) : ''} 안에서</span><button type="button" data-f="verb">행동동사</button><button type="button" data-f="memo">메모</button>${bsBtn}${x}`; }
+  else if (stage === 'overlap') m.innerHTML = `<span class="lab">${esc(note || '')}</span>${bsBtn}${x}`;
   else if (stage === 'resel') { const b = beatOf(P.reselect); m.innerHTML = `<button type="button" data-f="resel">${b ? labelIn(b, nm) : ''} 범위를 여기로 바꾸기</button>${x}`; }
+  else if (stage === 'bs') m.innerHTML = `<form id="fmBs" class="fm-bs"><span class="lab">Backstory · 이 대사에서 떠올린 인물의 과거</span><textarea id="fmBsText" rows="3" aria-label="Backstory 내용"></textarea><div class="fm-row"><span class="spacer"></span><button type="button" data-f="close">취소</button><button type="submit" class="pri">추가</button></div></form>`;
   placeFmenu();
+  if (stage === 'bs') $('#fmBsText').focus();
 }
 function hideFmenu() { const m = $('#fmenu'); if (m) m.hidden = true; P.fmenuStage = null; }
 function clearSel() { P.sel = null; P.selBeat = null; hideFmenu(); $$('#scriptText .selx').forEach(x => x.classList.remove('selx')); }
@@ -1009,7 +1047,7 @@ function decideMenu(logIt = true) {
   const pos = { sceneId: s.sceneId, start: s.start, end: s.end };
   if (P.reselect) {
     const others = over.filter(b => b.id !== P.reselect);
-    if (others.length) { rejectOverlap(others[0]); return; }
+    if (others.length) { log('beat_overlap_rejected', { ...pos, with: others[0].id, reselect: P.reselect }); toast(`${labelIn(others[0], numMap())}와 겹쳐서 범위를 바꿀 수 없습니다`, lastMouse); clearSel(); return; }
     if (logIt) log('beat_select_open', { ...pos, reselect: P.reselect });
     showFmenu('resel'); return;
   }
@@ -1019,12 +1057,9 @@ function decideMenu(logIt = true) {
     if (logIt) log('beat_inner_select_open', { beatId: b.id, start: s.start, end: s.end });
     P.selBeat = b.id; showFmenu('in'); return;
   }
-  rejectOverlap(b);
-}
-function rejectOverlap(b) {
-  log('beat_overlap_rejected', { start: P.sel.start, end: P.sel.end, with: b.id, reselect: P.reselect || null });
-  toast(`${labelIn(b, numMap())}와 겹쳐서 ${P.reselect ? '범위를 바꿀' : '비트를 만들'} 수 없습니다`, lastMouse);
-  clearSel();
+  // partial overlap: no new beat, but Backstory is still possible
+  if (logIt) log('beat_overlap_rejected', { start: s.start, end: s.end, with: b.id });
+  P.selBeat = null; showFmenu('overlap', `${labelIn(b, numMap())}와 겹쳐서 비트를 만들 수 없습니다`);
 }
 function createBeat() {
   const s = P.sel; if (!s) return;
@@ -1100,31 +1135,35 @@ $('#fmenu').addEventListener('click', e => {
   else if (f.dataset.f === 'verb') assignVerb();
   else if (f.dataset.f === 'memo') addMemo();
   else if (f.dataset.f === 'resel') changeRange();
+  else if (f.dataset.f === 'bs') { log('backstory_select_open', { sceneId: P.sel.sceneId, start: P.sel.start, end: P.sel.end }); showFmenu('bs'); }
+});
+$('#fmenu').addEventListener('submit', e => {
+  if (e.target.id !== 'fmBs') return;
+  e.preventDefault();
+  const s = P.sel; const text = ($('#fmBsText') || {}).value.trim();
+  if (!s) { clearSel(); return; }
+  if (!text) { $('#fmBsText').focus(); return; }
+  const range = { start: s.start, end: s.end };
+  createBackstory(text, { sceneId: s.sceneId, range, quote: quoteIn(curScript(), s.sceneId, range) }, 'script');
+  clearSel();
+});
+$('#fmenu').addEventListener('keydown', e => {
+  if (e.target.id === 'fmBsText' && e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); $('#fmBs').requestSubmit(); }
 });
 
-/* Backstory */
-function renderBackstory(el) {
-  const sc = curScript();
-  const list = backstories();
-  const sceneOpts = `<option value="">근거 장면 (선택)</option>` + sc.scenes.map(s => `<option value="${esc(s.id)}">${esc(s.title)}</option>`).join('');
-  el.innerHTML = `<div class="pane-h"><h2>Scripts</h2><span class="sub">Backstory</span></div>
-    <div class="pane-b script-scroll" id="scriptScroll"><div class="bs"><h3>Backstory · 대본 이전 이야기</h3>
-    <p class="help">대본 밖에 있는 인물의 과거나 비등장 시간을 적습니다.</p>
-    ${locked() ? '' : `<form class="bs-form" id="bsForm"><textarea id="bsText" rows="3" placeholder="예: 어린 시절부터 일기를 써 왔다" aria-label="Backstory 내용"></textarea>
-      <div class="row"><select id="bsScene" aria-label="근거 장면">${sceneOpts}</select><input type="text" id="bsLine" inputmode="numeric" placeholder="줄" aria-label="근거 줄 번호"><span style="flex:1"></span><button type="submit" class="pri">+ Backstory</button></div></form>`}
-    ${list.map(b => `<div class="bs-item kx b-${b.id}" data-bid="${b.id}"><div class="meta">${esc(beatWhereIn(sc, b)) || 'Backstory'}<span style="flex:1"></span>${locked() ? '' : `<button type="button" class="sm ghost danger" data-act="bsDel" data-bid="${b.id}">삭제</button>`}</div>
-      <textarea rows="2" data-bstext="${b.id}" aria-label="Backstory 내용" ${locked() ? 'disabled' : ''}>${esc(b.text || '')}</textarea></div>`).join('') || '<p class="empty" style="padding:0">아직 Backstory가 없습니다.</p>'}
-    </div></div>`;
+/* Backstory: added from a script selection (evidence = that range) or from the Beats pane (no evidence) */
+function createBackstory(text, evidence, from) {
+  const b = newBeatBase({ source: 'backstory', sceneId: BACKSTORY, text, evidence: evidence || null });
+  storeNewBeat(b);
+  log('backstory_create', { beatId: b.id, text, evidence: b.evidence, from });
+  P.bsCompose = false; P.flashBid = b.id;
+  if (P.ui.screen === 'collect') { renderBeats(); renderScripts(); } else { renderBeats(); }
 }
 document.addEventListener('submit', e => {
-  if (MODE !== 'participant' || e.target.id !== 'bsForm') return;
+  if (MODE !== 'participant' || e.target.id !== 'bsCompose') return;
   e.preventDefault(); if (locked()) return;
-  const text = $('#bsText').value.trim(); if (!text) { $('#bsText').focus(); return; }
-  const sid = $('#bsScene').value; const ln = parseInt($('#bsLine').value, 10);
-  const b = newBeatBase({ source: 'backstory', sceneId: BACKSTORY, text, evidence: sid ? { sceneId: sid, line: Number.isFinite(ln) ? ln : null } : null });
-  storeNewBeat(b);
-  log('backstory_create', { beatId: b.id, text, evidence: b.evidence });
-  P.flashBid = b.id; renderJourney(); renderBeats(); renderScripts();
+  const text = $('#bsNew').value.trim(); if (!text) { $('#bsNew').focus(); return; }
+  createBackstory(text, null, 'pane');
 });
 
 /* ---------- participant: shared click/input handlers ---------- */
@@ -1139,10 +1178,19 @@ document.addEventListener('click', e => {
     log('task_start', {}); flush();
     resetUi(); P.sel = null; P.reselect = null; saveUiSoon(); renderParticipant(); return;
   }
+  const jt = e.target.closest('[data-jtog]');
+  if (jt) { const id = jt.dataset.jtog; const open = !P.jOpen.has(id); if (open) P.jOpen.add(id); else P.jOpen.delete(id); log('journey_toggle', { sceneId: id, open }); renderJourney(); return; }
+  const jb = e.target.closest('[data-jb]'); if (jb) { openBeat(jb.dataset.jb, 'journey'); return; }
   const j = e.target.closest('[data-jscene]'); if (j) { openScene(j.dataset.jscene, 'journey'); return; }
+  const bm = e.target.closest('[data-bsm]'); if (bm) { openBeat(bm.dataset.bsm, 'marker'); return; }
+  const be = e.target.closest('[data-bsev]');
+  if (be) { const b = beatOf(be.dataset.bsev); const ev = b && evOf(curScript(), b); log('backstory_evidence_open', { beatId: be.dataset.bsev });
+    if (ev) { if (P.ui.screen !== 'collect') { switchScreen('collect'); } if (P.ui.sceneId !== ev.sceneId) { P.ui.sceneId = ev.sceneId; log('scene_open', { sceneId: ev.sceneId, from: 'evidence' }); saveUiSoon(); } P.scrollLine = ev.range.start.line; P.flashRange = ev.range; renderJourney(); renderScripts(); }
+    return; }
   if (act === 'cancelResel') { cancelReselect('cancel_button'); return; }
   if (!locked()) {
-    if (act === 'bsOpen') { openScene(BACKSTORY, 'beats'); const i = $('#bsText'); if (i) i.focus(); return; }
+    if (act === 'bsAdd') { P.bsCompose = true; log('backstory_compose_open', {}); renderBeats(); const i = $('#bsNew'); if (i) i.focus(); return; }
+    if (act === 'bsCancel') { P.bsCompose = false; renderBeats(); return; }
     if (act === 'beatDel' || act === 'bsDel') { if (!armConfirm(t, '정말 삭제')) return; deleteBeat(t.dataset.bid); renderAllCurrent(); return; }
     if (act === 'verbDel') {
       const b = beatOf(t.dataset.bid); if (!b) return; const g = (b.verbs || []).find(x => x.id === t.dataset.g);
@@ -1167,7 +1215,7 @@ document.addEventListener('click', e => {
   if (t) return;
   const card = e.target.closest('#beats .bt');
   if (card) {
-    if (e.target.closest('input,textarea,select,button,.bt-ed')) return;
+    if (card.id === 'bsCompose' || e.target.closest('input,textarea,select,button,.bt-ed')) return;
     const id = card.dataset.bid;
     if (P.ui.openBeat === id && e.target.closest('.bt-h')) { closeBeat(); return; }
     openBeat(id, 'pane');
@@ -1181,12 +1229,7 @@ document.addEventListener('input', e => {
   if (t.dataset.bmemo) { const b = beatOf(t.dataset.bid); const m = b && (b.memos || []).find(x => x.id === t.dataset.bmemo); if (!m) return; m.text = t.value; saveBeatSoon(b.id); return; }
   if (t.dataset.bstext) {
     const b = beatOf(t.dataset.bstext); if (!b) return; b.text = t.value;
-    saveBeatSoon(b.id, () => {
-      const a = document.activeElement;
-      if ($('#beats') && !$('#beats').contains(a)) renderBeats();
-      if (P.ui.sceneId === BACKSTORY && $('#scripts') && !$('#scripts').contains(a)) renderScripts();
-      if (P.ui.screen === 'connect') renderConn();
-    });
+    saveBeatSoon(b.id, () => { if (P.ui.screen === 'connect') renderConn(); });
     return;
   }
   if (t.dataset.iname || t.dataset.ibody) { const it = P.interps.get(t.dataset.iname || t.dataset.ibody); if (!it) return; if (t.dataset.iname) it.name = t.value; else it.body = t.value; clearTimeout(interpTimers.get(it.id)); interpTimers.set(it.id, setTimeout(() => { saveInterpNow(it.id); renderAgent(); }, 800)); return; }
@@ -1250,18 +1293,17 @@ function renderConn() {
   const maxY = Math.max(900, ...nodes.map(n => n.y + 400), ...its.map(i => i.y + 500));
   const mnode = n => {
     const b = beatOf(n.id); const k = classIn(b, nm);
-    const vs = verbGroupsIn(sc, b).filter(g => (g.verb || '').trim());
+    const t = isBS(b) ? '' : (b.purpose || '').trim();
     return `<div class="node mnode ${k}" data-bid="${b.id}" data-node="m" style="left:${n.x}px;top:${n.y}px">
-      <div class="nh" data-drag="m:${b.id}"><span class="bchip ${k}">${labelIn(b, nm)}</span><span class="muted">${esc(beatWhereIn(sc, b))}</span><span class="spacer"></span>${isComplete(b) ? '<span class="ok">✓</span>' : ''}${locked() ? '' : `<button type="button" class="ghost" data-cact="nodeRemove" data-bid="${b.id}" aria-label="캔버스에서 빼기" title="캔버스에서 빼기">✕</button>`}</div>
-      <div class="nb">${b.purpose ? `<span class="pp">목적 · ${esc(b.purpose)}</span>` : ''}<span class="q">${esc(beatTextOf(b))}</span>
-      ${vs.length ? `<ul class="vl">${vs.slice(0, 3).map(g => `<li>${esc(g.verb)}</li>`).join('')}${vs.length > 3 ? `<li class="muted">외 ${vs.length - 3}</li>` : ''}</ul>` : ''}</div>
+      <div class="nh" data-drag="m:${b.id}"><span class="bchip ${k}${isBS(b) || isComplete(b) ? '' : ' hollow'}" data-cb="${b.id}">${labelIn(b, nm)}</span><span class="spacer"></span>${locked() ? '' : `<button type="button" class="x" data-cact="nodeRemove" data-bid="${b.id}" aria-label="캔버스에서 빼기" title="캔버스에서 빼기">✕</button>`}</div>
+      <div class="nb">${t ? `<span class="pp">${esc(t)}</span>` : ''}<span class="q">${esc(beatTextOf(b))}</span></div>
       ${locked() ? '' : `<span class="port" data-port="${b.id}" title="해석 노드로 끌어 연결" aria-hidden="true"></span>`}</div>`;
   };
   const inode = it => `<div class="node inode${P.ui.selInterp === it.id ? ' sel' : ''}" data-iid="${it.id}" data-node="i" style="left:${it.x}px;top:${it.y}px">
       <span class="inport" aria-hidden="true"></span>
-      <div class="nh" data-drag="i:${it.id}"><b>해석</b><span class="muted">· 연결 ${linksOf(it.id).length}</span><span class="spacer"></span>${locked() ? '' : `<button type="button" class="ghost danger" data-cact="interpDel" data-iid="${it.id}" aria-label="해석 삭제">삭제</button>`}</div>
-      <div class="nb"><label>해석명<input type="text" data-iname="${it.id}" value="${esc(it.name || '')}" placeholder="예: 약속을 지키지 못한 딸" ${locked() ? 'disabled' : ''}></label>
-      <label>해석 작성<textarea data-ibody="${it.id}" rows="4" placeholder="이 비트들을 이어 보면 …" ${locked() ? 'disabled' : ''}>${esc(it.body || '')}</textarea></label>
+      <div class="nh" data-drag="i:${it.id}"><b>해석</b><span class="spacer"></span>${locked() ? '' : `<button type="button" class="x" data-cact="interpDel" data-iid="${it.id}" aria-label="해석 삭제" title="해석 삭제">✕</button>`}</div>
+      <div class="nb"><input type="text" class="iname" data-iname="${it.id}" value="${esc(it.name || '')}" placeholder="해석명" aria-label="해석명" ${locked() ? 'disabled' : ''}>
+      <textarea data-ibody="${it.id}" rows="4" placeholder="해석 작성 — 이 비트들을 이어 보면 …" aria-label="해석 작성" ${locked() ? 'disabled' : ''}>${esc(it.body || '')}</textarea>
       ${(it.attachedCards || []).length ? `<div class="chips">${it.attachedCards.map(c => `<button type="button" class="chip" data-chip="${esc(c.cardId)}" data-req="${esc(c.requestId || '')}">참고: ${esc(c.title)}</button>`).join('')}</div>` : ''}</div></div>`;
   el.innerHTML = `<div class="pane-h"><h2>Connections</h2><span class="spacer"></span>${locked() ? '' : '<button type="button" class="sm" data-cact="interpAdd">+ 해석</button>'}</div>
     <div class="cv" id="cv"><div class="cv-in" id="cvIn" style="width:${maxX}px;height:${maxY}px">
@@ -1441,10 +1483,9 @@ function renderAgent() {
   const ok = canRequest(it);
   const why = !its.length ? '[+ 해석]으로 해석 노드를 먼저 만들어 주세요.' : !it ? '캔버스에서 해석 노드를 골라 주세요.' : ok ? '' : '비트를 두 개 이상 연결하고 해석을 적어 주세요.';
   el.innerHTML = `<div class="pane-h"><h2>Dramaturgy Agent</h2></div><p class="disclose">${esc(DISCLOSE)}</p>
-    <div class="ag-tools"><span class="lab">참조할 해석</span>${its.length ? `<select id="agTarget" aria-label="참조할 해석"><option value="">해석 고르기</option>${its.map(x => `<option value="${x.id}" ${it && it.id === x.id ? 'selected' : ''}>${esc(interpLabel(x))} · 연결 ${linksOf(x.id).length}</option>`).join('')}</select>` : '<span class="hint">아직 해석이 없습니다.</span>'}
+    <div class="ag-tools">${its.length ? `<select id="agTarget" aria-label="참조할 해석"><option value="">해석 고르기</option>${its.map(x => `<option value="${x.id}" ${it && it.id === x.id ? 'selected' : ''}>${esc(interpLabel(x))} · 연결 ${linksOf(x.id).length}</option>`).join('')}</select>` : '<span class="hint">아직 해석이 없습니다.</span>'}
       <span title="${esc(why)}" style="display:block"><button type="button" class="pri" data-gact="ref" style="width:100%" ${ok && !locked() ? '' : 'disabled'} aria-describedby="agHint">이 해석으로 레퍼런스 찾기</button></span>
-      ${why ? `<span class="hint" id="agHint">${esc(why)}</span>` : ''}
-      <div class="chipsf" role="group" aria-label="보기"><button type="button" data-gfilter="all" aria-pressed="${P.agentFilter === 'all'}">전체</button><button type="button" data-gfilter="sel" aria-pressed="${P.agentFilter === 'sel'}">선택한 해석</button></div></div>
+      ${why ? `<span class="hint" id="agHint">${esc(why)}</span>` : ''}</div>
     <div class="thread" id="thread" aria-live="polite">${threadHtml()}</div>`;
   const nt = $('#thread'); nt.scrollTop = thTop == null || atBottom ? nt.scrollHeight : thTop;
 }
@@ -1466,7 +1507,7 @@ function cardHtml(q, c) {
   const isRef = c.type === 'reference';
   const d = isRef ? latestDecision(q.id, c.cardId) : null;
   const pol = cfg.settings && cfg.settings.showPolarity && c.polarity ? `<span class="pill">${c.polarity === 'contrast' ? '대조' : '유사'}</span>` : '';
-  return `<div class="rcard" data-req="${q.id}" data-card="${esc(c.cardId)}"><div class="meta">${c.sourceType ? `<span class="pill">${esc(srcLabel(c.sourceType))}</span>` : ''}${pol}${c.play ? `<span>${esc(c.play)}</span>` : ''}</div>
+  return `<div class="rcard" data-req="${q.id}" data-card="${esc(c.cardId)}"><div class="meta">${c.sourceType ? `<span>${esc(srcLabel(c.sourceType))}</span>` : ''}${pol}</div>
     <h4>${esc(c.title)}</h4>${c.summary ? `<p>${esc(c.summary)}</p>` : ''}${c.quote ? `<blockquote>${esc(c.quote)}</blockquote>` : ''}
     ${c.sourceUrl ? `<a href="${esc(c.sourceUrl)}" target="_blank" rel="noopener" data-src="1">출처 열기 ↗</a>` : ''}
     ${isRef ? `<div class="decide" role="group" aria-label="이 레퍼런스를"><button type="button" data-gact="dec" data-dec="accept" aria-pressed="${!!(d && d.decision === 'accept')}" ${locked() ? 'disabled' : ''}>채택</button><button type="button" data-gact="dec" data-dec="hold" aria-pressed="${!!(d && d.decision === 'hold')}" ${locked() ? 'disabled' : ''}>보류</button><button type="button" data-gact="dec" data-dec="reject" aria-pressed="${!!(d && d.decision === 'reject')}" ${locked() ? 'disabled' : ''}>배제</button></div>

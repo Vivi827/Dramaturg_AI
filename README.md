@@ -5,7 +5,7 @@
 | 경로 | 내용 |
 | --- | --- |
 | [`phase1/`](phase1/) | **Phase 1 형성 연구용 프로토타입 "Act & Connect"** — 대본을 비트로 나눠 목적·행동동사·메모를 달고, 비트를 연결해 해석을 구성하고, 그 해석을 근거로 드라마투르기적 레퍼런스를 얻는 과정을 관찰하기 위한 Wizard-of-Oz 프로토타입 |
-| [`phase1/SPEC.md`](phase1/SPEC.md) | Phase 1 설계 명세 v2.1 (연구계획서 ver1.1·기획안 0811 정렬판 + 비트 결정, 구현 기준) |
+| [`phase1/SPEC.md`](phase1/SPEC.md) | Phase 1 설계 명세 v2.2 (연구계획서 ver1.1·기획안 0811 정렬판 + 비트 결정, 구현 기준) |
 | [`phase1/demo/`](phase1/demo/) | 브라우저에서 바로 써 보는 데모 (GitHub Pages: `https://vivi827.github.io/Dramaturg_AI/phase1/demo/`) |
 | [`docs/`](docs/) | 연구 계획서 |
 

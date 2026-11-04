@@ -1,10 +1,12 @@
-# Phase 1 프로토타입 설계 명세 v2.1 — 연구계획서·기획안 정렬판
+# Phase 1 프로토타입 설계 명세 v2.2 — 연구계획서·기획안 정렬판
 
 > **이 문서가 Phase 1 프로토타입 구현의 기준이다.**
 > 기준 문서의 우선순위는 **① 연구계획서(IRB) ver1.1 → ② 시스템 기획안(2026.08.11, 이예림·최윤서) → ③ 이 명세**다.
 > 이 명세가 ①·②와 어긋나면 ①·②를 따르고 이 명세를 고친다. ①·②가 정하지 않은 부분만 이 명세에서 결정하며, 그런 항목은 **[결정]** 으로 표시한다. 아직 연구진 확인이 끝나지 않은 결정은 **[확인 필요]** 를 붙인다.
 >
 > 기존 `P1_prototype/SPEC.md`(Next.js + Supabase)와 v1~v3 구현은 이 명세로 대체된다.
+>
+> **v2.2 (2026-11-04)**: Backstory 근거를 대본 드래그로 달고 대사로 보여 주게 바꿨다(4.3.4). Journey 비트를 접게 했고, 컴포넌트별 정보량을 줄였다(4.4~4.7).
 >
 > **v2.1 (2026-11-04)**: 연구진 논의에 따라 Character Notes의 사용자 범주를 **비트**로 바꿨다(근거는 2.2). v3의 비트 기능을 가져오고 v2 인터페이스는 유지한다.
 
@@ -154,30 +156,39 @@ UI 표기: Character Journey, **Beats**, Scripts, Connections, Dramaturgy Agent.
 - 하이라이트를 클릭하면 Beats에서 그 비트가 펼쳐진다. 비트 카드·노드에 마우스를 올리면 대본의 해당 범위도 진해진다(양방향).
 
 #### 4.3.4 Backstory
-- Character Journey 맨 위 **Backstory** 칸(또는 Beats의 [+ Backstory])을 누르면 Scripts 자리에 Backstory 패널이 열린다.
-- 대본 밖 정보를 1~3줄로 적고, 선택적으로 근거 장면·줄을 지정해 추가한다. 목록에서 고치거나 삭제할 수 있다.
-- Backstory 항목은 Beats 목록 맨 위에 나오고, 비트처럼 캔버스에 올려 해석에 연결할 수 있다. 목적·행동동사는 없다.
+대본 밖 정보(인물의 과거, 비등장 시간)를 적는 항목. 근거를 다는 방법은 다른 기능과 같이 **대본을 드래그**하는 것이다. 줄 번호를 입력하는 칸은 두지 않는다.
+
+- **대사에서 추가**: 드래그 메뉴의 **[Backstory]** → 메뉴 자리에 작은 입력 칸("이 대사에서 떠올린 인물의 과거") → Enter 또는 [추가]. 드래그한 범위가 근거로 자동 저장된다. 비트가 없는 곳, 비트 안, 비트와 일부만 겹치는 곳 어디서든 가능하다.
+- **근거 없이 추가**: Beats 머리의 [+ Backstory] → 패널 맨 위에 입력 카드가 열린다. Scripts는 바뀌지 않는다.
+- **표시**: 대본에서는 근거 줄 번호 옆에 작은 점. 점을 누르면 Beats에서 그 Backstory가 펼쳐진다. Beats 카드를 펼치면 근거를 줄 번호가 아니라 **대사 그대로** 보여 주고, 누르면 대본의 그 위치로 이동해 잠시 강조한다.
+- Backstory는 Beats 목록 맨 위에 모이고, 비트처럼 캔버스에 올려 해석에 연결할 수 있다. 목적·행동동사는 없다.
+- v2.1의 Scripts 대체 Backstory 패널, 근거 장면 드롭다운, 줄 번호 입력, Journey의 Backstory 칸은 없앤다(v2.2). 사용자 관점에서 대본이 보이지 않는 상태로 줄 번호를 기억해 입력해야 했고, 결과도 "근거 1장 6행"처럼 대사를 알 수 없게 표시되었기 때문이다.
 
 ### 4.4 Beats (화면 1 가운데, 화면 2 왼쪽)
 
-- 패널 머리: "Beats" + "비트 n · 완료 m".
+원칙(v2.2): **한 컴포넌트에는 지금 필요한 정보만** 둔다. 위치(장면·줄)는 장면 소제목과 대본이 이미 보여 주므로 카드에 반복하지 않는다.
+
+- 패널 머리: "Beats" + [+ Backstory].
 - 목록 순서: **Backstory** → 장면별 묶음(장면 제목 소제목) → 장면 안에서는 대본 순서.
-- **접힌 카드**: `B1` 칩, 장면·줄 범위, ✓ 완료, (화면 2에서) 캔버스 표시. 인용 2줄, 목적 한 줄, 행동동사 목록(칩), 메모 개수.
-- **펼친 카드**(한 번에 하나): 인용 전체, **목적** 입력("~하기 위해"), **행동동사** 그룹별 카드(동사N · 묶인 문장 · 동사 입력 "상대를 ~하다" · 삭제), **메모** 카드(인용 · 메모 입력 · 삭제), [범위 다시 선택] [비트 삭제](화면 1에서만).
-- 카드를 누르면 펼쳐지고, 화면 1에서는 Scripts가 그 비트 위치로 이동해 강조한다. 펼친 카드의 머리를 다시 누르면 접힌다. 화면 2에서는 캔버스의 노드로 이동한다.
+- **접힌 카드**: `B1` 칩 + 한 줄(목적이 있으면 목적, 없으면 대사) + 펼침 아이콘. 그 밖의 정보는 없다. 완료 여부는 칩 모양으로 표시한다(완료 = 채운 칩, 미완료 = 테두리만).
+- **펼친 카드**(한 번에 하나): 대사 전체, **목적** 입력("~하기 위해"), **행동동사** 줄마다 `동사N` · 동사 입력 · ✕ 와 그 아래 묶인 문장, **메모**(있을 때만), 아래쪽 글자 버튼 [범위 다시 선택] [삭제](화면 1에서만). 행동동사가 없으면 짧은 안내 한 줄만 보인다.
+- 카드를 누르면 펼쳐지고, 화면 1에서는 Scripts가 그 비트 위치로 이동해 강조한다. 펼친 카드의 머리를 다시 누르면 접힌다. 화면 2에서는 캔버스의 노드로 이동하고, 이미 캔버스에 있는 카드는 옅게 보인다.
 - 비트 삭제는 두 번 확인한다. 캔버스 노드와 연결도 함께 지워지고, 남은 비트는 다시 번호가 매겨진다.
 - 모든 편집은 800ms 디바운스 저장, 포커스가 빠지면 즉시 저장. before/after 기록.
 
 ### 4.5 Character Journey (화면 1 왼쪽)
 
-- 세로 목록: **Backstory**(개수) → 장면 1 … 장면 N.
-- 각 칸: 장면 제목, 표적 라벨, 표적 인물 등장 여부("등장 X"), 그 장면 비트의 **번호 칩**(B1 B2…). 완료한 비트는 칩이 채워진다.
+- 세로 목록: 장면 1 … 장면 N(Backstory 칸 없음).
+- 각 칸: 장면 제목, 그리고 비트가 있으면 오른쪽에 **개수 + 펼침 아이콘**. 기본은 접힘이고, 펼치면 그 장면의 비트 칩(B1 B2…)이 보인다. 칩을 누르면 그 비트가 열린다. 펼침은 장면별로 따로 기억한다(`journey_toggle`).
+- 표적 인물이 등장하지 않는 장면은 제목을 옅게 표시한다(마우스를 올리면 "○○ 등장하지 않음"). "표적" 라벨은 참여자 화면에 두지 않는다.
 - 칸을 누르면 Scripts가 그 장면을 연다(`scene_open`). 현재 장면 칸 강조.
+
+**펼침 아이콘·드롭다운 화살표**: 모든 접기/펼치기 아이콘과 드롭다운 화살표는 컴포넌트 가장자리에서 12px 이상 안쪽에 둔다.
 
 ### 4.6 Connections (화면 2 가운데)
 
-- **비트 노드**: Beats의 카드를 캔버스로 끌어 놓는다. 노드: `B1` 칩, 장면·줄, ✓, 목적, 인용(최대 3줄), 행동동사(최대 3개 + "외 n"). 같은 비트는 한 번만 놓인다(이미 있으면 그 노드로 이동).
-- **해석 노드**: [+ 해석] → 해석명(한 줄), 해석 작성(여러 줄), 채택한 레퍼런스 칩.
+- **비트 노드**: Beats의 카드를 캔버스로 끌어 놓는다. 노드: `B1` 칩(완료 표시 겸함), 목적, 대사 2줄. 캔버스에서 빼는 ✕는 마우스를 올렸을 때만 보인다. 같은 비트는 한 번만 놓인다(이미 있으면 그 노드로 이동).
+- **해석 노드**: [+ 해석] → 해석명(한 줄), 해석 작성(여러 줄), 채택한 레퍼런스 칩. 입력 칸 위 라벨 없이 placeholder로 안내한다.
 - **연결**: 비트 노드 오른쪽 점을 해석 노드로 끈다. 단순 연결, 방향은 비트 → 해석, 관계 이름 없음. 한 비트를 여러 해석에 연결할 수 있다. 선 클릭 → [연결 삭제] 또는 Delete.
 - 노드 이동(머리 드래그), 캔버스 빼기(✕, 비트 자체는 남음), 빈 곳 드래그로 캔버스 이동. 확대·축소 없음.
 - 해석 노드를 클릭하면 선택 상태가 되고 Dramaturgy Agent의 대상이 된다.
@@ -185,7 +196,7 @@ UI 표기: Character Journey, **Beats**, Scripts, Connections, Dramaturgy Agent.
 ### 4.7 Dramaturgy Agent (화면 2 오른쪽)
 
 - 고정 고지문: **"응답은 연구진이 미리 준비한 자료 중에서 골라 보내 드립니다."**
-- 요청 대상: 선택한 해석 노드(또는 드롭다운).
+- 요청 대상: 선택한 해석 노드(또는 드롭다운). 라벨과 보기 필터는 두지 않는다.
 - **[이 해석으로 레퍼런스 찾기]** 활성 조건: 대상 해석에 **연결된 비트 2개 이상** + **해석 작성이 비어 있지 않음**. 비활성일 때 이유를 한 줄로 보인다.
 - 요청 시 **해석 스냅샷** 저장: 해석명, 해석 작성, 연결된 비트 각각의 번호·위치·인용·목적·행동동사(동사와 묶인 문장)·메모.
 - 응답: "'{해석명}' 참조됨" + "비슷한 상황에 처한 인물들을 알려드릴게요. 이 인물들은 어떻게 행동했는지 살펴보세요." + 카드 1~4장(출처 유형, 제목, 요약, 인용, 출처 링크).
@@ -250,7 +261,7 @@ pool/{cardId}                               소유자만 (6절 형식)
 wizardlog/{id}                              소유자만 {runKey, t, kind: marker|choice|phase, label, note}
 sessions/{uid}                              {activeCode}
 sessions/{uid}/runs/{code}                  {phase, taskStartAt, ui:{screen, sceneId, highlight, openBeatId, selectedInterpId, canvasScroll, viewport}}
-  .../beats/{id}        {mode, source: script|backstory, sceneId, range{start,end}|null, quote, text, evidence{sceneId,line}|null,
+  .../beats/{id}        {mode, source: script|backstory, sceneId, range{start,end}|null, quote, text, evidence{sceneId, range, quote}|null,
                          purpose, verbs[{id, keys[문장키 "줄:시작글자"], verb}], memos[{id, start, end, text, createdAt}], createdAt, updatedAt}
   .../nodes/{beatId}    {mode, x, y}
   .../interps/{id}      {mode, name, body, x, y, attachedCards[{cardId, title, requestId}], createdAt, updatedAt}
@@ -273,8 +284,8 @@ sessions/{uid}/runs/{code}                  {phase, taskStartAt, ui:{screen, sce
 
 | 계획서 수집 항목 | 이벤트 |
 | --- | --- |
-| (공통) 입장·단계·화면 | `session_join`, `task_start`, `screen_switch {from,to}`, `scene_open`, `backstory_open`, `viewport`(2초 디바운스) |
-| **모먼트 생성** (= 비트·Backstory) | `beat_select_open`, `beat_create {range, quote}`, `beat_overlap_rejected`, `beat_open`, `beat_edit {field: purpose, before, after}`, `beat_reselect_start`, `beat_range_change {before, after}`, `beat_select_cancel`, `beat_delete {snapshot}`, `backstory_create`, `backstory_edit`, `backstory_delete` |
+| (공통) 입장·단계·화면 | `session_join`, `task_start`, `screen_switch {from,to}`, `scene_open`, `journey_toggle`, `viewport`(2초 디바운스) |
+| **모먼트 생성** (= 비트·Backstory) | `beat_select_open`, `beat_create {range, quote}`, `beat_overlap_rejected`, `beat_open`, `beat_edit {field: purpose, before, after}`, `beat_reselect_start`, `beat_range_change {before, after}`, `beat_select_cancel`, `beat_delete {snapshot}`, `backstory_select_open`, `backstory_compose_open`, `backstory_create {evidence, from}`, `backstory_edit`, `backstory_delete`, `backstory_evidence_open` |
 | 비트 안 해석 | `beat_inner_select_open`, `verb_assign {sentences}`, `verb_edit {before, after}`, `verb_remove {reason}`, `beat_memo_create {quote}`, `beat_memo_edit {before, after}`, `beat_memo_delete` |
 | **연결** | `node_place`, `node_move`, `node_remove`, `link_create`, `link_delete` |
 | **캐릭터 해석 작성** | `interp_create`, `interp_edit {field: name|body, before, after}`, `interp_select`, `interp_delete` |
@@ -318,7 +329,7 @@ sessions/{uid}/runs/{code}                  {phase, taskStartAt, ui:{screen, sce
 | --- | --- | --- | --- |
 | D1 | ~~범주 초기 상태~~ → **범주 대신 비트** | 확정 (11-04) | 2.2 |
 | D2 | 연결 방식: 비트 → 해석 단순 연결, 관계 이름 없음 | 확정 | 기획안 와이어프레임 (2) |
-| D3 | Backstory: Journey 첫 칸, 비트 목록 맨 위, 캔버스에 올릴 수 있음 | 확정 (11-04) | 기획안 As-Is 그림 |
+| D3 | Backstory: 대본 드래그 메뉴 또는 Beats에서 추가, 근거는 대사로 표시, 비트 목록 맨 위, 캔버스에 올릴 수 있음 | 확정 (11-04, v2.2) | 기획안 As-Is 그림, 사용성 |
 | D4 | 한 비트를 여러 해석에 연결 허용 | 확정 | |
 | D5 | 레퍼런스 요청 조건: 연결 비트 2개 이상 + 해석 작성 | 확정 | 계획서 "정보 간 관계" |
 | D6 | 20분 배분 2 / 8 / 10분, 10분 체크포인트 | 파일럿에서 확인 | 계획서 20분 |
@@ -339,9 +350,9 @@ sessions/{uid}/runs/{code}                  {phase, taskStartAt, ui:{screen, sce
 6. 대본에 비트 배경·`B1` 칩, 행동동사 밑줄·`동사1` 라벨, 메모 점선이 보인다.
 7. 기존 비트와 일부만 겹치는 선택은 거부된다.
 8. [범위 다시 선택]으로 범위를 바꿔도 행동동사·메모가 남는다.
-9. Journey에 장면별 비트 번호 칩이 보인다.
-10. Backstory를 추가하면 Beats 맨 위에 보인다.
-11. 화면 2에서 비트를 캔버스로 끌면 목적·행동동사가 보이는 노드가 되고, 연결 비트 2개 + 해석 작성이 있어야 레퍼런스 버튼이 켜진다.
+9. Journey는 기본으로 접혀 있고, 펼치면 장면별 비트 번호 칩이 보인다. 펼침 아이콘·드롭다운 화살표가 가장자리에서 12px 이상 떨어져 있다.
+10. 대사를 드래그해 [Backstory]로 추가하면 근거가 그 대사로 저장되고, 대본 여백에 점이 생기며, 카드에서 근거 대사를 누르면 그 위치로 이동한다. Beats의 [+ Backstory]로 근거 없이도 추가할 수 있다. 줄 번호 입력 칸은 없다.
+11. 접힌 비트 카드는 칩 + 한 줄 + 펼침 아이콘뿐이다. 화면 2에서 비트를 캔버스로 끌면 칩·목적·대사만 보이는 노드가 되고, 연결 비트 2개 + 해석 작성이 있어야 레퍼런스 버튼이 켜진다.
 12. 새로고침 후 노드·연결·해석이 그대로다.
 13. 위저드 요청 상세에 비트의 목적·행동동사·메모가 보이고, 응답이 참여자에게 표시된다.
 14. 채택하면 해석 노드에 칩이 붙고 해석 본문은 바뀌지 않는다.
