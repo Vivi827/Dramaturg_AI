@@ -11,7 +11,7 @@ for k, v in pool.items(): seed['pool/' + k] = v
 
 RUNTIME = r'''(function(){
 'use strict';
-var KEY = 'actconnect-demo-v1';
+var KEY = 'actconnect-demo-v2';
 var SEED = __SEED__;
 var WIZARD_PIN = '0827';
 var OWNER = false, me = null;
